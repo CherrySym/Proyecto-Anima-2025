@@ -1,27 +1,27 @@
-// backend/src/utils/sanitizers.js
+// backend/src/middlewares/sanitizers.js
 
 // Helper para listas
-function sanitizeMany(items, sanitizer) {
+export function sanitizeMany(items, sanitizer) {
   if (!items || !Array.isArray(items)) return [];
   return items.map(sanitizer);
 }
 
 // Usuarios
-function sanitizeUser(user) {
+export function sanitizeUser(user) {
   if (!user) return null;
   const { password, ...safeUser } = user; // quitamos password
   return safeUser;
 }
 
 // Empresas
-function sanitizeEmpresa(empresa) {
+export function sanitizeEmpresa(empresa) {
   if (!empresa) return null;
   const { password, ...safeEmpresa } = empresa; // quitamos password
   return safeEmpresa;
 }
 
 // Desafíos
-function sanitizeDesafio(desafio) {
+export function sanitizeDesafio(desafio) {
   if (!desafio) return null;
   return {
     id: desafio.id,
@@ -33,7 +33,7 @@ function sanitizeDesafio(desafio) {
 }
 
 // Ofertas de trabajo
-function sanitizeOferta(oferta) {
+export function sanitizeOferta(oferta) {
   if (!oferta) return null;
   return {
     id: oferta.id,
@@ -45,7 +45,7 @@ function sanitizeOferta(oferta) {
 }
 
 // Cursos externos
-function sanitizeCurso(curso) {
+export function sanitizeCurso(curso) {
   if (!curso) return null;
   return {
     id: curso.id,
@@ -57,7 +57,7 @@ function sanitizeCurso(curso) {
 }
 
 // Postulaciones
-function sanitizePostulacion(postulacion) {
+export function sanitizePostulacion(postulacion) {
   if (!postulacion) return null;
   return {
     id: postulacion.id,
@@ -66,14 +66,3 @@ function sanitizePostulacion(postulacion) {
     estado: postulacion.estado,
   };
 }
-
-// Exportamos todas las funciones
-module.exports = {
-  sanitizeMany,
-  sanitizeUser,
-  sanitizeEmpresa,
-  sanitizeDesafio,
-  sanitizeOferta,
-  sanitizeCurso,
-  sanitizePostulacion,
-};

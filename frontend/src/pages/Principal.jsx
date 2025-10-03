@@ -1,47 +1,60 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Principal</title>
-  <link rel="stylesheet" href="Principal.css" />
-</head>
-<body>
-  <header class="header">
-    <div class="logo">
-      <img src="logo-anima.png" alt="Anima logo" />
-      Anima
+import "../styles/Principal.css";
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import Navbar from "../components/Navbar"; // importamos nuestro Navbar
+
+export default function Principal() {
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    let done = false;
+
+    const GO = () => {
+      navigate("/home"); // usamos react-router para navegar
+    };
+
+    const fireOnce = () => {
+      if (done) return;
+      done = true;
+      GO();
+    };
+
+    const keyHandler = (e) => {
+      if (["ArrowDown", "PageDown", " ", "Spacebar"].includes(e.key)) fireOnce();
+    };
+
+    window.addEventListener("scroll", fireOnce, { passive: true });
+    window.addEventListener("wheel", fireOnce, { passive: true });
+    window.addEventListener("touchmove", fireOnce, { passive: true });
+    window.addEventListener("keydown", keyHandler);
+
+    // limpieza al desmontar el componente
+    return () => {
+      window.removeEventListener("scroll", fireOnce);
+      window.removeEventListener("wheel", fireOnce);
+      window.removeEventListener("touchmove", fireOnce);
+      window.removeEventListener("keydown", keyHandler);
+    };
+  }, [navigate]);
+
+  return (
+    <div>
+      <header className="header">
+        <div className="logo">
+          <img src="logo-anima.png" alt="Anima logo" />
+          Anima
+        </div>
+        <Navbar /> {/* reemplazamos el nav estático por nuestro componente Navbar */}
+      </header>
+
+      <div className="container">
+        <h1 className="title">JobPath</h1>
+        <div className="arrow">&#8595;</div>
+      </div>
+
+      <div className="arrow" onClick={() => navigate("/home")}>
+        &#8595;
+      </div>
     </div>
-      <nav>
-      <a href="Principal.html" class="active">PRINCIPAL</a>
-
-    </nav>
-  </header>
-
-  <div class="container">
-    <h1 class="title">JobPath</h1>
-    <div class="arrow">&#8595;</div>
-  </div>
-
-  <script>
-  
-  const GO = () => location.href = "../home/home.html";
-
-  let done = false;
-  function fireOnce() {
-    if (done) return;
-    done = true;
-    GO();
-  }
-
-  
-  window.addEventListener("scroll", fireOnce, { passive: true });
-  window.addEventListener("wheel", fireOnce, { passive: true });
-  window.addEventListener("touchmove", fireOnce, { passive: true });
-  window.addEventListener("keydown", (e) => {
-    if (["ArrowDown", "PageDown", " ", "Spacebar"].includes(e.key)) fireOnce();
-  });
-</script>
-<div class="arrow" onclick="location.href='../home/home.html'">&#8595;</div>
-</body>
-</html>
+  );
+}
