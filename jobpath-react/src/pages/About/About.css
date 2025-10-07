@@ -1,0 +1,9 @@
+.about-page {
+  min-height: 100vh;
+  background: white;
+}
+
+.content {
+  padding: 40px;
+  text-align: center;
+}

@@ -1,0 +1,52 @@
+/* Estilos Landing Page - Migrado desde index.css */
+body,
+html {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.landing-page {
+  min-height: 100vh;
+  background: linear-gradient(to right, #2d2d3f, #4f4fcf);
+  color: white;
+  overflow: hidden;
+}
+
+.container {
+  height: calc(100vh - 80px);
+  border-radius: 16px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  text-align: center;
+  overflow: hidden;
+}
+
+.title {
+  font-size: 48px;
+  font-weight: 700;
+  margin: 0;
+}
+
+.arrow {
+  position: absolute;
+  bottom: 50px;
+  font-size: 40px;
+  animation: bounce 2s infinite;
+  cursor: pointer;
+}
+
+/* Animación del arrow - mantenida del original */
+@keyframes bounce {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(8px);
+  }
+}

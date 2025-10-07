@@ -1,0 +1,73 @@
+/* Estilos del Header - Migrado desde index.css y home.css */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 40px;
+  background: linear-gradient(to right, #2d2d3f, #4f4fcf);
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  font-weight: bold;
+  font-size: 14px;
+  gap: 8px;
+  color: white;
+}
+
+.logo img {
+  width: 20px;
+  height: 20px;
+}
+
+.header nav {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.header a {
+  color: white;
+  text-decoration: none;
+  margin-left: 20px;
+  font-weight: bold;
+  padding-bottom: 2px;
+  transition: border-bottom 0.3s ease;
+}
+
+.header a:hover {
+  border-bottom: 2px solid white;
+}
+
+.header a.active {
+  border-bottom: 2px solid white;
+}
+
+.language-nav {
+  display: flex;
+  gap: 10px;
+  margin-left: auto;
+}
+
+.language-nav button {
+  background: none;
+  border: 2px solid white;
+  color: rgba(255, 255, 255, 0.9);
+  text-shadow: 0 0 5px rgba(255, 255, 255, 0.8);
+  padding: 8px 18px;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.language-nav button:hover {
+  background: white;
+  color: #2d2d3f;
+}
+
+.language-nav button.active-lang {
+  background: white;
+  color: #2d2d3f;
+}

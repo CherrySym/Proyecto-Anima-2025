@@ -1,0 +1,115 @@
+// ===================== CONFIGURACIÓN =====================
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+// ===================== ENUMS =====================
+enum TipoUsuario {
+  ADOLESCENTE
+  ADULTO
+}
+
+enum EstadoPostulacion {
+  PENDIENTE
+  ACEPTADA
+  RECHAZADA
+}
+
+enum TipoRecompensa {
+  PUNTOS
+  EXPERIENCIA
+  DINERO
+}
+
+// ===================== ENTIDADES =====================
+
+// Usuarios de la app
+model User {
+  id        Int      @id @default(autoincrement()) // obligatorio, autoincrement
+  nombre    String                                 // obligatorio
+  email     String   @unique                       // obligatorio, único
+  password  String                                 // obligatorio
+  edad      Int                                    // obligatorio
+  tipo      TipoUsuario                            // MENOR o MAYOR
+  puntos    Int      @default(0)                   // opcional, default 0
+  cvs       CV[]                                   // opcional, relación
+  postulaciones Postulacion[]                      // opcional, relación
+  recompensas   RecompensaUsuario[]                // opcional, relación
+}
+
+// Empresas que publican ofertas y desafíos
+model Empresa {
+  id          Int       @id @default(autoincrement()) // obligatorio, autoincrement
+  nombre      String                                  // obligatorio
+  email       String   @unique                        // obligatorio, único
+  password    String                                  // obligatorio
+  descripcion String?                                 // opcional
+  ofertas     OfertaTrabajo[]                         // opcional, relación
+  desafios    Desafio[]                               // opcional, relación
+}
+
+// Currículums de los usuarios
+model CV {
+  id      Int    @id @default(autoincrement())                 // obligatorio, autoincrement
+  user    User   @relation(fields: [userId], references: [id]) // obligatorio
+  userId  Int                                                  // obligatorio
+  contenido Json                                               // obligatorio
+}
+
+// Ofertas de trabajo publicadas por empresas
+model OfertaTrabajo {
+  id        Int       @id @default(autoincrement())                    // obligatorio, autoincrement
+  empresa   Empresa   @relation(fields: [empresaId], references: [id]) // obligatorio
+  empresaId Int                                                        // obligatorio
+  titulo    String                                                     // obligatorio
+  descripcion String                                                   // obligatorio
+  requisitos String?                                                   // opcional
+  postulaciones Postulacion[]                                          // opcional, relación
+}
+
+// Cursos externos
+model CursoExterno {
+  id       Int    @id @default(autoincrement()) // obligatorio, autoincrement
+  titulo   String                               // obligatorio
+  descripcion String                            // obligatorio
+  url      String                               // obligatorio
+  area     String                               // obligatorio
+}
+
+// Desafíos / encargos de empresas
+model Desafio {
+  id        Int      @id @default(autoincrement())                    // obligatorio, autoincrement
+  empresa   Empresa  @relation(fields: [empresaId], references: [id]) // obligatorio
+  empresaId Int                                                       // obligatorio
+  titulo    String                                                    // obligatorio
+  descripcion String                                                  // obligatorio
+  recompensa String                                                   // obligatorio (descripción libre)
+  recompensas RecompensaUsuario[]                                     // relación con usuarios
+}
+
+// Postulaciones de usuarios a ofertas
+model Postulacion {
+  id        Int         @id @default(autoincrement())                     // obligatorio, autoincrement
+  user      User        @relation(fields: [userId], references: [id])     // obligatorio
+  userId    Int                                                           // obligatorio
+  oferta    OfertaTrabajo @relation(fields: [ofertaId], references: [id]) // obligatorio
+  ofertaId  Int                                                           // obligatorio
+  estado    EstadoPostulacion @default(PENDIENTE)                         // opcional, default pendiente
+}
+
+// Recompensas que reciben los usuarios (gamificación)
+model RecompensaUsuario {
+  id             Int            @id @default(autoincrement())
+  user           User           @relation(fields: [userId], references: [id])
+  userId         Int
+  desafio        Desafio?       @relation(fields: [desafioId], references: [id])
+  desafioId      Int?
+  tipoRecompensa TipoRecompensa
+  cantidad       Int
+  fecha          DateTime       @default(now())
+}
