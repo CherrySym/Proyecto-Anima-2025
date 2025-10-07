@@ -1,5 +1,6 @@
 // server.js
 import express from "express";
+import cors from "cors";
 import dotenv from "dotenv";
 import { PrismaClient } from "@prisma/client";
 
@@ -17,6 +18,11 @@ dotenv.config();
 const app = express();
 const prisma = new PrismaClient();
 
+// Middlewares
+app.use(cors({
+  origin: 'http://localhost:5173', // URL del frontend React
+  credentials: true
+}));
 app.use(express.json());
 
 // Ruta raíz
