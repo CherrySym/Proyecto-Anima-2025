@@ -7,8 +7,6 @@ import './App.css';
 /**
  * Componente principal de la aplicación
  * Configura el enrutamiento y los contextos globales
- * Migrado desde el sitio web estático HTML a una SPA con React Router
- * Las rutas están centralizadas en AppRouter para mejor organización
  */
 function App() {
   return (

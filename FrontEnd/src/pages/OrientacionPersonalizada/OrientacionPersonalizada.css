@@ -1,0 +1,219 @@
+/* OrientacionPersonalizada.css */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
+
+.orientacion-personalizada-page {
+  min-height: 100vh;
+  font-family: 'Poppins', sans-serif;
+  line-height: 1.6;
+  background-color: #f5f5f5;
+  color: #000000;
+}
+
+.main-container-op {
+  padding: 20px 50px;
+}
+
+.top-bar-op {
+  display: flex;
+  align-items: center;
+  padding: 15px 0;
+  border-bottom: 1px solid #1900ff;
+  margin-bottom: 20px;
+}
+
+.btn-volver-atras {
+  background-color: transparent;
+  border: 1px solid #003cff;
+  color: #003cff;
+  padding: 8px 15px;
+  border-radius: 20px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 600;
+  margin-right: 15px;
+  text-align: center;
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+.btn-volver-atras:hover {
+  background-color: rgba(0, 60, 255, 0.05);
+}
+
+.btn-volver-atras::after {
+  content: '';
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  background-color: #20b8d2;
+  border-radius: 50%;
+  margin-left: 10px;
+  position: relative;
+  top: -1px;
+}
+
+.vocational-orientation-op {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-left: 50px;
+  color: #000;
+}
+
+.title-section-op {
+  margin-bottom: 30px;
+}
+
+.main-title-op {
+  font-size: 2.2rem;
+  font-weight: 700;
+  margin-bottom: 20px;
+  max-width: 80%;
+  color: #1c1c38;
+}
+
+.advice-pair-op {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  margin-bottom: 40px;
+  padding-bottom: 40px;
+  width: 100%;
+  border-bottom: 1px solid #ccc;
+}
+
+.advice-pair-op:last-child {
+  border-bottom: none;
+}
+
+.left-section-op {
+  width: 100%;
+}
+
+.full-width-op {
+  width: 100%;
+}
+
+.advice-box-op {
+  background-color: #ffffff;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  padding: 25px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+}
+
+.advice-box-op h2 {
+  color: #0011ff;
+  margin-bottom: 15px;
+  border-bottom: 2px solid #20b8d2;
+  padding-bottom: 5px;
+  font-size: 1.5rem;
+}
+
+.advice-box-op p {
+  margin-bottom: 15px;
+  line-height: 1.8;
+  color: #333;
+}
+
+.advice-box-op strong {
+  color: #0011ff;
+}
+
+.right-section-op {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 20px;
+}
+
+.tips-section-op {
+  width: 100%;
+  padding: 10px 0;
+}
+
+.tips-title-op {
+  font-size: 1.3rem;
+  font-weight: 700;
+  margin-bottom: 20px;
+  color: #1c1c38;
+}
+
+.tips-section-op ul {
+  list-style: none;
+  padding: 0;
+}
+
+.tips-section-op li {
+  background-color: #ffffff;
+  border: 1px solid #ccc;
+  padding: 15px 20px;
+  border-radius: 5px;
+  margin-bottom: 15px;
+  text-align: left;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.tips-section-op li:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.tips-section-op li strong {
+  color: #0011ff;
+}
+
+.tips-section-op li a {
+  color: #007bff;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.tips-section-op li a:hover {
+  color: #0056b3;
+  text-decoration: underline;
+}
+
+/* Responsive */
+@media (max-width: 1000px) {
+  .advice-pair-op {
+    flex-direction: column;
+  }
+
+  .left-section-op,
+  .right-section-op {
+    width: 100%;
+  }
+
+  .main-title-op {
+    max-width: 100%;
+  }
+
+  .top-bar-op {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .vocational-orientation-op {
+    margin-left: 0;
+    margin-top: 10px;
+  }
+
+  .main-container-op {
+    padding: 15px 20px;
+  }
+}
+
+@media (max-width: 768px) {
+  .main-title-op {
+    font-size: 1.8rem;
+  }
+
+  .advice-box-op h2 {
+    font-size: 1.3rem;
+  }
+
+  .tips-title-op {
+    font-size: 1.1rem;
+  }
+}

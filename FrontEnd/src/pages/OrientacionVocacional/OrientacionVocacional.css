@@ -1,0 +1,243 @@
+/* OrientacionVocacional.css - Migrado desde OrientacionV/Vac.css */
+:root {
+  --primary-dark: #2d2d3f;
+  --secondary-blue: #4f4fcf;
+  --text-light: white;
+  --button-border-light: rgba(255, 255, 255, 0.4);
+  --bg-internal: rgba(255, 255, 255, 0.1);
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  font-family: 'Segoe UI', sans-serif;
+}
+
+.orientacion-page {
+  min-height: 100vh;
+  background: linear-gradient(to right, var(--primary-dark), var(--secondary-blue));
+  color: var(--text-light);
+}
+
+.language-nav button {
+  background: none;
+  border: 2px solid white;
+  color: rgba(255, 255, 255, 0.9);
+  text-shadow: 0 0 5px rgba(255, 255, 255, 0.8);
+  padding: 8px 18px;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.language-nav button:hover {
+  background: white;
+  color: #2d2d3f;
+}
+
+.active {
+  border-bottom: 2px solid white;
+}
+
+.navbar {
+  background-color: transparent;
+  color: white;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 40px;
+  box-shadow: none;
+}
+
+.logo {
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.navbar nav {
+  display: flex;
+}
+
+.navbar a {
+  color: white;
+  text-decoration: none;
+  margin-left: 30px;
+  padding-bottom: 3px;
+  border-bottom: 2px solid transparent;
+  transition: border-bottom 0.3s ease;
+  border-radius: 0;
+  padding-top: 5px;
+}
+
+.navbar a:hover {
+  background-color: transparent;
+  border-bottom: 2px solid white;
+}
+
+.navbar .active {
+  background-color: transparent;
+  border-bottom: 2px solid white;
+}
+
+.content-container {
+  padding: 50px;
+}
+
+.main-layout {
+  display: flex;
+  gap: 40px;
+  max-width: 1200px;
+  margin: 0 auto;
+  background-color: var(--bg-internal);
+  padding: 50px;
+  border-radius: 16px;
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.left-column {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+}
+
+.section-box h1 {
+  font-size: 32px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.section-box h3 {
+  font-size: 20px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.section-box p {
+  font-size: 14px;
+  line-height: 1.6;
+  border: 1px solid var(--button-border-light);
+  background-color: rgba(0, 0, 0, 0.1);
+  padding: 15px;
+  border-radius: 5px;
+}
+
+.center-column {
+  width: 350px;
+  position: relative;
+}
+
+.stars {
+  font-size: 30px;
+  position: absolute;
+  top: -20px;
+  left: -20px;
+  z-index: 10;
+}
+
+.button-list {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-top: 20px;
+}
+
+.action-button {
+  display: block;
+  text-align: left;
+  padding: 15px 20px;
+  border: 1px solid var(--button-border-light);
+  border-radius: 5px;
+  background-color: rgba(255, 255, 255, 0.1);
+  text-decoration: none;
+  color: white;
+  font-size: 14px;
+  font-weight: 500;
+  transition: all 0.2s;
+}
+
+.action-button:hover {
+  background-color: white;
+  border-color: white;
+  color: var(--primary-dark);
+}
+
+.right-column {
+  width: 400px;
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+  position: relative;
+}
+
+.image-card {
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
+}
+
+.image-card img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.top-image {
+  width: 90%;
+  align-self: flex-start;
+}
+
+.bottom-image {
+  width: 70%;
+  position: relative;
+  right: 0;
+  bottom: -80px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
+  z-index: 1;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .main-layout {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .center-column,
+  .right-column {
+    width: 100%;
+    max-width: 500px;
+  }
+
+  .bottom-image {
+    width: 100%;
+    bottom: 0;
+  }
+}
+
+@media (max-width: 768px) {
+  .content-container {
+    padding: 20px;
+  }
+
+  .main-layout {
+    padding: 30px 20px;
+  }
+
+  .navbar {
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .navbar nav {
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .navbar a {
+    margin: 5px 0;
+  }
+}

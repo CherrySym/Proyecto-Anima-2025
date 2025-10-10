@@ -1,58 +1,82 @@
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import Header from '../../components/layout/Header/Header';
 import './Landing.css';
 
 /**
  * Página Landing (Principal) - Migrado desde index.html
- * Al hacer scroll o interactuar, redirige automáticamente a /home
- * Usa hooks de React (useEffect, useNavigate) en lugar de eventos DOM directos
+ * VERSIÓN MEJORADA: Ofrece navegación explícita + auto-scroll opcional
+ * - Botón principal visible para navegación clara
+ * - Auto-scroll activado solo después de interacción significativa
+ * - Mejor UX y accesibilidad
  */
 const Landing = () => {
   const navigate = useNavigate();
 
+  // Navegación manual con el botón
+  const goToHome = () => {
+    navigate('/home');
+  };
+
   useEffect(() => {
     let done = false;
+    let scrollAttempts = 0;
 
-    // Función que se ejecuta una sola vez al detectar interacción
+    // Auto-scroll mejorado: solo después de scroll significativo (no accidental)
     const fireOnce = () => {
       if (done) return;
-      done = true;
-      navigate('/home');
+      scrollAttempts++;
+      
+      // Requiere 2 intentos de scroll para evitar disparos accidentales
+      if (scrollAttempts >= 2) {
+        done = true;
+        navigate('/home');
+      }
     };
 
-    // Event listeners para diferentes tipos de interacción
-    // Migrado desde el script inline del HTML original
-    const handleScroll = () => fireOnce();
-    const handleWheel = () => fireOnce();
-    const handleTouchMove = () => fireOnce();
-    const handleKeyDown = (e) => {
-      if (['ArrowDown', 'PageDown', ' ', 'Spacebar'].includes(e.key)) {
+    // Event listeners para scroll significativo
+    const handleScroll = () => {
+      // Solo si scroll > 50px
+      if (window.scrollY > 50) {
         fireOnce();
       }
     };
 
-    // Agregar listeners
+    const handleWheel = (e) => {
+      // Solo scroll hacia abajo
+      if (e.deltaY > 0) {
+        fireOnce();
+      }
+    };
+
+    const handleKeyDown = (e) => {
+      // Solo teclas de navegación hacia abajo
+      if (['ArrowDown', 'PageDown'].includes(e.key)) {
+        done = true;
+        navigate('/home');
+      }
+    };
+
+    // Agregar listeners (removemos touchmove para evitar falsos positivos en mobile)
     window.addEventListener('scroll', handleScroll, { passive: true });
     window.addEventListener('wheel', handleWheel, { passive: true });
-    window.addEventListener('touchmove', handleTouchMove, { passive: true });
     window.addEventListener('keydown', handleKeyDown);
 
-    // Cleanup: remover listeners cuando el componente se desmonte
+    // Cleanup
     return () => {
       window.removeEventListener('scroll', handleScroll);
       window.removeEventListener('wheel', handleWheel);
-      window.removeEventListener('touchmove', handleTouchMove);
       window.removeEventListener('keydown', handleKeyDown);
     };
   }, [navigate]);
 
   return (
     <div className="landing-page">
-      <Header />
       <div className="container">
         <h1 className="title">JobPath</h1>
-        <div className="arrow">&#8595;</div>
+        <div className="arrow animate-bounce">&#8595;</div>
+        <button onClick={goToHome} className="enter-button">
+          Entrar
+        </button>
       </div>
     </div>
   );

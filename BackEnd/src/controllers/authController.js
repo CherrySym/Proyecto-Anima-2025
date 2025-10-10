@@ -117,3 +117,65 @@ export const login = async (req, res) => {
     res.status(500).json({ error: "Error en el login" });
   }
 };
+
+/**
+ * Obtener datos del usuario/empresa actual
+ * - Requiere authMiddleware (req.user viene del JWT)
+ * - Devuelve datos completos según el tipo
+ */
+export const getMe = async (req, res) => {
+  try {
+    const { id, tipo } = req.user; // Viene del middleware de autenticación
+    
+    console.log('getMe called with:', { id, tipo }); // Debug log
+
+    if (tipo === "USUARIO") {
+      const user = await prisma.user.findUnique({
+        where: { id },
+        select: {
+          id: true,
+          nombre: true,
+          email: true,
+          edad: true,
+          tipo: true,
+          puntos: true, // ⚠️ Corregido: en schema es 'puntos', no 'puntosRecompensa'
+        }
+      });
+
+      if (!user) {
+        return res.status(404).json({ error: "Usuario no encontrado" });
+      }
+
+      return res.json({
+        tipoUsuario: "USUARIO",
+        user
+      });
+    } 
+    else if (tipo === "EMPRESA") {
+      const empresa = await prisma.empresa.findUnique({
+        where: { id },
+        select: {
+          id: true,
+          nombre: true,
+          email: true,
+          descripcion: true,
+        }
+      });
+
+      if (!empresa) {
+        return res.status(404).json({ error: "Empresa no encontrada" });
+      }
+
+      return res.json({
+        tipoUsuario: "EMPRESA",
+        empresa
+      });
+    }
+    else {
+      return res.status(400).json({ error: "Tipo de usuario inválido" });
+    }
+  } catch (error) {
+    console.error('Error en getMe:', error);
+    res.status(500).json({ error: "Error al obtener datos del usuario" });
+  }
+};

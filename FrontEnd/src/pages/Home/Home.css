@@ -14,7 +14,6 @@
   padding: 40px;
   gap: 40px;
   background-color: #ffffff;
-  min-height: calc(100vh - 80px);
 }
 
 .text-section {
@@ -25,14 +24,12 @@
   font-size: 26px;
   font-weight: bold;
   margin-bottom: 15px;
-  color: #222;
 }
 
 .text-section p {
   font-size: 15px;
   line-height: 1.6;
   margin-bottom: 20px;
-  color: #222;
 }
 
 .subscribe-btn {
@@ -43,22 +40,14 @@
   cursor: pointer;
   font-weight: bold;
   letter-spacing: 1px;
-  transition: background 0.3s ease;
 }
 
 .subscribe-btn:hover {
   background: #f4f4f4;
 }
 
-.image-section {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
 .img-large {
   width: 800px;
-  max-width: 100%;
   border-radius: 15px;
 }
 

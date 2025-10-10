@@ -1,9 +1,206 @@
-.about-page {
-  min-height: 100vh;
-  background: white;
+/* About.css - Migrado desde About Us/about.css */
+body {
+  margin: 0;
+  font-family: 'Segoe UI', sans-serif;
+  background: #f4f4f4;
 }
 
-.content {
-  padding: 40px;
+.about-page {
+  min-height: 100vh;
+  background: #f4f4f4;
+}
+
+.language-nav button {
+  background: none;
+  border: 2px solid white;
+  color: rgba(255, 255, 255, 0.9);
+  text-shadow: 0 0 5px rgba(255, 255, 255, 0.8);
+  padding: 8px 18px;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.language-nav button:hover {
+  background: white;
+  color: #2d2d3f;
+}
+
+.active {
+  border-bottom: 2px solid white;
+}
+
+.header {
+  background: linear-gradient(to right, #000000, #4b29d0);
+  color: white;
+  padding: 20px 40px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.about-title {
+  font-size: 36px;
+  font-weight: bold;
+  margin: 0;
+}
+
+.header nav {
+  display: flex;
+}
+
+.header nav a {
+  color: white;
+  text-decoration: none;
+  margin-left: 20px;
+  font-weight: bold;
+  padding-bottom: 2px;
+  transition: border-bottom 0.3s ease;
+}
+
+.header nav a:hover {
+  border-bottom: 2px solid white;
+}
+
+.header nav a.active {
+  border-bottom: 2px solid white;
+}
+
+.logo-bar {
+  background: white;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 30px;
+  border-bottom: 1px solid #ccc;
+}
+
+.logo-jobpath {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.logo-jobpath img {
+  width: 30px;
+}
+
+.logo-jobpath span {
+  font-size: 20px;
+  font-weight: bold;
+  background: #eee;
+  padding: 5px 15px;
+  border-radius: 20px;
+}
+
+.login-btn {
+  background: none;
+  border: none;
+  font-weight: bold;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+  color: #000;
+  cursor: pointer;
+}
+
+.login-btn img {
+  width: 30px;
+  border-radius: 50%;
+}
+
+.main-content {
+  display: grid;
+  grid-template-columns: 1fr 2fr 1fr;
+  gap: 20px;
+  padding: 30px;
+}
+
+.main-content section {
+  background: white;
+  border-radius: 10px;
+  padding: 20px;
+  border: 1px solid #ddd;
+}
+
+.left-box {
   text-align: center;
+}
+
+.left-box h2 {
+  font-size: 20px;
+}
+
+.get-started {
+  margin-top: 15px;
+  background: #3c8efc;
+  border: none;
+  padding: 10px 20px;
+  color: white;
+  border-radius: 6px;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-block;
+}
+
+.center-box {
+  text-align: center;
+}
+
+.center-box .icon {
+  font-size: 30px;
+  margin-bottom: 15px;
+}
+
+.center-box p {
+  text-align: justify;
+  margin-bottom: 10px;
+}
+
+.right-box {
+  background: #1d1d2c;
+  color: white;
+}
+
+.right-box h3 {
+  font-size: 16px;
+  margin-bottom: 10px;
+}
+
+.right-box ul {
+  list-style: none;
+  padding: 0;
+}
+
+.right-box ul li {
+  background: #2e2e40;
+  margin: 5px 0;
+  padding: 10px;
+  border-radius: 5px;
+}
+
+.right-box small {
+  display: block;
+  margin-top: 10px;
+  font-size: 12px;
+  color: #bfbfbf;
+}
+
+/* Responsive */
+@media (max-width: 968px) {
+  .main-content {
+    grid-template-columns: 1fr;
+  }
+  
+  .header {
+    flex-direction: column;
+    gap: 15px;
+    text-align: center;
+  }
+  
+  .header nav {
+    flex-direction: column;
+    gap: 10px;
+  }
 }

@@ -1,7 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
-import Header from '../../components/layout/Header/Header';
 import './Perfil.css';
 
 /**
@@ -11,7 +10,7 @@ import './Perfil.css';
  */
 const Perfil = () => {
   const navigate = useNavigate();
-  const { user, logout, updateProfile } = useAuth();
+  const { user, loading, logout, updateProfile } = useAuth(); // ⚠️ Agregamos loading
   const fileInputRef = useRef(null);
 
   // Estados locales
@@ -23,12 +22,12 @@ const Perfil = () => {
     points: '20'
   });
 
-  // Redirigir si no hay usuario logueado
+  // Redirigir si no hay usuario logueado (pero esperar a que termine de cargar)
   useEffect(() => {
-    if (!user) {
+    if (!loading && !user) {
       navigate('/login');
     }
-  }, [user, navigate]);
+  }, [user, loading, navigate]);
 
   // Manejar click en placeholder para agregar imagen
   const handlePlaceholderClick = (index) => {
@@ -86,14 +85,29 @@ const Perfil = () => {
     navigate('/login');
   };
 
+  // Mostrar loading mientras se carga el usuario
+  if (loading) {
+    return (
+      <div style={{
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        height: '100vh',
+        fontSize: '1.5rem',
+        color: '#666'
+      }}>
+        Cargando perfil...
+      </div>
+    );
+  }
+
+  // Si terminó de cargar y no hay usuario, el useEffect redirigirá
   if (!user) {
     return null;
   }
 
   return (
     <div className="perfil-page">
-      <Header showFullNav={true} title="Job Path" />
-
       <div className="profile-container">
         <h2 className="username">{user.name}</h2>
         <h2 className="username">{user.lastname}</h2>

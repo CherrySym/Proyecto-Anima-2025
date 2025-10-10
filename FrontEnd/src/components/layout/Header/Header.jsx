@@ -1,78 +1,256 @@
-import { Link, useLocation } from 'react-router-dom';
+import React, { useState } from 'react';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { useAuth } from '../../../context/AuthContext';
 import { useLanguage } from '../../../context/LanguageContext';
 import './Header.css';
 
-/**
- * Componente Header - Barra de navegación principal
- * Migrado desde el header HTML original
- * Usa React Router para la navegación en lugar de enlaces directos
- */
-const Header = ({ showFullNav = false, title = "Anima" }) => {
-  const location = useLocation();
+const Header = () => {
+  const { user, logout } = useAuth();
   const { language, changeLanguage } = useLanguage();
+  const navigate = useNavigate();
+  const location = useLocation();
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
 
-  // Función para determinar si un enlace está activo
-  const isActive = (path) => location.pathname === path;
+  const handleLogout = () => {
+    logout();
+    navigate('/');
+  };
+
+  const toggleMenu = () => {
+    setIsMenuOpen(!isMenuOpen);
+  };
+
+  const toggleLanguage = () => {
+    changeLanguage(language === 'es' ? 'en' : 'es');
+  };
+
+  const handleSearch = (e) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      navigate(`/buscar?q=${encodeURIComponent(searchQuery.trim())}`);
+      setSearchQuery('');
+    }
+  };
+
+  // Textos en diferentes idiomas
+  const texts = {
+    es: {
+      search: 'Buscar personas, empresas, cursos...',
+      home: 'Inicio',
+      network: 'Red',
+      jobs: 'Empleos',
+      courses: 'Cursos',
+      challenges: 'Desafíos',
+      messages: 'Mensajes',
+      notifications: 'Notificaciones',
+      profile: 'Perfil',
+      login: 'Iniciar Sesión',
+      register: 'Registrarse',
+      logout: 'Cerrar Sesión'
+    },
+    en: {
+      search: 'Search people, companies, courses...',
+      home: 'Home',
+      network: 'Network',
+      jobs: 'Jobs',
+      courses: 'Courses',
+      challenges: 'Challenges',
+      messages: 'Messages',
+      notifications: 'Notifications',
+      profile: 'Profile',
+      login: 'Log In',
+      register: 'Sign Up',
+      logout: 'Log Out'
+    }
+  };
+
+  const t = texts[language];
+
+  const isActivePath = (path) => {
+    return location.pathname === path;
+  };
 
   return (
     <header className="header">
-      <div className="logo">
-        <img src="/img/logo.png" alt="Anima logo" />
-        {title}
+      <div className="header-container">
+        {/* Logo */}
+        <Link to={user ? "/home" : "/"} className="logo">
+          <img src="/img/logo.png" alt="JobPath" />
+          <span>JobPath</span>
+        </Link>
+
+        {/* Barra de búsqueda */}
+        {user && (
+          <form className="search-form" onSubmit={handleSearch}>
+            <div className="search-container">
+              <span className="search-icon">🔍</span>
+              <input
+                type="text"
+                placeholder={t.search}
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="search-input"
+              />
+            </div>
+          </form>
+        )}
+
+        {/* Navegación principal para usuarios autenticados */}
+        {user ? (
+          <nav className="main-nav">
+            <Link 
+              to="/feed" 
+              className={`nav-item ${isActivePath('/feed') ? 'active' : ''}`}
+              title={t.home}
+            >
+              <span className="nav-icon">🏠</span>
+              <span className="nav-label">{t.home}</span>
+            </Link>
+            
+            <Link 
+              to="/red" 
+              className={`nav-item ${isActivePath('/red') ? 'active' : ''}`}
+              title={t.network}
+            >
+              <span className="nav-icon">👥</span>
+              <span className="nav-label">{t.network}</span>
+            </Link>
+            
+            {user.edad >= 18 && (
+              <Link 
+                to="/ofertas" 
+                className={`nav-item ${isActivePath('/ofertas') ? 'active' : ''}`}
+                title={t.jobs}
+              >
+                <span className="nav-icon">💼</span>
+                <span className="nav-label">{t.jobs}</span>
+              </Link>
+            )}
+            
+            <Link 
+              to="/cursos" 
+              className={`nav-item ${isActivePath('/cursos') ? 'active' : ''}`}
+              title={t.courses}
+            >
+              <span className="nav-icon">📚</span>
+              <span className="nav-label">{t.courses}</span>
+            </Link>
+            
+            <Link 
+              to="/desafios" 
+              className={`nav-item ${isActivePath('/desafios') ? 'active' : ''}`}
+              title={t.challenges}
+            >
+              <span className="nav-icon">🎯</span>
+              <span className="nav-label">{t.challenges}</span>
+            </Link>
+            
+            <Link 
+              to="/mensajes" 
+              className={`nav-item ${isActivePath('/mensajes') ? 'active' : ''}`}
+              title={t.messages}
+            >
+              <span className="nav-icon">💬</span>
+              <span className="nav-label">{t.messages}</span>
+            </Link>
+            
+            <Link 
+              to="/notificaciones" 
+              className={`nav-item ${isActivePath('/notificaciones') ? 'active' : ''}`}
+              title={t.notifications}
+            >
+              <span className="nav-icon">🔔</span>
+              <span className="nav-label">{t.notifications}</span>
+              <span className="notification-badge">3</span>
+            </Link>
+          </nav>
+        ) : (
+          // Navegación para usuarios no autenticados
+          <nav className={`guest-nav ${isMenuOpen ? 'nav-open' : ''}`}>
+            <Link to="/" className="nav-link">Inicio</Link>
+            <Link to="/about" className="nav-link">Nosotros</Link>
+            <Link to="/companias" className="nav-link">Empresas</Link>
+            <Link to="/jovenes" className="nav-link">Jóvenes</Link>
+          </nav>
+        )}
+
+        {/* Acciones del usuario */}
+        <div className="header-actions">
+          <button 
+            className="language-toggle"
+            onClick={toggleLanguage}
+            title={language === 'es' ? 'Switch to English' : 'Cambiar a Español'}
+          >
+            {language === 'es' ? '🇺🇸' : '🇪🇸'}
+          </button>
+
+          {user ? (
+            <div className="user-menu">
+              <Link to="/perfil" className="profile-link">
+                <img 
+                  src={user.avatar || "/img/usuario.png"} 
+                  alt={user.name || "Usuario"} 
+                  className="user-avatar"
+                />
+                <span className="user-name">{user.name || t.profile}</span>
+              </Link>
+              <div className="dropdown-menu">
+                <Link to="/perfil" className="dropdown-item">
+                  <span>👤</span>
+                  <span>Ver perfil</span>
+                </Link>
+                <Link to="/configuracion" className="dropdown-item">
+                  <span>⚙️</span>
+                  <span>Configuración</span>
+                </Link>
+                <Link to="/mis-cursos" className="dropdown-item">
+                  <span>📚</span>
+                  <span>Mis cursos</span>
+                </Link>
+                <Link to="/desafios" className="dropdown-item">
+                  <span>🎯</span>
+                  <span>Desafíos</span>
+                </Link>
+                <hr className="dropdown-divider" />
+                <Link to="/home" className="dropdown-item">
+                  <span>🏠</span>
+                  <span>Página principal</span>
+                </Link>
+                <Link to="/orientacion-vocacional" className="dropdown-item">
+                  <span>🧭</span>
+                  <span>Orientación vocacional</span>
+                </Link>
+                <Link to="/consejos" className="dropdown-item">
+                  <span>💡</span>
+                  <span>Consejos</span>
+                </Link>
+                <Link to="/suscripciones" className="dropdown-item">
+                  <span>⭐</span>
+                  <span>Suscripciones</span>
+                </Link>
+                <hr className="dropdown-divider" />
+                <button onClick={handleLogout} className="dropdown-item logout">
+                  <span>🚪</span>
+                  <span>{t.logout}</span>
+                </button>
+              </div>
+            </div>
+          ) : (
+            <div className="auth-buttons">
+              <Link to="/login" className="login-btn">{t.login}</Link>
+              <Link to="/register" className="register-btn">{t.register}</Link>
+            </div>
+          )}
+        </div>
+
+        {/* Menú móvil toggle */}
+        <button className="mobile-menu-toggle" onClick={toggleMenu}>
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
       </div>
-      
-      {showFullNav && (
-        <nav>
-          <Link to="/" className={isActive('/') ? 'active' : ''}>
-            Principal
-          </Link>
-          <Link to="/home" className={isActive('/home') ? 'active' : ''}>
-            Inicio
-          </Link>
-          <Link to="/jovenes" className={isActive('/jovenes') ? 'active' : ''}>
-            Jóvenes
-          </Link>
-          <Link to="/companias" className={isActive('/companias') ? 'active' : ''}>
-            Compañías
-          </Link>
-          <Link to="/about" className={isActive('/about') ? 'active' : ''}>
-            Hacerca De..
-          </Link>
-          <Link to="/perfil" className={isActive('/perfil') ? 'active' : ''}>
-            Perfil
-          </Link>
-        </nav>
-      )}
-
-      {!showFullNav && (
-        <nav>
-          <Link to="/home" className={isActive('/home') ? 'active' : ''}>
-            PRINCIPAL
-          </Link>
-          <Link to="/login" className={isActive('/login') ? 'active' : ''}>
-            INICIAR SESIÓN
-          </Link>
-          <Link to="/orientacion" className={isActive('/orientacion') ? 'active' : ''}>
-            ORIENTACIÓN VOCACIONAL
-          </Link>
-        </nav>
-      )}
-
-      {/* Botones de idioma - Migrado de la funcionalidad translate.js */}
-      <nav className="language-nav">
-        <button 
-          onClick={() => changeLanguage('es')}
-          className={language === 'es' ? 'active-lang' : ''}
-        >
-          Español
-        </button>
-        <button 
-          onClick={() => changeLanguage('en')}
-          className={language === 'en' ? 'active-lang' : ''}
-        >
-          English
-        </button>
-      </nav>
     </header>
   );
 };

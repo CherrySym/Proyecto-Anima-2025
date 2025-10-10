@@ -4,19 +4,24 @@ import { useAuth } from '../../context/AuthContext';
 import './Login.css';
 
 /**
- * Página Login - Migrado desde registro/login.html
- * Maneja el formulario de inicio de sesión con validación
- * Usa el hook useAuth para gestionar el estado de autenticación
+ * Página Login - Ahora con conexión real al backend
+ * Endpoints: POST /auth/login
  */
 const Login = () => {
   const navigate = useNavigate();
-  const { login } = useAuth();
+  const { login, loading, error } = useAuth();
 
-  // Estados para los campos del formulario
+  // Estados para el formulario
   const [formData, setFormData] = useState({
-    name: '',
-    lastname: '',
-    email: ''
+    tipoUsuario: 'USUARIO',
+    email: '',
+    password: ''
+  });
+  
+  const [errors, setErrors] = useState({
+    email: '',
+    password: '',
+    general: ''
   });
 
   // Maneja los cambios en los inputs
@@ -26,30 +31,51 @@ const Login = () => {
       ...prev,
       [name]: value
     }));
+    // Limpiar error del campo específico
+    setErrors(prev => ({ ...prev, [name]: '', general: '' }));
   };
 
   // Maneja el envío del formulario
-  // Migrado desde el addEventListener del HTML original
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setErrors({ email: '', password: '', general: '' });
 
-    const { name, lastname, email } = formData;
+    const { tipoUsuario, email, password } = formData;
 
-    // Validaciones
-    if (!name.trim() || !lastname.trim() || !email.trim()) {
-      alert('No se pudo ingresar: todos los campos son obligatorios');
+    // Validaciones por campo
+    let hasErrors = false;
+    const newErrors = { email: '', password: '', general: '' };
+
+    if (!email.trim()) {
+      newErrors.email = 'El email es obligatorio';
+      hasErrors = true;
+    } else if (!email.includes('@')) {
+      newErrors.email = "El email debe contener '@'";
+      hasErrors = true;
+    }
+
+    if (!password.trim()) {
+      newErrors.password = 'La contraseña es obligatoria';
+      hasErrors = true;
+    }
+
+    if (hasErrors) {
+      setErrors(newErrors);
       return;
     }
 
-    if (!email.includes('@')) {
-      alert("No se pudo ingresar: el correo debe contener '@'");
-      return;
-    }
+    // Llamar al login del contexto
+    const result = await login({ tipoUsuario, email, password });
 
-    // Guardar datos y redirigir
-    login({ name, lastname, email });
-    alert('Login exitoso');
-    navigate('/perfil');
+    if (result.success) {
+      navigate('/perfil');
+    } else {
+      setErrors({ 
+        email: '', 
+        password: '', 
+        general: result.error || 'Error al iniciar sesión' 
+      });
+    }
   };
 
   return (
@@ -66,41 +92,90 @@ const Login = () => {
         <h3>----------------------------------------------------</h3>
         <h1>Iniciar Sesión</h1>
 
+        {errors.general && (
+          <div style={{ 
+            color: '#721c24', 
+            marginBottom: '15px', 
+            padding: '12px', 
+            backgroundColor: '#f8d7da',
+            border: '1px solid #f5c6cb',
+            borderRadius: '5px'
+          }}>
+            ❌ {errors.general}
+          </div>
+        )}
+
         <form onSubmit={handleSubmit}>
-          <label htmlFor="name">Nombre</label>
-          <input
-            type="text"
-            id="name"
-            name="name"
-            value={formData.name}
+          <label htmlFor="tipoUsuario">Tipo de Usuario</label>
+          <select
+            id="tipoUsuario"
+            name="tipoUsuario"
+            value={formData.tipoUsuario}
             onChange={handleChange}
             required
-          />
+          >
+            <option value="USUARIO">Usuario / Joven</option>
+            <option value="EMPRESA">Empresa</option>
+          </select>
 
-          <label htmlFor="lastname">Apellido</label>
-          <input
-            type="text"
-            id="lastname"
-            name="lastname"
-            value={formData.lastname}
-            onChange={handleChange}
-            required
-          />
-
-          <label htmlFor="email">Correo</label>
+          <label htmlFor="email">Correo Electrónico</label>
           <input
             type="email"
             id="email"
             name="email"
             value={formData.email}
             onChange={handleChange}
+            placeholder="tu@email.com"
+            style={errors.email ? { borderColor: '#dc3545' } : {}}
             required
           />
+          {errors.email && (
+            <span style={{ 
+              color: '#dc3545', 
+              fontSize: '0.875em', 
+              marginTop: '-10px',
+              marginBottom: '10px',
+              display: 'block'
+            }}>
+              ⚠️ {errors.email}
+            </span>
+          )}
 
-          <button type="submit" className="submit-button">
-            Login
+          <label htmlFor="password">Contraseña</label>
+          <input
+            type="password"
+            id="password"
+            name="password"
+            value={formData.password}
+            onChange={handleChange}
+            placeholder="••••••••"
+            style={errors.password ? { borderColor: '#dc3545' } : {}}
+            required
+          />
+          {errors.password && (
+            <span style={{ 
+              color: '#dc3545', 
+              fontSize: '0.875em', 
+              marginTop: '-10px',
+              marginBottom: '10px',
+              display: 'block'
+            }}>
+              ⚠️ {errors.password}
+            </span>
+          )}
+
+          <button 
+            type="submit" 
+            className="submit-button"
+            disabled={loading}
+          >
+            {loading ? 'Iniciando sesión...' : 'Iniciar Sesión'}
           </button>
         </form>
+
+        <p style={{ marginTop: '20px', textAlign: 'center' }}>
+          ¿No tienes cuenta? <a href="/register" style={{ color: '#4f4fcf' }}>Regístrate aquí</a>
+        </p>
       </div>
     </div>
   );

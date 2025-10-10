@@ -20,15 +20,17 @@ const prisma = new PrismaClient();
 
 // Middlewares
 app.use(cors({
-  origin: 'http://localhost:5173', // URL del frontend React
+  origin: ['http://localhost:5173', 'http://localhost:5174'], // URL del frontend React (Vite puede usar ambos puertos)
   credentials: true
 }));
 app.use(express.json());
 
-// Ruta raíz
+// Ruta raíz de prueba
 app.get("/", (req, res) => {
-  res.send("Backend de Nexo funcionando!");
+  res.send("Backend de JobPath funcionando!");
 });
+
+// Rutas de autenticación
 
 // Test simple de conexión a DB
 app.get("/test-db", async (req, res) => {

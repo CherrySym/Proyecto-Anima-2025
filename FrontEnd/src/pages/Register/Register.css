@@ -1,0 +1,181 @@
+/* Estilos para la página de Registro */
+.register-page {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: linear-gradient(135deg, #2d2d3f 0%, #4f4fcf 100%);
+  padding: 20px;
+}
+
+.register-container {
+  background: white;
+  padding: 40px;
+  border-radius: 15px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+  max-width: 500px;
+  width: 100%;
+}
+
+.register-container h1 {
+  color: #2d2d3f;
+  text-align: center;
+  margin-bottom: 10px;
+  font-size: 2em;
+}
+
+.register-container h3 {
+  color: #666;
+  text-align: center;
+  margin-bottom: 10px;
+  font-size: 0.8em;
+}
+
+.subtitle {
+  text-align: center;
+  color: #666;
+  margin-bottom: 20px;
+  font-size: 1.1em;
+}
+
+.btn-volver {
+  background: transparent;
+  border: none;
+  color: #4f4fcf;
+  cursor: pointer;
+  font-size: 1em;
+  margin-bottom: 15px;
+  padding: 5px 10px;
+  transition: all 0.3s;
+}
+
+.btn-volver:hover {
+  color: #3a3aa0;
+  transform: translateX(-5px);
+}
+
+.success-message,
+.error-message {
+  padding: 12px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  text-align: center;
+  font-weight: 500;
+}
+
+.success-message {
+  background-color: #d4edda;
+  color: #155724;
+  border: 1px solid #c3e6cb;
+}
+
+.error-message {
+  background-color: #f8d7da;
+  color: #721c24;
+  border: 1px solid #f5c6cb;
+}
+
+.register-container form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.register-container label {
+  color: #333;
+  font-weight: 600;
+  margin-bottom: 5px;
+}
+
+.register-container input,
+.register-container select,
+.register-container textarea {
+  padding: 12px;
+  border: 2px solid #ddd;
+  border-radius: 8px;
+  font-size: 1em;
+  transition: border-color 0.3s;
+  font-family: inherit;
+}
+
+.register-container input:focus,
+.register-container select:focus,
+.register-container textarea:focus {
+  outline: none;
+  border-color: #4f4fcf;
+}
+
+.register-container textarea {
+  resize: vertical;
+  min-height: 100px;
+}
+
+.help-text {
+  color: #666;
+  font-size: 0.85em;
+  margin-top: -10px;
+  display: block;
+}
+
+/* Mensajes de error por campo */
+.field-error {
+  color: #dc3545;
+  font-size: 0.875em;
+  margin-top: -10px;
+  display: block;
+  margin-bottom: 5px;
+  font-weight: 500;
+}
+
+.submit-button {
+  background: linear-gradient(135deg, #4f4fcf 0%, #6a6aef 100%);
+  color: white;
+  border: none;
+  padding: 15px;
+  border-radius: 8px;
+  font-size: 1.1em;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s;
+  margin-top: 10px;
+}
+
+.submit-button:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 20px rgba(79, 79, 207, 0.4);
+}
+
+.submit-button:disabled {
+  background: #999;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.login-link {
+  text-align: center;
+  margin-top: 20px;
+  color: #666;
+}
+
+.login-link a {
+  color: #4f4fcf;
+  text-decoration: none;
+  font-weight: 600;
+  transition: color 0.3s;
+}
+
+.login-link a:hover {
+  color: #3a3aa0;
+  text-decoration: underline;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  .register-container {
+    padding: 25px;
+  }
+
+  .register-container h1 {
+    font-size: 1.5em;
+  }
+}
