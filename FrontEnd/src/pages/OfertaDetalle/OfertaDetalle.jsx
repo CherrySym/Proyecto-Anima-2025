@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
+import * as ofertasService from '../../services/ofertasService';
 import './OfertaDetalle.css';
 
 /**
@@ -13,81 +14,115 @@ const OfertaDetalle = () => {
   const { user } = useAuth();
   const [oferta, setOferta] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [postulando, setPostulando] = useState(false);
   const [yaPostulado, setYaPostulado] = useState(false);
 
   useEffect(() => {
-    // Simular carga de oferta específica desde API
-    setTimeout(() => {
-      // Mock data - en una app real sería una llamada a la API
-      const mockOferta = {
-        id: parseInt(id),
-        titulo: 'Desarrollador Frontend Junior',
-        empresa: 'TechCorp',
-        ubicacion: 'Buenos Aires, Argentina',
-        descripcion: 'Estamos buscando un desarrollador frontend junior apasionado por la tecnología para unirse a nuestro equipo dinámico. Trabajarás en proyectos emocionantes usando las últimas tecnologías.',
-        descripcionCompleta: `
-          <h3>Responsabilidades:</h3>
-          <ul>
-            <li>Desarrollar interfaces de usuario atractivas y funcionales</li>
-            <li>Colaborar con diseñadores UX/UI para implementar mockups</li>
-            <li>Escribir código limpio, mantenible y bien documentado</li>
-            <li>Participar en revisiones de código y reuniones de equipo</li>
-            <li>Aprender nuevas tecnologías y metodologías de desarrollo</li>
-          </ul>
-          
-          <h3>Beneficios:</h3>
-          <ul>
-            <li>Horarios flexibles y trabajo remoto opcional</li>
-            <li>Capacitaciones y cursos pagos por la empresa</li>
-            <li>Ambiente de trabajo joven y dinámico</li>
-            <li>Posibilidades de crecimiento profesional</li>
-            <li>Snacks y almuerzo en la oficina</li>
-          </ul>
-        `,
-        requisitos: [
-          'HTML5, CSS3 y JavaScript moderno',
-          'Conocimientos en React o Vue.js',
-          'Git y metodologías ágiles',
-          'Inglés básico/intermedio',
-          'Ganas de aprender y crecer'
-        ],
-        salario: '$80,000 - $120,000',
-        tipo: 'Tiempo completo',
-        modalidad: 'Híbrido',
-        fechaPublicacion: '2025-10-05',
-        fechaVencimiento: '2025-11-05',
-        area: 'tecnologia',
-        empresa_info: {
-          nombre: 'TechCorp',
-          descripcion: 'Empresa líder en desarrollo de software con más de 10 años en el mercado.',
-          empleados: '50-100',
-          sitio_web: 'https://techcorp.example.com'
-        }
-      };
-      
-      setOferta(mockOferta);
-      setLoading(false);
-      
-      // Simular si ya se postuló (esto vendría de la API)
-      setYaPostulado(false);
-    }, 800);
+    loadOferta();
   }, [id]);
 
+  const loadOferta = async () => {
+    try {
+      console.log('🔍 Cargando oferta ID:', id);
+      setLoading(true);
+      setError(null);
+      const data = await ofertasService.getOfertaById(id);
+      console.log('✅ Oferta cargada:', data);
+      setOferta(data);
+      
+      // Verificar si ya se postuló (esta info vendría en el objeto de oferta del backend)
+      setYaPostulado(data.yaPostulado || false);
+    } catch (err) {
+      console.error('❌ Error cargando oferta:', err);
+      setError('No se pudo cargar la oferta. Mostrando contenido de ejemplo.');
+      loadMockOferta();
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const loadMockOferta = () => {
+    // Mock data - fallback si falla la API
+    const mockOferta = {
+      id: parseInt(id),
+      titulo: 'Desarrollador Frontend Junior',
+      empresa: 'TechCorp',
+      ubicacion: 'Buenos Aires, Argentina',
+      descripcion: 'Estamos buscando un desarrollador frontend junior apasionado por la tecnología para unirse a nuestro equipo dinámico. Trabajarás en proyectos emocionantes usando las últimas tecnologías.',
+      descripcionCompleta: `
+        <h3>Responsabilidades:</h3>
+        <ul>
+          <li>Desarrollar interfaces de usuario atractivas y funcionales</li>
+          <li>Colaborar con diseñadores UX/UI para implementar mockups</li>
+          <li>Escribir código limpio, mantenible y bien documentado</li>
+          <li>Participar en revisiones de código y reuniones de equipo</li>
+          <li>Aprender nuevas tecnologías y metodologías de desarrollo</li>
+        </ul>
+        
+        <h3>Beneficios:</h3>
+        <ul>
+          <li>Horarios flexibles y trabajo remoto opcional</li>
+          <li>Capacitaciones y cursos pagos por la empresa</li>
+          <li>Ambiente de trabajo joven y dinámico</li>
+          <li>Posibilidades de crecimiento profesional</li>
+          <li>Snacks y almuerzo en la oficina</li>
+        </ul>
+      `,
+      requisitos: [
+        'HTML5, CSS3 y JavaScript moderno',
+        'Conocimientos en React o Vue.js',
+        'Git y metodologías ágiles',
+        'Inglés básico/intermedio',
+        'Ganas de aprender y crecer'
+      ],
+      salario: '$80,000 - $120,000',
+      tipo: 'Tiempo completo',
+      modalidad: 'Híbrido',
+      fechaPublicacion: '2025-10-05',
+      fechaVencimiento: '2025-11-05',
+      area: 'tecnologia',
+      empresa_info: {
+        nombre: 'TechCorp',
+        descripcion: 'Empresa líder en desarrollo de software con más de 10 años en el mercado.',
+        empleados: '50-100',
+        sitio_web: 'https://techcorp.example.com'
+      }
+    };
+    
+    setOferta(mockOferta);
+    setYaPostulado(false);
+  };
+
   const handlePostularse = async () => {
-    if (user?.edad < 18) {
+    if (!user) {
+      alert('Debes iniciar sesión para postularte');
+      navigate('/login');
+      return;
+    }
+
+    if (user.edad < 18) {
       alert('Debes ser mayor de 18 años para postularte a ofertas laborales.');
+      return;
+    }
+
+    if (user.tipoUsuario === 'EMPRESA') {
+      alert('Las empresas no pueden postularse a ofertas.');
       return;
     }
 
     setPostulando(true);
     
-    // Simular envío de postulación
-    setTimeout(() => {
-      setPostulando(false);
+    try {
+      await ofertasService.postularseOferta(oferta.id);
       setYaPostulado(true);
       alert('¡Postulación enviada exitosamente! La empresa revisará tu perfil y se pondrá en contacto contigo.');
-    }, 2000);
+    } catch (err) {
+      console.error('Error al postularse:', err);
+      alert(err.error || 'Error al postularse. Puede que ya te hayas postulado antes.');
+    } finally {
+      setPostulando(false);
+    }
   };
 
   const handleGuardarOferta = () => {
@@ -141,6 +176,30 @@ const OfertaDetalle = () => {
     <div className="oferta-detalle-page">
       <main className="oferta-detalle-content">
         <div className="oferta-detalle-container">
+          {/* Banner de error si hubo problema */}
+          {error && (
+            <div style={{
+              backgroundColor: '#fff3cd',
+              border: '2px solid #ffc107',
+              borderRadius: '8px',
+              padding: '16px',
+              marginBottom: '24px',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '12px'
+            }}>
+              <span style={{ fontSize: '24px' }}>⚠️</span>
+              <div>
+                <strong style={{ color: '#856404', display: 'block', marginBottom: '4px' }}>
+                  Aviso
+                </strong>
+                <p style={{ margin: 0, color: '#856404', fontSize: '14px' }}>
+                  {error} Mostrando datos de ejemplo.
+                </p>
+              </div>
+            </div>
+          )}
+
           {/* Header de la oferta */}
           <div className="oferta-header">
             <button onClick={() => navigate('/ofertas')} className="btn-back">
@@ -184,9 +243,13 @@ const OfertaDetalle = () => {
               <section className="requisitos-section">
                 <h3>✅ Requisitos</h3>
                 <ul>
-                  {oferta.requisitos.map((requisito, index) => (
-                    <li key={index}>{requisito}</li>
-                  ))}
+                  {Array.isArray(oferta.requisitos) ? (
+                    oferta.requisitos.map((requisito, index) => (
+                      <li key={index}>{requisito}</li>
+                    ))
+                  ) : (
+                    <li>{oferta.requisitos}</li>
+                  )}
                 </ul>
               </section>
 

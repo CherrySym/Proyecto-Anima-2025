@@ -204,42 +204,24 @@
   margin: 20px 0 15px 0;
 }
 
-.btn-ver-detalle,
-.btn-postularse {
-  flex: 1;
-  padding: 10px 16px;
+.btn-ver-detalle {
+  width: 100%;
+  padding: 12px 20px;
   border: none;
-  border-radius: 6px;
+  border-radius: 8px;
   font-weight: 600;
+  font-size: 1rem;
   cursor: pointer;
   transition: all 0.3s;
   text-align: center;
-}
-
-.btn-ver-detalle {
-  background-color: #f8f9fa;
-  color: #333;
-  border: 2px solid #ddd;
+  background: linear-gradient(135deg, #4f4fcf 0%, #3d3db8 100%);
+  color: white;
+  box-shadow: 0 2px 8px rgba(79, 79, 207, 0.3);
 }
 
 .btn-ver-detalle:hover {
-  background-color: #e9ecef;
-  border-color: #adb5bd;
-}
-
-.btn-postularse {
-  background-color: #4f4fcf;
-  color: white;
-}
-
-.btn-postularse:hover {
-  background-color: #3d3db8;
-}
-
-.btn-postularse.disabled {
-  background-color: #6c757d;
-  cursor: not-allowed;
-  opacity: 0.6;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(79, 79, 207, 0.4);
 }
 
 .oferta-fecha {
