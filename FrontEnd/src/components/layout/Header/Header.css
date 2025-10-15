@@ -1,8 +1,8 @@
 /* Header.css - Red Social JobPath */
 
 .header {
-  background-color: var(--color-bg-primary);
-  border-bottom: 1px solid var(--color-border);
+  background-color: var(--bg-primary);
+  border-bottom: 1px solid var(--border-light);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
   position: sticky;
   top: 0;

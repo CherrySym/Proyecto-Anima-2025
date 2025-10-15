@@ -8,6 +8,9 @@
   max-width: 1200px;
   margin: 0 auto;
   padding: 20px;
+  flex: 1;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .ofertas-header {
@@ -60,16 +63,20 @@
 
 /* Filtros */
 .filtros-container {
-  display: flex;
-  gap: 20px;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 15px;
   margin-bottom: 30px;
-  flex-wrap: wrap;
-  justify-content: center;
+  max-width: 1000px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
-.filtro-busqueda {
-  flex: 2;
-  max-width: 400px;
+.filtro-busqueda,
+.filtro-area,
+.filtro-tipo,
+.filtro-modalidad {
+  width: 100%;
 }
 
 .busqueda-input {
@@ -79,6 +86,8 @@
   border-radius: 8px;
   font-size: 1rem;
   transition: border-color 0.3s;
+  height: 48px;
+  box-sizing: border-box;
 }
 
 .busqueda-input:focus {
@@ -86,12 +95,9 @@
   border-color: #4f4fcf;
 }
 
-.filtro-area {
-  flex: 1;
-  max-width: 200px;
-}
-
-.area-select {
+.area-select,
+.tipo-select,
+.modalidad-select {
   width: 100%;
   padding: 12px 16px;
   border: 2px solid #ddd;
@@ -99,6 +105,33 @@
   font-size: 1rem;
   background-color: white;
   cursor: pointer;
+  transition: border-color 0.3s;
+  height: 48px;
+  box-sizing: border-box;
+}
+
+.area-select:focus,
+.tipo-select:focus,
+.modalidad-select:focus {
+  outline: none;
+  border-color: #4f4fcf;
+}
+
+.error-banner {
+  background-color: #fff3cd;
+  color: #856404;
+  padding: 12px 20px;
+  border-radius: 8px;
+  border: 1px solid #ffeeba;
+  margin-top: 15px;
+  margin-bottom: 15px;
+  text-align: center;
+  font-size: 14px;
+}
+
+/* Grid de ofertas */
+.ofertas-grid {/* Grid de ofertas */
+  color: #666;
 }
 
 /* Grid de ofertas */
@@ -226,7 +259,8 @@
   }
   
   .filtros-container {
-    flex-direction: column;
+    grid-template-columns: 1fr;
+    gap: 12px;
   }
   
   .ofertas-grid {
@@ -236,4 +270,70 @@
   .oferta-actions {
     flex-direction: column;
   }
+}
+
+/* Estilos adicionales para nuevos campos */
+.oferta-info {
+  margin: 15px 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.oferta-info p {
+  margin: 0;
+  padding: 6px 12px;
+  background-color: #f8f9fa;
+  border-radius: 6px;
+  color: #666;
+  font-size: 0.9rem;
+}
+
+.oferta-requisitos {
+  margin: 15px 0;
+  padding: 12px;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  border-left: 3px solid #4f4fcf;
+}
+
+.oferta-requisitos strong {
+  display: block;
+  margin-bottom: 6px;
+  color: #333;
+  font-size: 0.95rem;
+}
+
+.oferta-requisitos p {
+  margin: 0;
+  color: #666;
+  line-height: 1.5;
+}
+
+.oferta-fechas {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.85rem;
+  color: #999;
+  border-top: 1px solid #eee;
+  padding-top: 12px;
+  margin-top: 12px;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.oferta-fechas span.vencida {
+  color: #dc3545;
+  font-weight: 600;
+}
+
+.oferta-card.vencida {
+  opacity: 0.7;
+  border: 2px solid #dc3545;
+  background-color: #fff5f5;
+}
+
+.oferta-card.vencida .oferta-header h3 {
+  color: #999;
+  text-decoration: line-through;
 }
