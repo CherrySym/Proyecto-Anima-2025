@@ -31,10 +31,10 @@ import CompanyProfile from '../pages/CompanyProfile/CompanyProfile';
 import Home from '../pages/Home/Home';
 import Ofertas from '../pages/Ofertas/Ofertas';
 import OfertaDetalle from '../pages/OfertaDetalle/OfertaDetalle';
+import MisPostulaciones from '../pages/MisPostulaciones/MisPostulaciones';
 import Desafios from '../pages/Desafios/Desafios';
 import Cursos from '../pages/Cursos/Cursos';
 import MisCursos from '../pages/MisCursos/MisCursos';
-import Perfil from '../pages/Perfil/Perfil';
 
 const AppRouter = () => {
   const { user, loading, error } = useAuth();
@@ -216,9 +216,7 @@ const AppRouter = () => {
           <PrivateRoute requireAdult>
             <div className="app">
               <Header />
-              <main className="main-content">
-                <Ofertas />
-              </main>
+              <Ofertas />
             </div>
           </PrivateRoute>
         } 
@@ -232,6 +230,20 @@ const AppRouter = () => {
               <Header />
               <main className="main-content">
                 <OfertaDetalle />
+              </main>
+            </div>
+          </PrivateRoute>
+        } 
+      />
+      
+      <Route 
+        path="/mis-postulaciones" 
+        element={
+          <PrivateRoute requireAdult>
+            <div className="app">
+              <Header />
+              <main className="main-content">
+                <MisPostulaciones />
               </main>
             </div>
           </PrivateRoute>
