@@ -34,7 +34,6 @@ const Ofertas = () => {
       const data = await ofertasService.getOfertas(filtros);
       setOfertas(data);
     } catch (err) {
-      console.error('Error cargando ofertas:', err);
       setError('No se pudieron cargar las ofertas. Mostrando contenido de ejemplo.');
       loadMockOfertas();
     } finally {

@@ -36,7 +36,6 @@ const Post = ({ post, onLike }) => {
       
       setComments(commentsTransformed);
     } catch (err) {
-      console.error('Error cargando comentarios:', err);
       // Si falla, mostrar comentarios mock solo para demo
       if (post.id === 1) {
         setComments([
@@ -81,7 +80,6 @@ const Post = ({ post, onLike }) => {
       setComments([...comments, newCommentObj]);
       setNewComment('');
     } catch (err) {
-      console.error('Error al agregar comentario:', err);
       alert('No se pudo agregar el comentario. Inténtalo de nuevo.');
     }
   };

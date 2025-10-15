@@ -44,7 +44,6 @@ const Feed = () => {
       
       setPosts(postsTransformados);
     } catch (err) {
-      console.error('Error cargando posts:', err);
       setError('No se pudieron cargar las publicaciones. Mostrando contenido de ejemplo.');
       // Fallback a mock data si falla la API
       loadMockPosts();
@@ -136,7 +135,6 @@ const Feed = () => {
       };
       setPosts([newPost, ...posts]);
     } catch (err) {
-      console.error('Error creando post:', err);
       alert('No se pudo crear la publicación. Inténtalo de nuevo.');
     }
   };
@@ -160,7 +158,6 @@ const Feed = () => {
           : p
       ));
     } catch (err) {
-      console.error('Error al dar like:', err);
       alert('No se pudo procesar el like. Inténtalo de nuevo.');
     }
   };

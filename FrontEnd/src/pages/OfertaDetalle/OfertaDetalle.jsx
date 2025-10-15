@@ -24,17 +24,14 @@ const OfertaDetalle = () => {
 
   const loadOferta = async () => {
     try {
-      console.log('🔍 Cargando oferta ID:', id);
       setLoading(true);
       setError(null);
       const data = await ofertasService.getOfertaById(id);
-      console.log('✅ Oferta cargada:', data);
       setOferta(data);
       
       // Verificar si ya se postuló (esta info vendría en el objeto de oferta del backend)
       setYaPostulado(data.yaPostulado || false);
     } catch (err) {
-      console.error('❌ Error cargando oferta:', err);
       setError('No se pudo cargar la oferta. Mostrando contenido de ejemplo.');
       loadMockOferta();
     } finally {
@@ -149,7 +146,6 @@ const OfertaDetalle = () => {
       setYaPostulado(true);
       alert('¡Postulación enviada exitosamente! La empresa revisará tu perfil y se pondrá en contacto contigo.');
     } catch (err) {
-      console.error('Error al postularse:', err);
       alert(err.error || 'Error al postularse. Puede que ya te hayas postulado antes.');
     } finally {
       setPostulando(false);

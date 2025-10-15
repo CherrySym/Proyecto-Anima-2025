@@ -6,7 +6,8 @@
   width: 100%;
   background: linear-gradient(to right, #2d2d3f, #4f4fcf);
   color: white;
-  overflow: auto;
+  overflow-x: hidden;
+  overflow-y: auto;
   position: fixed;
   top: 0;
   left: 0;

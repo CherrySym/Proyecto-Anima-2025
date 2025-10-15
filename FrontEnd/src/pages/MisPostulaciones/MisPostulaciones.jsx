@@ -28,7 +28,6 @@ const MisPostulaciones = () => {
       const data = await ofertasService.getMisPostulaciones();
       setPostulaciones(data);
     } catch (err) {
-      console.error('Error cargando postulaciones:', err);
       setError('No se pudieron cargar tus postulaciones. Intenta de nuevo más tarde.');
     } finally {
       setLoading(false);
