@@ -145,6 +145,13 @@
   margin-top: 20px;
 }
 
+/* Tablets - cards más pequeñas */
+@media (max-width: 1024px) and (min-width: 769px) {
+  .ofertas-grid {
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  }
+}
+
 .oferta-card {
   background: white;
   border-radius: 12px;
