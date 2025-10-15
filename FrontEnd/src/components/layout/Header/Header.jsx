@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../../context/AuthContext';
 import { useLanguage } from '../../../context/LanguageContext';
@@ -10,7 +10,33 @@ const Header = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+  const dropdownRef = useRef(null);
+
+  // Cerrar dropdown cuando se hace click fuera
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setIsDropdownOpen(false);
+      }
+    };
+
+    if (isDropdownOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+      document.addEventListener('touchstart', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener('touchstart', handleClickOutside);
+    };
+  }, [isDropdownOpen]);
+
+  // Cerrar dropdown cuando cambia la ruta (navegación)
+  useEffect(() => {
+    setIsDropdownOpen(false);
+  }, [location.pathname]);
 
   const handleLogout = () => {
     logout();
@@ -19,6 +45,14 @@ const Header = () => {
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
+  };
+
+  const toggleDropdown = () => {
+    setIsDropdownOpen(!isDropdownOpen);
+  };
+
+  const closeDropdown = () => {
+    setIsDropdownOpen(false);
   };
 
   const toggleLanguage = () => {
@@ -47,7 +81,8 @@ const Header = () => {
       profile: 'Perfil',
       login: 'Iniciar Sesión',
       register: 'Registrarse',
-      logout: 'Cerrar Sesión'
+      logout: 'Cerrar Sesión',
+      backToPublic: 'Volver al sitio público'
     },
     en: {
       search: 'Search people, companies, courses...',
@@ -61,7 +96,8 @@ const Header = () => {
       profile: 'Profile',
       login: 'Log In',
       register: 'Sign Up',
-      logout: 'Log Out'
+      logout: 'Log Out',
+      backToPublic: 'Back to public site'
     }
   };
 
@@ -75,7 +111,7 @@ const Header = () => {
     <header className="header">
       <div className="header-container">
         {/* Logo */}
-        <Link to={user ? "/home" : "/"} className="logo">
+        <Link to={user ? "/feed" : "/"} className="logo">
           <img src="/img/logo.png" alt="JobPath" />
           <span>JobPath</span>
         </Link>
@@ -186,46 +222,42 @@ const Header = () => {
           </button>
 
           {user ? (
-            <div className="user-menu">
-              <Link to="/perfil" className="profile-link">
+            <div className="user-menu" ref={dropdownRef}>
+              <button onClick={toggleDropdown} className="profile-link">
                 <img 
                   src={user.avatar || "/img/usuario.png"} 
                   alt={user.name || "Usuario"} 
                   className="user-avatar"
                 />
                 <span className="user-name">{user.name || t.profile}</span>
-              </Link>
-              <div className="dropdown-menu">
-                <Link to="/perfil" className="dropdown-item">
+              </button>
+              <div className={`dropdown-menu ${isDropdownOpen ? 'dropdown-open' : ''}`}>
+                <Link to="/perfil" className="dropdown-item" onClick={closeDropdown}>
                   <span>👤</span>
                   <span>Ver perfil</span>
                 </Link>
-                <Link to="/configuracion" className="dropdown-item">
+                <Link to="/configuracion" className="dropdown-item" onClick={closeDropdown}>
                   <span>⚙️</span>
                   <span>Configuración</span>
                 </Link>
-                <Link to="/mis-cursos" className="dropdown-item">
+                <Link to="/mis-cursos" className="dropdown-item" onClick={closeDropdown}>
                   <span>📚</span>
                   <span>Mis cursos</span>
                 </Link>
-                <Link to="/desafios" className="dropdown-item">
+                <Link to="/desafios" className="dropdown-item" onClick={closeDropdown}>
                   <span>🎯</span>
                   <span>Desafíos</span>
                 </Link>
                 <hr className="dropdown-divider" />
-                <Link to="/home" className="dropdown-item">
-                  <span>🏠</span>
-                  <span>Página principal</span>
-                </Link>
-                <Link to="/orientacion-vocacional" className="dropdown-item">
+                <Link to="/orientacion-vocacional" className="dropdown-item" onClick={closeDropdown}>
                   <span>🧭</span>
                   <span>Orientación vocacional</span>
                 </Link>
-                <Link to="/consejos" className="dropdown-item">
+                <Link to="/consejos" className="dropdown-item" onClick={closeDropdown}>
                   <span>💡</span>
                   <span>Consejos</span>
                 </Link>
-                <Link to="/suscripciones" className="dropdown-item">
+                <Link to="/suscripciones" className="dropdown-item" onClick={closeDropdown}>
                   <span>⭐</span>
                   <span>Suscripciones</span>
                 </Link>

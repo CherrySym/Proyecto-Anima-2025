@@ -206,6 +206,10 @@
   border-radius: 20px;
   transition: all 0.3s ease;
   border: 1px solid transparent;
+  background: none;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: inherit;
 }
 
 .profile-link:hover {
@@ -245,12 +249,15 @@
   visibility: hidden;
   transform: translateY(-10px);
   transition: all 0.3s ease;
+  pointer-events: none;
 }
 
-.user-menu:hover .dropdown-menu {
+/* Dropdown abierto con JavaScript - ÚNICA FORMA DE ABRIR */
+.dropdown-menu.dropdown-open {
   opacity: 1;
   visibility: visible;
   transform: translateY(0);
+  pointer-events: auto;
 }
 
 .dropdown-item {
