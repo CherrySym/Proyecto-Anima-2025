@@ -19,7 +19,7 @@ const Register = () => {
     email: '',
     password: '',
     confirmPassword: '',
-    edad: '',
+    fechaNacimiento: '', // Cambiado de 'edad' a 'fechaNacimiento'
     descripcion: ''
   });
 
@@ -28,7 +28,7 @@ const Register = () => {
     email: '',
     password: '',
     confirmPassword: '',
-    edad: '',
+    fechaNacimiento: '', // Cambiado de 'edad' a 'fechaNacimiento'
     descripcion: '',
     general: ''
   });
@@ -47,13 +47,13 @@ const Register = () => {
 
   // Validaciones
   const validateForm = () => {
-    const { tipoUsuario, nombre, email, password, confirmPassword, edad, descripcion } = formData;
+    const { tipoUsuario, nombre, email, password, confirmPassword, fechaNacimiento, descripcion } = formData;
     const newErrors = {
       nombre: '',
       email: '',
       password: '',
       confirmPassword: '',
-      edad: '',
+      fechaNacimiento: '',
       descripcion: '',
       general: ''
     };
@@ -83,9 +83,22 @@ const Register = () => {
     }
 
     if (tipoUsuario === 'USUARIO') {
-      if (!edad || edad < 13 || edad > 100) {
-        newErrors.edad = 'La edad debe estar entre 13 y 100 años';
+      if (!fechaNacimiento) {
+        newErrors.fechaNacimiento = 'La fecha de nacimiento es obligatoria';
         hasErrors = true;
+      } else {
+        // Validar que la fecha sea válida y el usuario tenga entre 13 y 100 años
+        const fecha = new Date(fechaNacimiento);
+        const hoy = new Date();
+        const edad = Math.floor((hoy - fecha) / (365.25 * 24 * 60 * 60 * 1000));
+        
+        if (edad < 13) {
+          newErrors.fechaNacimiento = 'Debes tener al menos 13 años';
+          hasErrors = true;
+        } else if (edad > 100) {
+          newErrors.fechaNacimiento = 'La fecha de nacimiento no es válida';
+          hasErrors = true;
+        }
       }
     }
 
@@ -108,7 +121,7 @@ const Register = () => {
       email: '',
       password: '',
       confirmPassword: '',
-      edad: '',
+      fechaNacimiento: '',
       descripcion: '',
       general: ''
     });
@@ -117,7 +130,7 @@ const Register = () => {
       return;
     }
 
-    const { tipoUsuario, nombre, email, password, edad, descripcion } = formData;
+    const { tipoUsuario, nombre, email, password, fechaNacimiento, descripcion } = formData;
 
     // Preparar datos según tipo de usuario
     const userData = {
@@ -128,7 +141,7 @@ const Register = () => {
     };
 
     if (tipoUsuario === 'USUARIO') {
-      userData.edad = parseInt(edad);
+      userData.fechaNacimiento = fechaNacimiento; // Enviar fecha completa
     } else {
       userData.descripcion = descripcion;
     }
@@ -139,7 +152,8 @@ const Register = () => {
     if (result.success) {
       setSuccess(true);
       setTimeout(() => {
-        navigate('/perfil');
+        // Redirigir al feed
+        navigate('/feed');
       }, 1500);
     } else {
       setErrors(prev => ({ 
@@ -228,30 +242,33 @@ const Register = () => {
           />
           <ErrorMessage error={errors.email} />
 
-          {/* Edad - Solo para usuarios */}
+          {/* Fecha de Nacimiento - Solo para usuarios */}
           {formData.tipoUsuario === 'USUARIO' && (
             <>
-              <label htmlFor="edad">Edad</label>
+              <label htmlFor="fechaNacimiento">Fecha de Nacimiento</label>
               <input
-                type="number"
-                id="edad"
-                name="edad"
-                value={formData.edad}
+                type="date"
+                id="fechaNacimiento"
+                name="fechaNacimiento"
+                value={formData.fechaNacimiento}
                 onChange={handleChange}
-                placeholder="18"
-                min="13"
-                max="100"
-                style={errors.edad ? { borderColor: '#dc3545' } : {}}
+                max={new Date().toISOString().split('T')[0]} // No permitir fechas futuras
+                style={errors.fechaNacimiento ? { borderColor: '#dc3545' } : {}}
                 required
               />
-              <ErrorMessage error={errors.edad} />
-              {!errors.edad && formData.edad && (
-                <small className="help-text">
-                  {parseInt(formData.edad) < 18 
-                    ? '⚠️ Cuenta de adolescente (algunas restricciones aplican)'
-                    : '✅ Cuenta de adulto (acceso completo)'}
-                </small>
-              )}
+              <ErrorMessage error={errors.fechaNacimiento} />
+              {!errors.fechaNacimiento && formData.fechaNacimiento && (() => {
+                const fecha = new Date(formData.fechaNacimiento);
+                const hoy = new Date();
+                const edad = Math.floor((hoy - fecha) / (365.25 * 24 * 60 * 60 * 1000));
+                return (
+                  <small className="help-text">
+                    {edad < 18
+                      ? `⚠️ Tienes ${edad} años - Cuenta ADOLESCENTE (algunas restricciones aplican)`
+                      : `✅ Tienes ${edad} años - Cuenta JOVEN (acceso completo)`}
+                  </small>
+                );
+              })()}
             </>
           )}
 

@@ -13,8 +13,10 @@
 .oferta-detalle-container {
   background: white;
   border-radius: 12px;
-  overflow: hidden;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 20px;
 }
 
 /* Header de la oferta */
@@ -22,6 +24,7 @@
   padding: 30px;
   background: linear-gradient(135deg, #4f4fcf 0%, #3d3db8 100%);
   color: white;
+  border-radius: 12px 12px 0 0;
 }
 
 .btn-back {
@@ -75,16 +78,24 @@
 
 /* Contenido principal */
 .oferta-main-content {
-  display: grid;
-  grid-template-columns: 2fr 1fr;
+  display: flex;
   gap: 30px;
-  padding: 30px;
+  padding: 0;
+  align-items: flex-start;
+  background: transparent;
+  margin-top: 0;
 }
 
 .oferta-details {
   display: flex;
   flex-direction: column;
   gap: 30px;
+  flex: 2;
+  min-width: 0;
+  background: white;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
 }
 
 .oferta-details section h3 {
@@ -173,11 +184,14 @@
 
 /* Sidebar */
 .oferta-sidebar {
+  position: -webkit-sticky; /* Safari */
   position: sticky;
-  top: 20px;
+  top: 140px;
   height: fit-content;
-  max-height: calc(100vh - 100px);
-  align-self: start;
+  max-height: calc(100vh - 220px);
+  flex: 1;
+  min-width: 300px;
+  align-self: flex-start;
 }
 
 .postulacion-card {
@@ -375,7 +389,7 @@
   }
   
   .oferta-main-content {
-    grid-template-columns: 1fr;
+    flex-direction: column;
     gap: 20px;
     padding: 20px;
   }
@@ -394,5 +408,7 @@
   
   .oferta-sidebar {
     position: static;
+    min-width: unset;
+    width: 100%;
   }
 }

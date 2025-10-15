@@ -58,6 +58,23 @@ const OfertaDetalle = () => {
           <li>Escribir código limpio, mantenible y bien documentado</li>
           <li>Participar en revisiones de código y reuniones de equipo</li>
           <li>Aprender nuevas tecnologías y metodologías de desarrollo</li>
+          <li>Optimizar el rendimiento de aplicaciones web</li>
+          <li>Implementar pruebas unitarias y de integración</li>
+          <li>Mantener documentación técnica actualizada</li>
+          <li>Trabajar en equipo usando metodologías ágiles</li>
+          <li>Resolver bugs y problemas técnicos</li>
+        </ul>
+        
+        <h3>Requisitos Técnicos:</h3>
+        <ul>
+          <li>Experiencia mínima de 1 año en desarrollo frontend</li>
+          <li>Dominio de HTML5, CSS3 y JavaScript ES6+</li>
+          <li>Conocimiento sólido de React y sus ecosistemas</li>
+          <li>Familiaridad con herramientas de build (Webpack, Vite)</li>
+          <li>Experiencia con sistemas de control de versiones (Git)</li>
+          <li>Conocimientos de responsive design y mobile-first</li>
+          <li>Comprensión de principios de accesibilidad web</li>
+          <li>Experiencia con APIs RESTful</li>
         </ul>
         
         <h3>Beneficios:</h3>
@@ -67,6 +84,20 @@ const OfertaDetalle = () => {
           <li>Ambiente de trabajo joven y dinámico</li>
           <li>Posibilidades de crecimiento profesional</li>
           <li>Snacks y almuerzo en la oficina</li>
+          <li>Seguro médico privado</li>
+          <li>Días de vacaciones adicionales</li>
+          <li>Budget para equipamiento y home office</li>
+          <li>Eventos y actividades de team building</li>
+          <li>Acceso a conferencias y meetups tecnológicos</li>
+        </ul>
+        
+        <h3>Proceso de Selección:</h3>
+        <ul>
+          <li>Entrevista inicial con RRHH (30 minutos)</li>
+          <li>Prueba técnica para resolver en casa (2-3 horas)</li>
+          <li>Entrevista técnica con el equipo de desarrollo (1 hora)</li>
+          <li>Entrevista final con el CTO (30 minutos)</li>
+          <li>Propuesta y onboarding</li>
         </ul>
       `,
       requisitos: [
@@ -225,9 +256,10 @@ const OfertaDetalle = () => {
               )}
             </div>
           </div>
+        </div>
 
-          {/* Contenido principal */}
-          <div className="oferta-main-content">
+        {/* Contenido principal */}
+        <div className="oferta-main-content">
             <div className="oferta-details">
               <section className="descripcion-section">
                 <h3>📋 Descripción del puesto</h3>
@@ -325,7 +357,6 @@ const OfertaDetalle = () => {
               </div>
             </div>
           </div>
-        </div>
       </main>
     </div>
   );

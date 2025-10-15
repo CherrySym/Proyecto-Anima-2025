@@ -6,6 +6,10 @@ import './Cursos.css';
  * Página de Cursos y Talleres
  * Accesible para todos los usuarios
  * Muestra cursos externos y capacitaciones
+ * 
+ * ⚠️ ESTADO MVP: Esta página usa datos de ejemplo (mock data)
+ * Los cursos NO están conectados al backend en esta versión MVP
+ * Funcionalidad completa se implementará en fase 2
  */
 const Cursos = () => {
   const navigate = useNavigate();
@@ -182,6 +186,30 @@ const Cursos = () => {
   return (
     <div className="cursos-page">
       <main className="cursos-content">
+        {/* Banner de advertencia MVP */}
+        <div style={{
+          backgroundColor: '#fff3cd',
+          border: '1px solid #ffc107',
+          borderRadius: '8px',
+          padding: '16px',
+          marginBottom: '24px',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '12px'
+        }}>
+          <span style={{ fontSize: '24px' }}>⚠️</span>
+          <div>
+            <strong style={{ color: '#856404', display: 'block', marginBottom: '4px' }}>
+              Versión MVP - Datos de Ejemplo
+            </strong>
+            <p style={{ margin: 0, color: '#856404', fontSize: '14px' }}>
+              Esta página muestra cursos de ejemplo. La conexión con proveedores de cursos reales 
+              se implementará en una futura actualización. Por ahora, puedes explorar la interfaz 
+              y ver cómo funcionará el sistema de cursos.
+            </p>
+          </div>
+        </div>
+
         <div className="cursos-header">
           <h1>📚 Cursos y Talleres</h1>
           <p>Desarrolla nuevas habilidades con cursos seleccionados para jóvenes profesionales</p>

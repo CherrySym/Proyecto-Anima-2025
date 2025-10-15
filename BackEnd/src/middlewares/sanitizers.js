@@ -20,18 +20,6 @@ export function sanitizeEmpresa(empresa) {
   return safeEmpresa;
 }
 
-// Desafíos
-export function sanitizeDesafio(desafio) {
-  if (!desafio) return null;
-  return {
-    id: desafio.id,
-    titulo: desafio.titulo,
-    descripcion: desafio.descripcion,
-    recompensa: desafio.recompensa,
-    empresaId: desafio.empresaId,
-  };
-}
-
 // Ofertas de trabajo
 export function sanitizeOferta(oferta) {
   if (!oferta) return null;
@@ -40,19 +28,14 @@ export function sanitizeOferta(oferta) {
     titulo: oferta.titulo,
     descripcion: oferta.descripcion,
     requisitos: oferta.requisitos,
+    ubicacion: oferta.ubicacion,
+    salario: oferta.salario,
+    tipo: oferta.tipo,
+    area: oferta.area,
+    modalidad: oferta.modalidad,
     empresaId: oferta.empresaId,
-  };
-}
-
-// Cursos externos
-export function sanitizeCurso(curso) {
-  if (!curso) return null;
-  return {
-    id: curso.id,
-    titulo: curso.titulo,
-    descripcion: curso.descripcion,
-    url: curso.url,
-    area: curso.area,
+    activa: oferta.activa,
+    fechaVencimiento: oferta.fechaVencimiento
   };
 }
 
@@ -61,8 +44,12 @@ export function sanitizePostulacion(postulacion) {
   if (!postulacion) return null;
   return {
     id: postulacion.id,
-    userId: postulacion.userId,
+    usuarioId: postulacion.usuarioId,
     ofertaId: postulacion.ofertaId,
     estado: postulacion.estado,
+    createdAt: postulacion.createdAt
   };
 }
+
+// ❌ ELIMINADOS: sanitizeCurso y sanitizeDesafio (modelos no existen en schema)
+

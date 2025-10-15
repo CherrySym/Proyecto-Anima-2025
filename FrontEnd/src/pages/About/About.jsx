@@ -83,10 +83,13 @@ const About = () => {
         </div>
 
         {user && (
-          <a href="#" onClick={() => navigate('/perfil')} className="login-btn">
+          <button 
+            onClick={() => navigate('/feed')} 
+            className="login-btn"
+          >
             <img src="/img/usuario.png" alt="User" />
             {t.perfil}
-          </a>
+          </button>
         )}
       </div>
 

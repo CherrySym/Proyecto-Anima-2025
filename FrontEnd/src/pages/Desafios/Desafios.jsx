@@ -7,6 +7,10 @@ import './Desafios.css';
  * Página de Desafíos
  * Accesible para todos los usuarios (menores y mayores de 18)
  * Los menores pueden participar pero con recompensas limitadas
+ * 
+ * ⚠️ ESTADO MVP: Esta página usa datos de ejemplo (mock data)
+ * Los desafíos NO están conectados al backend en esta versión MVP
+ * Funcionalidad completa se implementará en fase 2
  */
 const Desafios = () => {
   const navigate = useNavigate();
@@ -148,6 +152,30 @@ const Desafios = () => {
   return (
     <div className="desafios-page">
       <main className="desafios-content">
+        {/* Banner de advertencia MVP */}
+        <div style={{
+          backgroundColor: '#fff3cd',
+          border: '1px solid #ffc107',
+          borderRadius: '8px',
+          padding: '16px',
+          marginBottom: '24px',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '12px'
+        }}>
+          <span style={{ fontSize: '24px' }}>⚠️</span>
+          <div>
+            <strong style={{ color: '#856404', display: 'block', marginBottom: '4px' }}>
+              Versión MVP - Datos de Ejemplo
+            </strong>
+            <p style={{ margin: 0, color: '#856404', fontSize: '14px' }}>
+              Esta página muestra desafíos de ejemplo. La funcionalidad de participación real 
+              se implementará en una futura actualización. Por ahora, puedes explorar la interfaz 
+              y ver cómo funcionará el sistema de desafíos.
+            </p>
+          </div>
+        </div>
+
         <div className="desafios-header">
           <h1>🎯 Desafíos y Encargos</h1>
           <p>Completa tareas reales de empresas y gana puntos y experiencia</p>

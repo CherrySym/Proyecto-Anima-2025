@@ -1,13 +1,24 @@
 /**
  * Servicios para Desafíos y Encargos
- * Endpoints: /desafios
+ * 
+ * ⚠️ ADVERTENCIA MVP: Desafíos NO están implementados en el backend actualmente
+ * Este servicio está DESHABILITADO hasta que se implemente la funcionalidad completa
+ * Todas las funciones lanzarán un error indicando que la característica no está disponible
+ * 
+ * Endpoints: /desafios (NO IMPLEMENTADOS)
  */
 import API from './api';
 
+const MVP_WARNING = '⚠️ DESAFÍOS: Funcionalidad no disponible en MVP. Próximamente.';
+
 /**
- * Obtener todos los desafíos disponibles
+ * Obtener todos los desafíos disponibles (NO IMPLEMENTADO)
  */
 export const getDesafios = async (filtros = {}) => {
+  console.warn(MVP_WARNING);
+  throw new Error(MVP_WARNING);
+  
+  /* CÓDIGO DESHABILITADO TEMPORALMENTE
   try {
     const params = new URLSearchParams();
     
@@ -26,36 +37,51 @@ export const getDesafios = async (filtros = {}) => {
   } catch (error) {
     throw error.response?.data || { error: 'Error al cargar desafíos' };
   }
+  */
 };
 
 /**
- * Obtener un desafío específico por ID
+ * Obtener un desafío específico por ID (NO IMPLEMENTADO)
  */
 export const getDesafioById = async (id) => {
+  console.warn(MVP_WARNING);
+  throw new Error(MVP_WARNING);
+  
+  /* CÓDIGO DESHABILITADO TEMPORALMENTE
   try {
     const response = await API.get(`/desafios/${id}`);
     return response.data;
   } catch (error) {
     throw error.response?.data || { error: 'Error al cargar el desafío' };
   }
+  */
 };
 
 /**
- * Participar en un desafío
+ * Participar en un desafío (NO IMPLEMENTADO)
  */
 export const participarDesafio = async (desafioId) => {
+  console.warn(MVP_WARNING);
+  throw new Error(MVP_WARNING);
+  
+  /* CÓDIGO DESHABILITADO TEMPORALMENTE
   try {
     const response = await API.post(`/desafios/${desafioId}/participar`);
     return response.data;
   } catch (error) {
     throw error.response?.data || { error: 'Error al participar en el desafío' };
   }
+  */
 };
 
 /**
- * Enviar solución de un desafío
+ * Enviar solución de un desafío (NO IMPLEMENTADO)
  */
 export const enviarSolucionDesafio = async (desafioId, solucion) => {
+  console.warn(MVP_WARNING);
+  throw new Error(MVP_WARNING);
+  
+  /* CÓDIGO DESHABILITADO TEMPORALMENTE
   try {
     const formData = new FormData();
     
@@ -82,16 +108,22 @@ export const enviarSolucionDesafio = async (desafioId, solucion) => {
   } catch (error) {
     throw error.response?.data || { error: 'Error al enviar solución' };
   }
+  */
 };
 
 /**
- * Obtener mis desafíos (participados/completados)
+ * Obtener mis desafíos (participados/completados) (NO IMPLEMENTADO)
  */
 export const getMisDesafios = async () => {
+  console.warn(MVP_WARNING);
+  throw new Error(MVP_WARNING);
+  
+  /* CÓDIGO DESHABILITADO TEMPORALMENTE
   try {
     const response = await API.get('/desafios/mis-desafios');
     return response.data;
   } catch (error) {
     throw error.response?.data || { error: 'Error al cargar mis desafíos' };
   }
+  */
 };

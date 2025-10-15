@@ -1,13 +1,24 @@
 /**
  * Servicios para Cursos y Talleres
- * Endpoints: /cursos
+ * 
+ * ⚠️ ADVERTENCIA MVP: Cursos NO están implementados en el backend actualmente
+ * Este servicio está DESHABILITADO hasta que se implemente la funcionalidad completa
+ * Todas las funciones lanzarán un error indicando que la característica no está disponible
+ * 
+ * Endpoints: /cursos (NO IMPLEMENTADOS)
  */
 import API from './api';
 
+const MVP_WARNING = '⚠️ CURSOS: Funcionalidad no disponible en MVP. Próximamente.';
+
 /**
- * Obtener todos los cursos disponibles
+ * Obtener todos los cursos disponibles (NO IMPLEMENTADO)
  */
 export const getCursos = async (filtros = {}) => {
+  console.warn(MVP_WARNING);
+  throw new Error(MVP_WARNING);
+  
+  /* CÓDIGO DESHABILITADO TEMPORALMENTE
   try {
     const params = new URLSearchParams();
     
@@ -29,48 +40,68 @@ export const getCursos = async (filtros = {}) => {
   } catch (error) {
     throw error.response?.data || { error: 'Error al cargar cursos' };
   }
+  */
 };
 
 /**
- * Obtener un curso específico por ID
+ * Obtener un curso específico por ID (NO IMPLEMENTADO)
  */
 export const getCursoById = async (id) => {
+  console.warn(MVP_WARNING);
+  throw new Error(MVP_WARNING);
+  
+  /* CÓDIGO DESHABILITADO TEMPORALMENTE
   try {
     const response = await API.get(`/cursos/${id}`);
     return response.data;
   } catch (error) {
     throw error.response?.data || { error: 'Error al cargar el curso' };
   }
+  */
 };
 
 /**
- * Marcar un curso como favorito
+ * Marcar un curso como favorito (NO IMPLEMENTADO)
  */
 export const toggleFavoritoCurso = async (cursoId) => {
+  console.warn(MVP_WARNING);
+  throw new Error(MVP_WARNING);
+  
+  /* CÓDIGO DESHABILITADO TEMPORALMENTE
   try {
     const response = await API.post(`/cursos/${cursoId}/favorito`);
     return response.data;
   } catch (error) {
     throw error.response?.data || { error: 'Error al marcar como favorito' };
   }
+  */
 };
 
 /**
- * Obtener cursos favoritos del usuario
+ * Obtener cursos favoritos del usuario (NO IMPLEMENTADO)
  */
 export const getCursosFavoritos = async () => {
+  console.warn(MVP_WARNING);
+  throw new Error(MVP_WARNING);
+  
+  /* CÓDIGO DESHABILITADO TEMPORALMENTE
   try {
     const response = await API.get('/cursos/favoritos');
     return response.data;
   } catch (error) {
     throw error.response?.data || { error: 'Error al cargar cursos favoritos' };
   }
+  */
 };
 
 /**
- * Registrar progreso en un curso
+ * Registrar progreso en un curso (NO IMPLEMENTADO)
  */
 export const registrarProgresoCurso = async (cursoId, progreso) => {
+  console.warn(MVP_WARNING);
+  throw new Error(MVP_WARNING);
+  
+  /* CÓDIGO DESHABILITADO TEMPORALMENTE
   try {
     const response = await API.post(`/cursos/${cursoId}/progreso`, {
       porcentaje: progreso.porcentaje,
@@ -81,4 +112,5 @@ export const registrarProgresoCurso = async (cursoId, progreso) => {
   } catch (error) {
     throw error.response?.data || { error: 'Error al registrar progreso' };
   }
+  */
 };

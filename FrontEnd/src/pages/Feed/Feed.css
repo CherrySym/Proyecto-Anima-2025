@@ -40,6 +40,30 @@
   color: #666;
 }
 
+.error-banner {
+  background-color: #fff3cd;
+  color: #856404;
+  padding: 12px 20px;
+  border-radius: 8px;
+  border: 1px solid #ffeeba;
+  margin-bottom: 20px;
+  text-align: center;
+  font-size: 14px;
+}
+
+.no-posts {
+  background-color: white;
+  padding: 60px 20px;
+  border-radius: 12px;
+  text-align: center;
+  color: #666;
+}
+
+.no-posts h3 {
+  margin-bottom: 10px;
+  color: #333;
+}
+
 .loading-spinner {
   width: 40px;
   height: 40px;

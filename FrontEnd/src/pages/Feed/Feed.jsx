@@ -10,129 +10,159 @@ const Feed = () => {
   const { user } = useAuth();
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [page, setPage] = useState(1);
 
-  // Mock data para posts
-  const mockPosts = [
-    {
-      id: 1,
-      user: {
-        id: 1,
-        name: "María González",
-        avatar: "/img/usuario.png",
-        isCompany: false,
-        profession: "Estudiante de Marketing"
-      },
-      content: "¡Acabo de completar mi primer curso de Marketing Digital! 🚀 Muy emocionada de aplicar todo lo aprendido. ¿Alguien más está estudiando marketing?",
-      image: "/img/img1.png",
-      timestamp: "2 horas",
-      likes: 24,
-      comments: 8,
-      isLiked: false
-    },
-    {
-      id: 2,
-      user: {
-        id: 2,
-        name: "Globant",
-        avatar: "/img/globant.jpg",
-        isCompany: true,
-        sector: "Tecnología"
-      },
-      content: "🌟 ¡Nueva oportunidad para jóvenes desarrolladores! Estamos buscando talentos entre 18-25 años para nuestro programa de trainee. ¡Aplica ahora!",
-      image: null,
-      timestamp: "4 horas",
-      likes: 156,
-      comments: 32,
-      isLiked: true
-    },
-    {
-      id: 3,
-      user: {
-        id: 3,
-        name: "Carlos Ruiz",
-        avatar: "/img/usuario.png",
-        isCompany: false,
-        profession: "Desarrollador Junior"
-      },
-      content: "Compartiendo mi proyecto final del bootcamp de React. Fue todo un desafío pero aprendí muchísimo. ¡Gracias a todos los que me ayudaron! 💻✨",
-      image: "/img/ejCV.png",
-      timestamp: "6 horas",
-      likes: 89,
-      comments: 15,
-      isLiked: false
-    },
-    {
-      id: 4,
-      user: {
-        id: 4,
-        name: "MercadoLibre",
-        avatar: "/img/MercLP.jpg",
-        isCompany: true,
-        sector: "E-commerce"
-      },
-      content: "🎯 Tips para tu primera entrevista laboral:\n\n✅ Investiga sobre la empresa\n✅ Prepara preguntas inteligentes\n✅ Practica tu presentación personal\n✅ Llega 10 minutos antes\n\n¿Qué otros consejos agregarían?",
-      image: "/img/entrevistaT.png",
-      timestamp: "1 día",
-      likes: 312,
-      comments: 67,
-      isLiked: true
-    },
-    {
-      id: 5,
-      user: {
-        id: 5,
-        name: "Sofía Mendez",
-        avatar: "/img/usuario.png",
-        isCompany: false,
-        profession: "Diseñadora UX/UI"
-      },
-      content: "Feliz de compartir que conseguí mi primera pasantía en diseño UX! 🎨 Ha sido un camino largo de aprendizaje, pero cada curso y proyecto valió la pena. ¡A seguir creciendo!",
-      image: null,
-      timestamp: "2 días",
-      likes: 198,
-      comments: 41,
-      isLiked: false
-    }
-  ];
-
+  // Cargar posts desde la API
   useEffect(() => {
-    // Simular carga de posts
-    setTimeout(() => {
-      setPosts(mockPosts);
-      setLoading(false);
-    }, 1000);
+    loadPosts();
   }, []);
 
-  const handleNewPost = (newPost) => {
-    const post = {
-      id: posts.length + 1,
-      user: {
-        id: user.id,
-        name: user.name || "Usuario",
-        avatar: user.avatar || "/img/usuario.png",
-        isCompany: user.tipo_usuario === 'empresa',
-        profession: user.profession || "Estudiante"
-      },
-      content: newPost.content,
-      image: newPost.image,
-      timestamp: "Ahora",
-      likes: 0,
-      comments: 0,
-      isLiked: false
-    };
-    setPosts([post, ...posts]);
+  const loadPosts = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      const data = await postService.getAllPosts();
+      
+      // Transformar datos del backend al formato del frontend
+      const postsTransformados = data.map(post => ({
+        id: post.id,
+        user: {
+          id: post.author?.id,
+          name: post.authorName || post.author?.nombre,
+          avatar: post.authorAvatar || post.author?.avatar || post.author?.logo || "/img/usuario.png",
+          isCompany: post.autorTipo === 'Empresa',
+          profession: post.author?.tipo || post.author?.sector || "Usuario"
+        },
+        content: post.contenido || post.content,
+        image: post.imagenUrl || post.image,
+        timestamp: formatTimestamp(post.createdAt),
+        likes: post.likesCount || 0,
+        comments: post.commentsCount || 0,
+        isLiked: post.isLiked || false
+      }));
+      
+      setPosts(postsTransformados);
+    } catch (err) {
+      console.error('Error cargando posts:', err);
+      setError('No se pudieron cargar las publicaciones. Mostrando contenido de ejemplo.');
+      // Fallback a mock data si falla la API
+      loadMockPosts();
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const handleLike = (postId) => {
-    setPosts(posts.map(post => 
-      post.id === postId 
-        ? { 
-            ...post, 
-            isLiked: !post.isLiked,
-            likes: post.isLiked ? post.likes - 1 : post.likes + 1
-          }
-        : post
-    ));
+  const loadMockPosts = () => {
+    // Mock data para posts (fallback)
+    const mockPosts = [
+      {
+        id: 1,
+        user: {
+          id: 1,
+          name: "María González",
+          avatar: "/img/usuario.png",
+          isCompany: false,
+          profession: "Estudiante de Marketing"
+        },
+        content: "¡Acabo de completar mi primer curso de Marketing Digital! 🚀 Muy emocionada de aplicar todo lo aprendido. ¿Alguien más está estudiando marketing?",
+        image: "/img/img1.png",
+        timestamp: "2 horas",
+        likes: 24,
+        comments: 8,
+        isLiked: false
+      },
+      {
+        id: 2,
+        user: {
+          id: 2,
+          name: "Globant",
+          avatar: "/img/globant.jpg",
+          isCompany: true,
+          profession: "Tecnología"
+        },
+        content: "� ¡Nueva oportunidad para jóvenes desarrolladores! Estamos buscando talentos entre 18-25 años para nuestro programa de trainee. ¡Aplica ahora!",
+        image: null,
+        timestamp: "4 horas",
+        likes: 156,
+        comments: 32,
+        isLiked: true
+      }
+    ];
+    setPosts(mockPosts);
+  };
+
+  const formatTimestamp = (dateString) => {
+    if (!dateString) return 'Ahora';
+    
+    const date = new Date(dateString);
+    const now = new Date();
+    const diffMs = now - date;
+    const diffMins = Math.floor(diffMs / 60000);
+    const diffHours = Math.floor(diffMs / 3600000);
+    const diffDays = Math.floor(diffMs / 86400000);
+
+    if (diffMins < 1) return 'Ahora';
+    if (diffMins < 60) return `${diffMins} min`;
+    if (diffHours < 24) return `${diffHours}h`;
+    if (diffDays < 7) return `${diffDays}d`;
+    return date.toLocaleDateString('es-ES', { day: 'numeric', month: 'short' });
+  };
+
+  const handleNewPost = async (newPostData) => {
+    try {
+      // Crear post en el backend
+      const createdPost = await postService.createPost({
+        contenido: newPostData.content,
+        imagenUrl: newPostData.image
+      });
+
+      // Agregar el nuevo post al estado
+      const newPost = {
+        id: createdPost.id,
+        user: {
+          id: user.id,
+          name: user.nombre || "Usuario",
+          avatar: user.avatar || user.logo || "/img/usuario.png",
+          isCompany: user.tipoUsuario === 'EMPRESA',
+          profession: user.tipo || user.sector || "Estudiante"
+        },
+        content: createdPost.contenido,
+        image: createdPost.imagenUrl,
+        timestamp: "Ahora",
+        likes: 0,
+        comments: 0,
+        isLiked: false
+      };
+      setPosts([newPost, ...posts]);
+    } catch (err) {
+      console.error('Error creando post:', err);
+      alert('No se pudo crear la publicación. Inténtalo de nuevo.');
+    }
+  };
+
+  const handleLike = async (postId) => {
+    const post = posts.find(p => p.id === postId);
+    if (!post) return;
+
+    try {
+      // Usar toggleLike que maneja dar/quitar like automáticamente
+      const result = await postService.toggleLike(postId);
+      
+      // Actualizar el estado local con la respuesta del servidor
+      setPosts(posts.map(p => 
+        p.id === postId 
+          ? { 
+              ...p, 
+              isLiked: result.liked,
+              likes: result.totalLikes || (result.liked ? p.likes + 1 : p.likes - 1)
+            }
+          : p
+      ));
+    } catch (err) {
+      console.error('Error al dar like:', err);
+      alert('No se pudo procesar el like. Inténtalo de nuevo.');
+    }
   };
 
   if (loading) {
@@ -153,18 +183,31 @@ const Feed = () => {
       <div className="feed-container">
         <div className="feed-main">
           <div className="feed-content">
+            {error && (
+              <div className="error-banner">
+                ⚠️ {error}
+              </div>
+            )}
+            
             {user && (
               <CreatePost onPost={handleNewPost} />
             )}
             
             <div className="posts-container">
-              {posts.map(post => (
-                <Post 
-                  key={post.id} 
-                  post={post} 
-                  onLike={handleLike}
-                />
-              ))}
+              {posts.length === 0 ? (
+                <div className="no-posts">
+                  <h3>No hay publicaciones aún</h3>
+                  <p>¡Sé el primero en compartir algo!</p>
+                </div>
+              ) : (
+                posts.map(post => (
+                  <Post 
+                    key={post.id} 
+                    post={post} 
+                    onLike={handleLike}
+                  />
+                ))
+              )}
             </div>
           </div>
         </div>

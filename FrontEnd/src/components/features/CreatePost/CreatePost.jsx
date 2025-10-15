@@ -24,9 +24,15 @@ const CreatePost = ({ onPost }) => {
   const handleImageUpload = (e) => {
     const file = e.target.files[0];
     if (file) {
-      // En un MVP real, aquí subirías la imagen a un servidor
-      // Por ahora simulamos con una URL local
-      setImage(URL.createObjectURL(file));
+      // TODO: En producción, subir la imagen a un servidor o servicio de almacenamiento
+      // Por ahora creamos una URL local para preview
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        // Aquí deberías subir la imagen y obtener la URL
+        // Por ahora usamos la URL local
+        setImage(URL.createObjectURL(file));
+      };
+      reader.readAsDataURL(file);
     }
   };
 
@@ -39,14 +45,14 @@ const CreatePost = ({ onPost }) => {
       <div className="create-post-header">
         <div className="user-avatar">
           <img 
-            src={user?.avatar || "/img/usuario.png"} 
-            alt={user?.name || "Usuario"} 
+            src={user?.avatar || user?.logo || "/img/usuario.png"} 
+            alt={user?.nombre || "Usuario"} 
           />
         </div>
         <div className="post-input-container">
           <textarea
             className={`post-input ${isExpanded ? 'expanded' : ''}`}
-            placeholder={user?.tipo_usuario === 'empresa' 
+            placeholder={user?.tipoUsuario === 'EMPRESA' 
               ? "¿Qué novedades quieres compartir con la comunidad?" 
               : "¿Qué está pasando en tu carrera profesional?"
             }

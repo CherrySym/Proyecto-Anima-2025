@@ -1,35 +1,49 @@
-// src/controllers/empresaController.js
+// src/controllers/empresasController.js
 import bcrypt from "bcrypt";
 import { PrismaClient } from "@prisma/client";
-import { sanitizeEmpresa, sanitizeMany } from "../middlewares/sanitizers.js";
 
 const prisma = new PrismaClient();
 const SALT_ROUNDS = 10;
 
 /**
- * Crear empresa
- * - Hashea la password antes de guardar
- * - Valida que no exista el email
+ * Crear empresa (rara vez usado - normalmente se usa authController.register)
  */
 export const createEmpresa = async (req, res) => {
   try {
-    const { nombre, email, password, descripcion } = req.body;
+    const { nombre, email, password, descripcion, logo, sector, ubicacion } = req.body;
 
     if (!nombre || !email || !password) {
-      return res.status(400).json({ error: "Faltan datos obligatorios" });
+      return res.status(400).json({ error: "Nombre, email y password son obligatorios" });
     }
 
+    // Verificar si el email ya existe
     const existing = await prisma.empresa.findUnique({ where: { email } });
-    if (existing) return res.status(400).json({ error: "El email ya está registrado" });
+    if (existing) {
+      return res.status(400).json({ error: "El email ya está registrado" });
+    }
 
-    const hashed = await bcrypt.hash(password, SALT_ROUNDS);
+    // Hash password
+    const hashedPassword = await bcrypt.hash(password, SALT_ROUNDS);
 
+    // Crear empresa
     const empresa = await prisma.empresa.create({
-      data: { nombre, email, password: hashed, descripcion },
+      data: {
+        nombre,
+        email,
+        password: hashedPassword,
+        descripcion,
+        logo,
+        sector,
+        ubicacion
+      },
     });
 
-    // sanitizeEmpresa debe remover campos sensibles (ej: password) si corresponde
-    return res.status(201).json(sanitizeEmpresa(empresa));
+    // Respuesta sin password
+    const { password: _, ...empresaSinPassword } = empresa;
+    return res.status(201).json({
+      ...empresaSinPassword,
+      name: empresa.nombre // Alias para frontend
+    });
   } catch (err) {
     console.error("createEmpresa:", err);
     return res.status(400).json({ error: err.message });
@@ -37,12 +51,55 @@ export const createEmpresa = async (req, res) => {
 };
 
 /**
- * Obtener todas las empresas
+ * Obtener todas las empresas (con filtros opcionales)
  */
 export const getEmpresas = async (req, res) => {
   try {
-    const empresas = await prisma.empresa.findMany();
-    return res.json(sanitizeMany(empresas, sanitizeEmpresa));
+    const { sector, search } = req.query;
+
+    // Construir filtros
+    const where = {};
+    if (sector) where.sector = sector;
+    if (search) {
+      where.OR = [
+        { nombre: { contains: search, mode: 'insensitive' } },
+        { descripcion: { contains: search, mode: 'insensitive' } },
+        { sector: { contains: search, mode: 'insensitive' } }
+      ];
+    }
+
+    const empresas = await prisma.empresa.findMany({
+      where,
+      select: {
+        id: true,
+        nombre: true,
+        email: true,
+        descripcion: true,
+        logo: true,
+        sector: true,
+        ubicacion: true,
+        createdAt: true,
+        _count: {
+          select: {
+            ofertas: true,
+            posts: true
+          }
+        }
+      },
+      orderBy: { createdAt: 'desc' }
+    });
+
+    // Agregar alias y contadores
+    const empresasTransformadas = empresas.map(e => ({
+      ...e,
+      name: e.nombre, // Alias para frontend
+      contadores: {
+        ofertas: e._count.ofertas,
+        posts: e._count.posts
+      }
+    }));
+
+    return res.json(empresasTransformadas);
   } catch (err) {
     console.error("getEmpresas:", err);
     return res.status(500).json({ error: "Error al obtener empresas" });
@@ -50,14 +107,72 @@ export const getEmpresas = async (req, res) => {
 };
 
 /**
- * Obtener empresa por ID
+ * Obtener empresa por ID (perfil público)
  */
 export const getEmpresaById = async (req, res) => {
   try {
     const id = parseInt(req.params.id);
-    const empresa = await prisma.empresa.findUnique({ where: { id } });
-    if (!empresa) return res.status(404).json({ error: "Empresa no encontrada" });
-    return res.json(sanitizeEmpresa(empresa));
+
+    const empresa = await prisma.empresa.findUnique({
+      where: { id },
+      select: {
+        id: true,
+        nombre: true,
+        email: true,
+        descripcion: true,
+        logo: true,
+        sector: true,
+        ubicacion: true,
+        createdAt: true,
+        ofertas: {
+          where: { activa: true },
+          take: 10,
+          orderBy: { createdAt: 'desc' },
+          include: {
+            _count: {
+              select: { postulaciones: true }
+            }
+          }
+        },
+        posts: {
+          take: 10,
+          orderBy: { createdAt: 'desc' },
+          include: {
+            _count: {
+              select: { likes: true, comentarios: true }
+            }
+          }
+        },
+        _count: {
+          select: {
+            ofertas: true,
+            posts: true
+          }
+        }
+      }
+    });
+
+    if (!empresa) {
+      return res.status(404).json({ error: "Empresa no encontrada" });
+    }
+
+    return res.json({
+      ...empresa,
+      name: empresa.nombre, // Alias para frontend
+      contadores: {
+        ofertas: empresa._count.ofertas,
+        posts: empresa._count.posts
+      },
+      ofertas: empresa.ofertas.map(o => ({
+        ...o,
+        postulacionesCount: o._count.postulaciones
+      })),
+      posts: empresa.posts.map(p => ({
+        ...p,
+        likesCount: p._count.likes,
+        commentsCount: p._count.comentarios
+      }))
+    });
   } catch (err) {
     console.error("getEmpresaById:", err);
     return res.status(500).json({ error: "Error al obtener empresa" });
@@ -65,24 +180,52 @@ export const getEmpresaById = async (req, res) => {
 };
 
 /**
- * Actualizar empresa
- * - Si actualizan password, se re-hashea
+ * Actualizar empresa (solo la propia empresa o admin)
  */
 export const updateEmpresa = async (req, res) => {
   try {
     const id = parseInt(req.params.id);
-    const data = { ...req.body };
+    const empresaId = req.user?.id;
+    const userRol = req.user?.rol;
 
-    if (data.password) {
-      data.password = await bcrypt.hash(data.password, SALT_ROUNDS);
+    // Verificar permisos
+    if (empresaId !== id && userRol !== 'ADMIN') {
+      return res.status(403).json({ error: "No tienes permiso para modificar esta empresa" });
+    }
+
+    const { nombre, descripcion, logo, sector, ubicacion, password } = req.body;
+
+    // Preparar datos de actualización
+    const dataToUpdate = {};
+    if (nombre) dataToUpdate.nombre = nombre;
+    if (descripcion !== undefined) dataToUpdate.descripcion = descripcion;
+    if (logo !== undefined) dataToUpdate.logo = logo;
+    if (sector !== undefined) dataToUpdate.sector = sector;
+    if (ubicacion !== undefined) dataToUpdate.ubicacion = ubicacion;
+
+    // Si se actualiza password, re-hashear
+    if (password) {
+      dataToUpdate.password = await bcrypt.hash(password, SALT_ROUNDS);
     }
 
     const empresa = await prisma.empresa.update({
       where: { id },
-      data,
+      data: dataToUpdate,
+      select: {
+        id: true,
+        nombre: true,
+        email: true,
+        descripcion: true,
+        logo: true,
+        sector: true,
+        ubicacion: true
+      }
     });
 
-    return res.json(sanitizeEmpresa(empresa));
+    return res.json({
+      ...empresa,
+      name: empresa.nombre // Alias para frontend
+    });
   } catch (err) {
     console.error("updateEmpresa:", err);
     return res.status(400).json({ error: err.message });
@@ -90,13 +233,25 @@ export const updateEmpresa = async (req, res) => {
 };
 
 /**
- * Borrar empresa
+ * Borrar empresa (solo admin o la propia empresa)
  */
 export const deleteEmpresa = async (req, res) => {
   try {
     const id = parseInt(req.params.id);
+    const empresaId = req.user?.id;
+    const userRol = req.user?.rol;
+
+    // Verificar permisos
+    if (empresaId !== id && userRol !== 'ADMIN') {
+      return res.status(403).json({ error: "No tienes permiso para eliminar esta empresa" });
+    }
+
     await prisma.empresa.delete({ where: { id } });
-    return res.json({ success: true });
+
+    return res.json({
+      success: true,
+      message: "Empresa eliminada correctamente"
+    });
   } catch (err) {
     console.error("deleteEmpresa:", err);
     return res.status(400).json({ error: err.message });

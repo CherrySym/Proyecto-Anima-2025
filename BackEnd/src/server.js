@@ -8,10 +8,14 @@ import { PrismaClient } from "@prisma/client";
 import usersRouter from "./routes/users.js";
 import empresasRouter from "./routes/empresas.js";
 import ofertasRouter from "./routes/ofertas.js";
-import desafiosRouter from "./routes/desafios.js";
-import cursosRouter from "./routes/cursos.js";
 import postulacionesRouter from "./routes/postulaciones.js";
 import authRouter from "./routes/auth.js";
+import postsRouter from "./routes/posts.js";
+import likesRouter from "./routes/likes.js";
+import comentariosRouter from "./routes/comentarios.js";
+// ❌ Rutas deshabilitadas (modelos no existen en schema):
+// import desafiosRouter from "./routes/desafios.js";
+// import cursosRouter from "./routes/cursos.js";
 
 // Configuración
 dotenv.config();
@@ -35,21 +39,31 @@ app.get("/", (req, res) => {
 // Test simple de conexión a DB
 app.get("/test-db", async (req, res) => {
   try {
-    const users = await prisma.user.findMany();
-    res.json({ success: true, usuarios: users });
+    const usuarios = await prisma.usuario.findMany({ take: 5 });
+    const empresas = await prisma.empresa.findMany({ take: 5 });
+    res.json({ 
+      success: true, 
+      message: "Conexión a base de datos exitosa",
+      usuarios: usuarios.length,
+      empresas: empresas.length 
+    });
   } catch (err) {
     res.status(500).json({ success: false, error: err.message });
   }
 });
 
 // -------------------- ROUTERS --------------------
+app.use("/auth", authRouter);
 app.use("/users", usersRouter);
 app.use("/empresas", empresasRouter);
+app.use("/posts", postsRouter);
+app.use("/likes", likesRouter);
+app.use("/comentarios", comentariosRouter);
 app.use("/ofertas", ofertasRouter);
-app.use("/desafios", desafiosRouter);
-app.use("/cursos", cursosRouter);
 app.use("/postulaciones", postulacionesRouter);
-app.use("/auth", authRouter);
+// ❌ Deshabilitadas (modelos no existen en schema):
+// app.use("/desafios", desafiosRouter);
+// app.use("/cursos", cursosRouter);
 
 // -------------------- START SERVER --------------------
 const PORT = process.env.PORT || 4000;

@@ -1,3 +1,7 @@
+// ==================== NEXO (JobPath) - MVP ====================
+// Red social profesional para jóvenes 14-25 años
+// Schema MVP limpio y funcional
+
 generator client {
   provider = "prisma-client-js"
 }
@@ -7,109 +11,197 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User {
-  id            Int                 @id @default(autoincrement())
-  nombre        String
-  email         String              @unique
-  password      String
-  edad          Int
-  tipo          TipoUsuario
-  puntos        Int                 @default(0)
-  cvs           CV[]
+// ==================== USUARIOS Y EMPRESAS ====================
+
+/// Usuario - Joven o adolescente que usa la plataforma
+/// Puede publicar, dar likes, comentar y postularse a ofertas (si es mayor de 18)
+model Usuario {
+  id              Int         @id @default(autoincrement())
+  nombre          String
+  email           String      @unique
+  password        String // Hash bcrypt
+  fechaNacimiento DateTime // Obligatorio para calcular edad y determinar tipo
+  tipo            TipoUsuario // ADOLESCENTE (<18) o JOVEN (18-25)
+  rol             RolUsuario  @default(USUARIO) // USUARIO o ADMIN
+
+  // Perfil
+  avatar    String?
+  bio       String? @db.Text
+  ubicacion String?
+  puntos    Int     @default(0) // Sistema de gamificación
+
+  // Timestamps
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relaciones
+  posts         Post[]
+  likes         Like[]
+  comentarios   Comentario[]
   postulaciones Postulacion[]
-  recompensas   RecompensaUsuario[]
+
+  @@index([email])
+  @@map("usuarios")
 }
 
+/// Empresa - Organización que publica ofertas y contenido
 model Empresa {
-  id          Int             @id @default(autoincrement())
+  id          Int     @id @default(autoincrement())
   nombre      String
-  email       String          @unique
-  password    String
-  descripcion String?
-  desafios    Desafio[]
-  ofertas     OfertaTrabajo[]
+  email       String  @unique
+  password    String // Hash bcrypt
+  descripcion String? @db.Text
+
+  // Perfil
+  logo      String?
+  sector    String? // Ej: "Tecnología", "Marketing"
+  ubicacion String?
+
+  // Timestamps
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relaciones
+  posts   Post[]
+  ofertas Oferta[]
+
+  @@index([email])
+  @@map("empresas")
 }
 
-model CV {
-  id        Int  @id @default(autoincrement())
-  userId    Int
-  contenido Json
-  user      User @relation(fields: [userId], references: [id])
+// ==================== RED SOCIAL ====================
 
-  @@index([userId], map: "CV_userId_fkey")
+/// Post - Publicación de un usuario o empresa en el feed
+/// Autor polimórfico: puede ser Usuario O Empresa
+model Post {
+  id        Int     @id @default(autoincrement())
+  contenido String  @db.Text
+  imagenUrl String? // URL de imagen opcional
+
+  // Autor polimórfico (uno de los dos debe estar lleno)
+  usuarioId Int?
+  empresaId Int?
+  usuario   Usuario? @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
+  empresa   Empresa? @relation(fields: [empresaId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+
+  // Relaciones
+  likes       Like[]
+  comentarios Comentario[]
+
+  @@index([usuarioId])
+  @@index([empresaId])
+  @@index([createdAt])
+  @@map("posts")
 }
 
-model OfertaTrabajo {
-  id            Int           @id @default(autoincrement())
-  empresaId     Int
-  titulo        String
-  descripcion   String
-  requisitos    String?
-  empresa       Empresa       @relation(fields: [empresaId], references: [id])
-  postulaciones Postulacion[]
+/// Like - Reacción "me gusta" a una publicación
+/// Un usuario solo puede dar like una vez por post
+model Like {
+  id        Int      @id @default(autoincrement())
+  postId    Int
+  usuarioId Int
+  createdAt DateTime @default(now())
 
-  @@index([empresaId], map: "OfertaTrabajo_empresaId_fkey")
+  post    Post    @relation(fields: [postId], references: [id], onDelete: Cascade)
+  usuario Usuario @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
+
+  @@unique([postId, usuarioId])
+  @@index([postId])
+  @@map("likes")
 }
 
-model CursoExterno {
+/// Comentario - Respuesta a una publicación
+/// Soporta respuestas anidadas mediante parentId
+model Comentario {
+  id        Int      @id @default(autoincrement())
+  postId    Int
+  usuarioId Int
+  contenido String   @db.Text
+  parentId  Int? // NULL si es comentario raíz, sino ID del comentario padre
+  createdAt DateTime @default(now())
+
+  post       Post         @relation(fields: [postId], references: [id], onDelete: Cascade)
+  usuario    Usuario      @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
+  parent     Comentario?  @relation("ComentarioRespuestas", fields: [parentId], references: [id], onDelete: Cascade)
+  respuestas Comentario[] @relation("ComentarioRespuestas")
+
+  @@index([postId])
+  @@index([usuarioId])
+  @@index([parentId])
+  @@map("comentarios")
+}
+
+// ==================== OFERTAS LABORALES ====================
+
+/// Oferta - Trabajo publicado por una empresa
+/// Solo usuarios mayores de 18 años (JOVEN) pueden postularse
+model Oferta {
   id          Int    @id @default(autoincrement())
-  titulo      String
-  descripcion String
-  url         String
-  area        String
-}
-
-model Desafio {
-  id          Int                 @id @default(autoincrement())
   empresaId   Int
   titulo      String
-  descripcion String
-  recompensa  String
-  empresa     Empresa             @relation(fields: [empresaId], references: [id])
-  recompensas RecompensaUsuario[]
+  descripcion String @db.Text
 
-  @@index([empresaId], map: "Desafio_empresaId_fkey")
+  // Detalles de la oferta
+  ubicacion  String?
+  salario    String?
+  tipo       String? // Ej: "Tiempo completo", "Medio tiempo", "Trainee"
+  area       String? // Ej: "tecnologia", "marketing", "ventas"
+  modalidad  String? // Ej: "Presencial", "Remoto", "Híbrido"
+  requisitos String? @db.Text // Requisitos del puesto
+
+  // Estado y fechas
+  activa           Boolean   @default(true)
+  fechaVencimiento DateTime? // Fecha límite para postularse
+  createdAt        DateTime  @default(now())
+
+  // Relaciones
+  empresa       Empresa       @relation(fields: [empresaId], references: [id], onDelete: Cascade)
+  postulaciones Postulacion[]
+
+  @@index([empresaId])
+  @@index([activa])
+  @@index([area])
+  @@map("ofertas")
 }
 
+/// Postulacion - Usuario aplica a una oferta laboral
+/// Solo un usuario puede postularse una vez a cada oferta
 model Postulacion {
-  id       Int               @id @default(autoincrement())
-  userId   Int
-  ofertaId Int
-  estado   EstadoPostulacion @default(PENDIENTE)
-  oferta   OfertaTrabajo     @relation(fields: [ofertaId], references: [id])
-  user     User              @relation(fields: [userId], references: [id])
+  id        Int               @id @default(autoincrement())
+  usuarioId Int
+  ofertaId  Int
+  estado    EstadoPostulacion @default(PENDIENTE)
+  createdAt DateTime          @default(now())
 
-  @@index([ofertaId], map: "Postulacion_ofertaId_fkey")
-  @@index([userId], map: "Postulacion_userId_fkey")
+  usuario Usuario @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
+  oferta  Oferta  @relation(fields: [ofertaId], references: [id], onDelete: Cascade)
+
+  @@unique([usuarioId, ofertaId])
+  @@index([usuarioId])
+  @@index([ofertaId])
+  @@index([estado])
+  @@map("postulaciones")
 }
 
-model RecompensaUsuario {
-  id             Int            @id @default(autoincrement())
-  userId         Int
-  desafioId      Int?
-  tipoRecompensa TipoRecompensa
-  cantidad       Int
-  fecha          DateTime       @default(now())
-  desafio        Desafio?       @relation(fields: [desafioId], references: [id])
-  user           User           @relation(fields: [userId], references: [id])
+// ==================== ENUMS ====================
 
-  @@index([desafioId], map: "RecompensaUsuario_desafioId_fkey")
-  @@index([userId], map: "RecompensaUsuario_userId_fkey")
-}
-
+/// TipoUsuario - Clasificación por edad
 enum TipoUsuario {
-  ADOLESCENTE
-  ADULTO
+  ADOLESCENTE // 14-17 años - No puede postularse a ofertas
+  JOVEN // 18-25 años - Acceso completo
 }
 
+/// RolUsuario - Nivel de permisos en la plataforma
+enum RolUsuario {
+  USUARIO // Usuario estándar
+  ADMIN // Administrador del sistema
+}
+
+/// EstadoPostulacion - Estado del proceso de postulación
 enum EstadoPostulacion {
-  PENDIENTE
-  ACEPTADA
-  RECHAZADA
-}
-
-enum TipoRecompensa {
-  PUNTOS
-  EXPERIENCIA
-  DINERO
+  PENDIENTE // En revisión por la empresa
+  ACEPTADA // Usuario aceptado para el puesto
+  RECHAZADA // Postulación rechazada
 }

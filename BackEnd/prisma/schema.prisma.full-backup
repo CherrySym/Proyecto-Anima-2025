@@ -1,0 +1,566 @@
+// ==================== CONFIGURACIÓN ====================
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+// ==================== USUARIOS Y EMPRESAS ====================
+
+/// Usuario juvenil (14-25 años) - Puede ser joven o adolescente
+model Usuario {
+  id                  Int                 @id @default(autoincrement())
+  nombre              String
+  email               String              @unique
+  password            String              // Hash bcrypt
+  fechaNacimiento     DateTime?           // Calcular edad dinámica
+  rol                 RolUsuario          @default(JOVEN)
+  puntos              Int                 @default(0)
+  
+  // Perfil profesional
+  avatar              String?
+  banner              String?
+  bio                 String?             @db.Text
+  profesion           String?
+  ubicacion           String?
+  telefono            String?
+  sitioWeb            String?
+  linkedin            String?
+  github              String?
+  
+  // Metadata
+  createdAt           DateTime            @default(now())
+  updatedAt           DateTime            @updatedAt
+  ultimaConexion      DateTime?
+  
+  // Relaciones - Contenido
+  posts               Post[]
+  likes               Like[]
+  comentarios         Comentario[]
+  
+  // Relaciones - Perfil
+  experiencias        Experiencia[]
+  educacion           Educacion[]
+  habilidades         Habilidad[]
+  
+  // Relaciones - Seguimiento
+  siguiendo           Follow[]            @relation("UsuarioSiguiendo")
+  seguidores          Follow[]            @relation("UsuarioSeguidores")
+  empresasSeguidas    EmpresaFollow[]
+  
+  // Relaciones - Empleo
+  postulaciones       Postulacion[]
+  
+  // Relaciones - Aprendizaje
+  cursosInscritos     InscripcionCurso[]
+  desafiosParticipados ParticipacionDesafio[]
+  recompensas         Recompensa[]
+  
+  @@index([email])
+  @@index([fechaNacimiento])
+  @@map("usuarios")
+}
+
+/// Empresa - Publica ofertas, desafíos y contenido
+model Empresa {
+  id                  Int                 @id @default(autoincrement())
+  nombre              String
+  email               String              @unique
+  password            String              // Hash bcrypt
+  descripcion         String?             @db.Text
+  
+  // Perfil empresarial
+  logo                String?
+  banner              String?
+  sector              String?             // "Tecnología", "Salud", etc.
+  ubicacion           String?
+  telefono            String?
+  sitioWeb            String?
+  linkedin            String?
+  tamanio             TamanioEmpresa?
+  anioFundacion       Int?
+  verificada          Boolean             @default(false)
+  
+  // Metadata
+  createdAt           DateTime            @default(now())
+  updatedAt           DateTime            @updatedAt
+  
+  // Relaciones - Contenido
+  posts               Post[]
+  
+  // Relaciones - Seguimiento
+  seguidores          EmpresaFollow[]
+  
+  // Relaciones - Empleo y aprendizaje
+  ofertas             Oferta[]
+  desafios            Desafio[]
+  
+  @@index([email])
+  @@index([sector])
+  @@map("empresas")
+}
+
+// ==================== RED SOCIAL ====================
+
+/// Publicación - Puede ser de usuario o empresa
+model Post {
+  id                  Int                 @id @default(autoincrement())
+  contenido           String              @db.Text
+  imagenUrl           String?
+  
+  // Autor (usuario o empresa)
+  usuarioId           Int?
+  empresaId           Int?
+  usuario             Usuario?            @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
+  empresa             Empresa?            @relation(fields: [empresaId], references: [id], onDelete: Cascade)
+  
+  // Metadata
+  createdAt           DateTime            @default(now())
+  updatedAt           DateTime            @updatedAt
+  
+  // Relaciones
+  likes               Like[]
+  comentarios         Comentario[]
+  
+  @@index([usuarioId])
+  @@index([empresaId])
+  @@index([createdAt])
+  @@map("posts")
+}
+
+/// Like en publicación
+model Like {
+  id                  Int                 @id @default(autoincrement())
+  postId              Int
+  usuarioId           Int
+  createdAt           DateTime            @default(now())
+  
+  post                Post                @relation(fields: [postId], references: [id], onDelete: Cascade)
+  usuario             Usuario             @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
+  
+  @@unique([postId, usuarioId])
+  @@index([postId])
+  @@index([usuarioId])
+  @@map("likes")
+}
+
+/// Comentario en publicación
+model Comentario {
+  id                  Int                 @id @default(autoincrement())
+  postId              Int
+  usuarioId           Int
+  contenido           String              @db.Text
+  createdAt           DateTime            @default(now())
+  updatedAt           DateTime            @updatedAt
+  
+  post                Post                @relation(fields: [postId], references: [id], onDelete: Cascade)
+  usuario             Usuario             @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
+  
+  @@index([postId])
+  @@index([usuarioId])
+  @@map("comentarios")
+}
+
+// ==================== SEGUIMIENTO ====================
+
+/// Usuario sigue a otro usuario
+model Follow {
+  id                  Int                 @id @default(autoincrement())
+  seguidorId          Int                 // Quien sigue
+  seguidoId           Int                 // A quien se sigue
+  createdAt           DateTime            @default(now())
+  
+  seguidor            Usuario             @relation("UsuarioSiguiendo", fields: [seguidorId], references: [id], onDelete: Cascade)
+  seguido             Usuario             @relation("UsuarioSeguidores", fields: [seguidoId], references: [id], onDelete: Cascade)
+  
+  @@unique([seguidorId, seguidoId])
+  @@index([seguidorId])
+  @@index([seguidoId])
+  @@map("follows")
+}
+
+/// Usuario sigue a empresa
+model EmpresaFollow {
+  id                  Int                 @id @default(autoincrement())
+  usuarioId           Int
+  empresaId           Int
+  createdAt           DateTime            @default(now())
+  
+  usuario             Usuario             @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
+  empresa             Empresa             @relation(fields: [empresaId], references: [id], onDelete: Cascade)
+  
+  @@unique([usuarioId, empresaId])
+  @@index([usuarioId])
+  @@index([empresaId])
+  @@map("empresa_follows")
+}
+
+// ==================== PERFIL PROFESIONAL ====================
+
+/// Experiencia laboral del usuario
+model Experiencia {
+  id                  Int                 @id @default(autoincrement())
+  usuarioId           Int
+  empresa             String
+  puesto              String
+  descripcion         String?             @db.Text
+  fechaInicio         DateTime
+  fechaFin            DateTime?
+  actualmenteTrabajando Boolean           @default(false)
+  
+  usuario             Usuario             @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
+  
+  @@index([usuarioId])
+  @@map("experiencias")
+}
+
+/// Educación del usuario
+model Educacion {
+  id                  Int                 @id @default(autoincrement())
+  usuarioId           Int
+  institucion         String
+  titulo              String
+  descripcion         String?             @db.Text
+  fechaInicio         DateTime
+  fechaFin            DateTime?
+  actualmenteEstudiando Boolean           @default(false)
+  
+  usuario             Usuario             @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
+  
+  @@index([usuarioId])
+  @@map("educacion")
+}
+
+/// Habilidades del usuario
+model Habilidad {
+  id                  Int                 @id @default(autoincrement())
+  usuarioId           Int
+  nombre              String
+  nivel               NivelHabilidad
+  
+  usuario             Usuario             @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
+  
+  @@index([usuarioId])
+  @@map("habilidades")
+}
+
+// ==================== OFERTAS LABORALES ====================
+
+/// Oferta de trabajo publicada por empresa
+model Oferta {
+  id                  Int                 @id @default(autoincrement())
+  empresaId           Int
+  titulo              String
+  descripcion         String              @db.Text
+  requisitos          String?             @db.Text
+  ubicacion           String?
+  modalidad           Modalidad           @default(PRESENCIAL)
+  tipoContrato        TipoContrato?
+  salarioMin          Int?
+  salarioMax          Int?
+  sector              String?
+  habilidadesRequeridas String?           @db.Text // JSON string de array
+  experienciaRequerida Int?               @default(0) // Años
+  activa              Boolean             @default(true)
+  vistas              Int                 @default(0)
+  
+  // Metadata
+  createdAt           DateTime            @default(now())
+  updatedAt           DateTime            @updatedAt
+  fechaCierre         DateTime?
+  
+  empresa             Empresa             @relation(fields: [empresaId], references: [id], onDelete: Cascade)
+  postulaciones       Postulacion[]
+  
+  @@index([empresaId])
+  @@index([activa])
+  @@index([createdAt])
+  @@map("ofertas")
+}
+
+/// Postulación de usuario a oferta
+model Postulacion {
+  id                  Int                 @id @default(autoincrement())
+  usuarioId           Int
+  ofertaId            Int
+  estado              EstadoPostulacion   @default(PENDIENTE)
+  cartaPresentacion   String?             @db.Text
+  notasEmpresa        String?             @db.Text
+  
+  // Metadata
+  createdAt           DateTime            @default(now())
+  updatedAt           DateTime            @updatedAt
+  
+  usuario             Usuario             @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
+  oferta              Oferta              @relation(fields: [ofertaId], references: [id], onDelete: Cascade)
+  
+  @@unique([usuarioId, ofertaId])
+  @@index([usuarioId])
+  @@index([ofertaId])
+  @@index([estado])
+  @@map("postulaciones")
+}
+
+// ==================== CURSOS ====================
+
+/// Curso externo disponible
+model Curso {
+  id                  Int                 @id @default(autoincrement())
+  titulo              String
+  descripcion         String              @db.Text
+  url                 String
+  imagenUrl           String?
+  proveedor           String?             // "Coursera", "Udemy", etc.
+  area                AreaCurso
+  nivel               NivelCurso
+  modalidad           Modalidad
+  duracion            String?             // "4 semanas", "20 horas"
+  precio              TipoPrecio
+  precioValor         Decimal?            @db.Decimal(10, 2)
+  rating              Decimal?            @db.Decimal(3, 2)
+  habilidades         String?             @db.Text // JSON string de array
+  tieneCertificado    Boolean             @default(false)
+  
+  // Metadata
+  createdAt           DateTime            @default(now())
+  
+  inscripciones       InscripcionCurso[]
+  
+  @@index([area])
+  @@index([nivel])
+  @@map("cursos")
+}
+
+/// Inscripción de usuario a curso
+model InscripcionCurso {
+  id                  Int                 @id @default(autoincrement())
+  usuarioId           Int
+  cursoId             Int
+  progreso            Int                 @default(0) // 0-100
+  completado          Boolean             @default(false)
+  certificadoUrl      String?
+  
+  // Metadata
+  createdAt           DateTime            @default(now())
+  updatedAt           DateTime            @updatedAt
+  fechaCompletado     DateTime?
+  
+  usuario             Usuario             @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
+  curso               Curso               @relation(fields: [cursoId], references: [id], onDelete: Cascade)
+  
+  @@unique([usuarioId, cursoId])
+  @@index([usuarioId])
+  @@index([cursoId])
+  @@map("inscripciones_cursos")
+}
+
+// ==================== DESAFÍOS ====================
+
+/// Desafío publicado por empresa
+model Desafio {
+  id                  Int                 @id @default(autoincrement())
+  empresaId           Int
+  titulo              String
+  descripcion         String              @db.Text
+  categoria           CategoriaDesafio
+  dificultad          Dificultad
+  recompensaPuntos    Int                 @default(0)
+  recompensaDinero    Decimal?            @db.Decimal(10, 2) // Solo para +18
+  tiempoEstimado      String?             // "2-4 horas", "1 semana"
+  estado              EstadoDesafio       @default(DISPONIBLE)
+  participantesMax    Int?
+  tags                String?             @db.Text // JSON string de array
+  
+  // Metadata
+  createdAt           DateTime            @default(now())
+  updatedAt           DateTime            @updatedAt
+  fechaInicio         DateTime?
+  fechaLimite         DateTime?
+  
+  empresa             Empresa             @relation(fields: [empresaId], references: [id], onDelete: Cascade)
+  participaciones     ParticipacionDesafio[]
+  
+  @@index([empresaId])
+  @@index([estado])
+  @@index([categoria])
+  @@map("desafios")
+}
+
+/// Participación de usuario en desafío
+model ParticipacionDesafio {
+  id                  Int                 @id @default(autoincrement())
+  desafioId           Int
+  usuarioId           Int
+  estado              EstadoParticipacion @default(EN_PROGRESO)
+  archivoEntregable   String?
+  calificacion        Int?                // 0-100
+  feedback            String?             @db.Text
+  recompensaOtorgada  Boolean             @default(false)
+  
+  // Metadata
+  createdAt           DateTime            @default(now())
+  updatedAt           DateTime            @updatedAt
+  fechaEntrega        DateTime?
+  
+  desafio             Desafio             @relation(fields: [desafioId], references: [id], onDelete: Cascade)
+  usuario             Usuario             @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
+  
+  @@unique([desafioId, usuarioId])
+  @@index([desafioId])
+  @@index([usuarioId])
+  @@map("participaciones_desafios")
+}
+
+// ==================== GAMIFICACIÓN ====================
+
+/// Recompensa otorgada a usuario
+model Recompensa {
+  id                  Int                 @id @default(autoincrement())
+  usuarioId           Int
+  tipo                TipoRecompensa
+  cantidad            Int
+  motivo              String              // "Completó desafío", "Like en post"
+  referencia          String?             // ID del desafío/post/etc
+  
+  createdAt           DateTime            @default(now())
+  
+  usuario             Usuario             @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
+  
+  @@index([usuarioId])
+  @@index([createdAt])
+  @@map("recompensas")
+}
+
+// ==================== ENUMS ====================
+
+enum RolUsuario {
+  JOVEN         // 18-25 años - Acceso completo
+  ADOLESCENTE   // 14-17 años - Sin postulaciones
+  ADMIN         // Administrador
+  
+  @@map("rol_usuario")
+}
+
+enum TamanioEmpresa {
+  STARTUP       // 1-10
+  PEQUENA       // 11-50
+  MEDIANA       // 51-200
+  GRANDE        // 201+
+  
+  @@map("tamanio_empresa")
+}
+
+enum Modalidad {
+  PRESENCIAL
+  REMOTO
+  HIBRIDO
+  
+  @@map("modalidad")
+}
+
+enum TipoContrato {
+  TIEMPO_COMPLETO
+  MEDIO_TIEMPO
+  FREELANCE
+  PASANTIA
+  
+  @@map("tipo_contrato")
+}
+
+enum EstadoPostulacion {
+  PENDIENTE
+  EN_REVISION
+  ENTREVISTA
+  ACEPTADA
+  RECHAZADA
+  
+  @@map("estado_postulacion")
+}
+
+enum AreaCurso {
+  TECNOLOGIA
+  DISENO
+  MARKETING
+  NEGOCIOS
+  DESARROLLO_PERSONAL
+  IDIOMAS
+  OTRO
+  
+  @@map("area_curso")
+}
+
+enum NivelCurso {
+  PRINCIPIANTE
+  INTERMEDIO
+  AVANZADO
+  
+  @@map("nivel_curso")
+}
+
+enum TipoPrecio {
+  GRATUITO
+  PAGO
+  FREEMIUM
+  
+  @@map("tipo_precio")
+}
+
+enum NivelHabilidad {
+  BASICO
+  INTERMEDIO
+  AVANZADO
+  EXPERTO
+  
+  @@map("nivel_habilidad")
+}
+
+enum CategoriaDesafio {
+  DISENO
+  INVESTIGACION
+  CONTENIDO
+  DESARROLLO
+  MARKETING
+  ANALISIS
+  OTRO
+  
+  @@map("categoria_desafio")
+}
+
+enum Dificultad {
+  FACIL
+  MEDIO
+  DIFICIL
+  
+  @@map("dificultad")
+}
+
+enum EstadoDesafio {
+  DISPONIBLE
+  EN_CURSO
+  FINALIZADO
+  CANCELADO
+  
+  @@map("estado_desafio")
+}
+
+enum EstadoParticipacion {
+  EN_PROGRESO
+  ENTREGADO
+  EVALUADO
+  APROBADO
+  RECHAZADO
+  
+  @@map("estado_participacion")
+}
+
+enum TipoRecompensa {
+  PUNTOS
+  EXPERIENCIA
+  DINERO
+  INSIGNIA
+  
+  @@map("tipo_recompensa")
+}

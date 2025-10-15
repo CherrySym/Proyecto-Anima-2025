@@ -68,7 +68,8 @@ const Login = () => {
     const result = await login({ tipoUsuario, email, password });
 
     if (result.success) {
-      navigate('/perfil');
+            // Redirigir al feed después de un login exitoso
+      navigate('/feed');
     } else {
       setErrors({ 
         email: '', 

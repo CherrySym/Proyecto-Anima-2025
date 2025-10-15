@@ -33,8 +33,12 @@ export const AuthProvider = ({ children }) => {
               id: response.user.id,
               nombre: response.user.nombre,
               email: response.user.email,
-              edad: response.user.edad,
-              tipo: response.user.tipo,
+              edad: response.user.edad, // Edad calculada por el backend
+              tipo: response.user.tipo, // ADOLESCENTE o JOVEN
+              rol: response.user.rol, // USUARIO o ADMIN
+              avatar: response.user.avatar,
+              bio: response.user.bio,
+              ubicacion: response.user.ubicacion,
               puntos: response.user.puntos,
               tipoUsuario: 'USUARIO'
             };
@@ -45,6 +49,9 @@ export const AuthProvider = ({ children }) => {
               nombre: response.empresa.nombre,
               email: response.empresa.email,
               descripcion: response.empresa.descripcion,
+              logo: response.empresa.logo,
+              sector: response.empresa.sector,
+              ubicacion: response.empresa.ubicacion,
               tipoUsuario: 'EMPRESA'
             };
             setUser(empresaData);
@@ -94,6 +101,10 @@ export const AuthProvider = ({ children }) => {
               email: userData.user.email,
               edad: userData.user.edad,
               tipo: userData.user.tipo,
+              rol: userData.user.rol,
+              avatar: userData.user.avatar,
+              bio: userData.user.bio,
+              ubicacion: userData.user.ubicacion,
               puntos: userData.user.puntos,
               tipoUsuario: 'USUARIO'
             });
@@ -103,6 +114,9 @@ export const AuthProvider = ({ children }) => {
               nombre: userData.empresa.nombre,
               email: userData.empresa.email,
               descripcion: userData.empresa.descripcion,
+              logo: userData.empresa.logo,
+              sector: userData.empresa.sector,
+              ubicacion: userData.empresa.ubicacion,
               tipoUsuario: 'EMPRESA'
             });
           }

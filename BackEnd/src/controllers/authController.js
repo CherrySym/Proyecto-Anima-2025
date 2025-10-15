@@ -2,19 +2,20 @@
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { PrismaClient } from "@prisma/client";
+import { calcularEdad, determinarTipoUsuario, validarFechaNacimiento } from "../utils/dateHelpers.js";
 
 const prisma = new PrismaClient();
 
 /**
  * Registro unificado de usuario o empresa
  * - Recibe tipoUsuario: 'USUARIO' | 'EMPRESA'
- * - Para usuarios: nombre, email, password, edad y Determina tipo de usuario según edad
+ * - Para usuarios: nombre, email, password, fechaNacimiento (calcula edad y tipo automáticamente)
  * - Para empresas: nombre, email, password, descripcion
- * - Hashea la password antees de guardarla
+ * - Hashea la password antes de guardarla
  */
 export const register = async (req, res) => {
   try {
-    const { tipoUsuario, nombre, email, password, edad, descripcion } = req.body;
+    const { tipoUsuario, nombre, email, password, fechaNacimiento, edad, descripcion } = req.body;
 
     // Validación básica de campos
     if (!tipoUsuario || !nombre || !email || !password) {
@@ -22,33 +23,69 @@ export const register = async (req, res) => {
     }
 
     if (tipoUsuario === "USUARIO") {
-      // Validación específica para usuario
-      if (!edad) return res.status(400).json({ error: "Edad requerida para usuarios" });
+      // Aceptar fechaNacimiento o edad (para compatibilidad con frontend legacy)
+      let fechaNac;
+      
+      if (fechaNacimiento) {
+        // Validar fechaNacimiento
+        const validacion = validarFechaNacimiento(fechaNacimiento);
+        if (!validacion.valida) {
+          return res.status(400).json({ error: validacion.error });
+        }
+        fechaNac = new Date(fechaNacimiento);
+      } else if (edad) {
+        // Convertir edad a fechaNacimiento aproximada
+        fechaNac = new Date();
+        fechaNac.setFullYear(fechaNac.getFullYear() - parseInt(edad));
+        fechaNac.setMonth(0); // Enero
+        fechaNac.setDate(1);  // Día 1
+      } else {
+        return res.status(400).json({ error: "Fecha de nacimiento o edad requerida" });
+      }
+
+      // Calcular edad y determinar tipo
+      const edadCalculada = calcularEdad(fechaNac);
+      const tipo = determinarTipoUsuario(edadCalculada);
 
       // Verificar si el email ya existe en usuarios
-      const existingUser = await prisma.user.findUnique({ where: { email } });
-      if (existingUser) return res.status(400).json({ error: "El email ya está registrado" });
-
-      // Determinar tipo según edad
-      const tipo = edad < 18 ? "ADOLESCENTE" : "ADULTO";
+      const existingUser = await prisma.usuario.findUnique({ where: { email } });
+      if (existingUser) {
+        return res.status(400).json({ error: "El email ya está registrado" });
+      }
 
       // Hashear la contraseña
       const hashedPassword = await bcrypt.hash(password, 10);
 
-      // Crear usuario
-      const user = await prisma.user.create({
-        data: { nombre, email, password: hashedPassword, edad, tipo }
+      // Crear usuario con nuevo schema
+      const user = await prisma.usuario.create({
+        data: { 
+          nombre, 
+          email, 
+          password: hashedPassword, 
+          fechaNacimiento: fechaNac,
+          tipo,
+          rol: "USUARIO" // Default para usuarios normales
+        }
       });
 
       res.status(201).json({
-        message: "Usuario registrado",
-        user: { id: user.id, email: user.email, tipo: user.tipo }
+        message: "Usuario registrado exitosamente",
+        user: { 
+          id: user.id, 
+          nombre: user.nombre,
+          email: user.email, 
+          tipo: user.tipo,
+          rol: user.rol,
+          edad: edadCalculada
+        }
       });
     } 
     else if (tipoUsuario === "EMPRESA") {
       // Verificar si el email ya existe en empresas
       const existingEmpresa = await prisma.empresa.findUnique({ where: { email } });
-      if (existingEmpresa) return res.status(400).json({ error: "El email ya está registrado" });
+      if (existingEmpresa) {
+        return res.status(400).json({ error: "El email ya está registrado" });
+      }
 
       // Hashear la contraseña
       const hashedPassword = await bcrypt.hash(password, 10);
@@ -59,18 +96,23 @@ export const register = async (req, res) => {
       });
 
       res.status(201).json({
-        message: "Empresa registrada",
-        empresa: { id: empresa.id, email: empresa.email }
+        message: "Empresa registrada exitosamente",
+        empresa: { 
+          id: empresa.id, 
+          nombre: empresa.nombre,
+          email: empresa.email 
+        }
       });
     } 
     else {
       return res.status(400).json({ error: "tipoUsuario inválido" });
     }
   } catch (error) {
-    console.error(error);
+    console.error("Error en registro:", error);
     res.status(500).json({ error: "Error en el registro" });
   }
 };
+
 
 /**
  * Login unificado de usuario o empresa
@@ -90,7 +132,7 @@ export const login = async (req, res) => {
     let account;
     if (tipoUsuario === "USUARIO") {
       // Buscar usuario por email
-      account = await prisma.user.findUnique({ where: { email } });
+      account = await prisma.usuario.findUnique({ where: { email } });
     } else if (tipoUsuario === "EMPRESA") {
       // Buscar empresa por email
       account = await prisma.empresa.findUnique({ where: { email } });
@@ -98,11 +140,15 @@ export const login = async (req, res) => {
       return res.status(400).json({ error: "tipoUsuario inválido" });
     }
 
-    if (!account) return res.status(400).json({ error: "Credenciales inválidas" });
+    if (!account) {
+      return res.status(400).json({ error: "Credenciales inválidas" });
+    }
 
     // Comparar contraseñas
     const validPassword = await bcrypt.compare(password, account.password);
-    if (!validPassword) return res.status(400).json({ error: "Credenciales inválidas" });
+    if (!validPassword) {
+      return res.status(400).json({ error: "Credenciales inválidas" });
+    }
 
     // Crear JWT (expira en 1 día)
     const token = jwt.sign(
@@ -113,7 +159,7 @@ export const login = async (req, res) => {
 
     res.json({ message: "Login exitoso", token });
   } catch (error) {
-    console.error(error);
+    console.error("Error en login:", error);
     res.status(500).json({ error: "Error en el login" });
   }
 };
@@ -122,23 +168,30 @@ export const login = async (req, res) => {
  * Obtener datos del usuario/empresa actual
  * - Requiere authMiddleware (req.user viene del JWT)
  * - Devuelve datos completos según el tipo
+ * - Calcula edad dinámicamente desde fechaNacimiento
  */
 export const getMe = async (req, res) => {
   try {
     const { id, tipo } = req.user; // Viene del middleware de autenticación
     
-    console.log('getMe called with:', { id, tipo }); // Debug log
+    console.log('getMe called with:', { id, tipo });
 
     if (tipo === "USUARIO") {
-      const user = await prisma.user.findUnique({
+      const user = await prisma.usuario.findUnique({
         where: { id },
         select: {
           id: true,
           nombre: true,
           email: true,
-          edad: true,
+          fechaNacimiento: true,
           tipo: true,
-          puntos: true, // ⚠️ Corregido: en schema es 'puntos', no 'puntosRecompensa'
+          rol: true,
+          avatar: true,
+          bio: true,
+          ubicacion: true,
+          puntos: true,
+          createdAt: true,
+          updatedAt: true,
         }
       });
 
@@ -146,9 +199,27 @@ export const getMe = async (req, res) => {
         return res.status(404).json({ error: "Usuario no encontrado" });
       }
 
+      // Calcular edad desde fechaNacimiento
+      const edad = calcularEdad(user.fechaNacimiento);
+
       return res.json({
         tipoUsuario: "USUARIO",
-        user
+        user: {
+          id: user.id,
+          nombre: user.nombre,
+          name: user.nombre, // Alias para frontend
+          email: user.email,
+          edad, // Calculada dinámicamente
+          tipo: user.tipo,
+          rol: user.rol,
+          avatar: user.avatar,
+          bio: user.bio,
+          ubicacion: user.ubicacion,
+          location: user.ubicacion, // Alias para frontend
+          puntos: user.puntos,
+          createdAt: user.createdAt,
+          updatedAt: user.updatedAt,
+        }
       });
     } 
     else if (tipo === "EMPRESA") {
@@ -159,6 +230,11 @@ export const getMe = async (req, res) => {
           nombre: true,
           email: true,
           descripcion: true,
+          logo: true,
+          sector: true,
+          ubicacion: true,
+          createdAt: true,
+          updatedAt: true,
         }
       });
 
@@ -168,7 +244,19 @@ export const getMe = async (req, res) => {
 
       return res.json({
         tipoUsuario: "EMPRESA",
-        empresa
+        empresa: {
+          id: empresa.id,
+          nombre: empresa.nombre,
+          name: empresa.nombre, // Alias para frontend
+          email: empresa.email,
+          descripcion: empresa.descripcion,
+          logo: empresa.logo,
+          sector: empresa.sector,
+          ubicacion: empresa.ubicacion,
+          location: empresa.ubicacion, // Alias para frontend
+          createdAt: empresa.createdAt,
+          updatedAt: empresa.updatedAt,
+        }
       });
     }
     else {
