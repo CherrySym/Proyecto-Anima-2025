@@ -120,9 +120,7 @@ const AppRouter = () => {
           <PrivateRoute>
             <div className="app">
               <Header />
-              <main className="main-content">
-                <Feed />
-              </main>
+              <Feed />
             </div>
           </PrivateRoute>
         } 
@@ -135,9 +133,7 @@ const AppRouter = () => {
           <PrivateRoute>
             <div className="app">
               <Header />
-              <main className="main-content">
-                <UserProfile />
-              </main>
+              <UserProfile />
             </div>
           </PrivateRoute>
         } 
@@ -256,9 +252,7 @@ const AppRouter = () => {
           <PrivateRoute>
             <div className="app">
               <Header />
-              <main className="main-content">
-                <Desafios />
-              </main>
+              <Desafios />
             </div>
           </PrivateRoute>
         } 
@@ -270,9 +264,7 @@ const AppRouter = () => {
           <PrivateRoute>
             <div className="app">
               <Header />
-              <main className="main-content">
-                <Cursos />
-              </main>
+              <Cursos />
             </div>
           </PrivateRoute>
         } 
@@ -285,9 +277,7 @@ const AppRouter = () => {
           <PrivateRoute>
             <div className="app">
               <Header />
-              <main className="main-content">
-                <MisCursos />
-              </main>
+              <MisCursos />
             </div>
           </PrivateRoute>
         } 

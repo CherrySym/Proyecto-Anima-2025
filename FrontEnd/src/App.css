@@ -499,38 +499,73 @@ a:active {
 
 .spinner,
 .loading-spinner {
-  width: 40px;
-  height: 40px;
-  border: 4px solid rgba(79, 79, 207, 0.1);
-  border-top: 4px solid var(--primary-500);
-  border-radius: var(--radius-full);
-  animation: spin 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55) infinite;
-  margin-bottom: var(--space-md);
-  box-shadow: 0 2px 8px rgba(79, 79, 207, 0.2);
+  width: 60px;
+  height: 60px;
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 40px;
+}
+
+.loading-spinner::before,
+.spinner::before {
+  content: '⭐';
+  position: absolute;
+  animation: pulseStar 1.5s ease-in-out infinite;
+}
+
+.loading-spinner::after,
+.spinner::after {
+  content: '✨';
+  position: absolute;
+  font-size: 20px;
+  animation: sparkle 1.5s ease-in-out infinite;
 }
 
 .spinner-sm {
-  width: 24px;
-  height: 24px;
-  border-width: 3px;
+  width: 40px;
+  height: 40px;
+  font-size: 28px;
+}
+
+.spinner-sm::after {
+  font-size: 14px;
 }
 
 .spinner-lg {
-  width: 56px;
-  height: 56px;
-  border-width: 5px;
+  width: 80px;
+  height: 80px;
+  font-size: 56px;
 }
 
-@keyframes spin {
-  0% { 
-    transform: rotate(0deg);
+.spinner-lg::after {
+  font-size: 28px;
+}
+
+@keyframes pulseStar {
+  0%, 100% {
+    transform: scale(1) rotate(0deg);
+    opacity: 1;
+    filter: brightness(1);
   }
-  100% { 
-    transform: rotate(360deg);
+  50% {
+    transform: scale(1.3) rotate(180deg);
+    opacity: 0.8;
+    filter: brightness(1.5);
   }
 }
 
-/* ========================================
+@keyframes sparkle {
+  0%, 100% {
+    transform: scale(0) rotate(0deg);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.5) rotate(360deg);
+    opacity: 1;
+  }
+}/* ========================================
    TARJETAS/CARDS
    ======================================== */
 .card {

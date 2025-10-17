@@ -1,13 +1,17 @@
 /* Desafios.css */
 .desafios-page {
   min-height: 100vh;
-  background-color: #f8f9fa;
+  background-color: #f5f7fa;
+  width: 100%;
+  padding: 0;
+  margin: 0;
 }
 
 .desafios-content {
   max-width: 1200px;
   margin: 0 auto;
   padding: 20px;
+  box-sizing: border-box;
 }
 
 .desafios-header {
@@ -41,21 +45,6 @@
   align-items: center;
   justify-content: center;
   height: 50vh;
-}
-
-.loading-spinner {
-  width: 40px;
-  height: 40px;
-  border: 4px solid #f3f3f3;
-  border-top: 4px solid #4f4fcf;
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
-  margin-bottom: 20px;
-}
-
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
 }
 
 /* Filtros */

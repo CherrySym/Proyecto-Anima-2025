@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
+import { useMinLoadingTime } from '../../hooks/useMinLoadingTime';
 import './Desafios.css';
 
 /**
@@ -16,7 +17,7 @@ const Desafios = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
   const [desafios, setDesafios] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const { loading, withMinLoadingTime } = useMinLoadingTime(800);
   const [filtros, setFiltros] = useState({
     categoria: 'todos',
     dificultad: 'todas',
@@ -24,8 +25,12 @@ const Desafios = () => {
   });
 
   useEffect(() => {
-    // Simular carga de desafíos desde API
-    setTimeout(() => {
+    loadDesafios();
+  }, [user]);
+
+  const loadDesafios = async () => {
+    await withMinLoadingTime(async () => {
+      // Simular carga de desafíos desde API
       setDesafios([
         {
           id: 1,
@@ -100,9 +105,8 @@ const Desafios = () => {
           tags: ['optimización', 'performance', 'web development']
         }
       ]);
-      setLoading(false);
-    }, 800);
-  }, [user]);
+    });
+  };
 
   const filtrarDesafios = () => {
     return desafios.filter(desafio => {

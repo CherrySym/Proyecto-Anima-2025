@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../context/AuthContext';
+import { useMinLoadingTime } from '../../hooks/useMinLoadingTime';
 import CreatePost from '../../components/features/CreatePost/CreatePost';
 import Post from '../../components/features/Post/Post';
 import Sidebar from '../../components/layout/Sidebar/Sidebar';
@@ -9,7 +10,7 @@ import './Feed.css';
 const Feed = () => {
   const { user } = useAuth();
   const [posts, setPosts] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const { loading, withMinLoadingTime } = useMinLoadingTime(800);
   const [error, setError] = useState(null);
   const [page, setPage] = useState(1);
 
@@ -19,37 +20,36 @@ const Feed = () => {
   }, []);
 
   const loadPosts = async () => {
-    try {
-      setLoading(true);
-      setError(null);
-      const data = await postService.getAllPosts();
-      
-      // Transformar datos del backend al formato del frontend
-      const postsTransformados = data.map(post => ({
-        id: post.id,
-        user: {
-          id: post.author?.id,
-          name: post.authorName || post.author?.nombre,
-          avatar: post.authorAvatar || post.author?.avatar || post.author?.logo || "/img/usuario.png",
-          isCompany: post.autorTipo === 'Empresa',
-          profession: post.author?.tipo || post.author?.sector || "Usuario"
-        },
-        content: post.contenido || post.content,
-        image: post.imagenUrl || post.image,
-        timestamp: formatTimestamp(post.createdAt),
-        likes: post.likesCount || 0,
-        comments: post.commentsCount || 0,
-        isLiked: post.isLiked || false
-      }));
-      
-      setPosts(postsTransformados);
-    } catch (err) {
-      setError('No se pudieron cargar las publicaciones. Mostrando contenido de ejemplo.');
-      // Fallback a mock data si falla la API
-      loadMockPosts();
-    } finally {
-      setLoading(false);
-    }
+    await withMinLoadingTime(async () => {
+      try {
+        setError(null);
+        const data = await postService.getAllPosts();
+        
+        // Transformar datos del backend al formato del frontend
+        const postsTransformados = data.map(post => ({
+          id: post.id,
+          user: {
+            id: post.author?.id,
+            name: post.authorName || post.author?.nombre,
+            avatar: post.authorAvatar || post.author?.avatar || post.author?.logo || "/img/usuario.png",
+            isCompany: post.autorTipo === 'Empresa',
+            profession: post.author?.tipo || post.author?.sector || "Usuario"
+          },
+          content: post.contenido || post.content,
+          image: post.imagenUrl || post.image,
+          timestamp: formatTimestamp(post.createdAt),
+          likes: post.likesCount || 0,
+          comments: post.commentsCount || 0,
+          isLiked: post.isLiked || false
+        }));
+        
+        setPosts(postsTransformados);
+      } catch (err) {
+        setError('No se pudieron cargar las publicaciones. Mostrando contenido de ejemplo.');
+        // Fallback a mock data si falla la API
+        loadMockPosts();
+      }
+    });
   };
 
   const loadMockPosts = () => {

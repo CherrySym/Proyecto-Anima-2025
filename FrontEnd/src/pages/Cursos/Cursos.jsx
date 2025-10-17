@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useMinLoadingTime } from '../../hooks/useMinLoadingTime';
 import './Cursos.css';
 
 /**
@@ -14,7 +15,7 @@ import './Cursos.css';
 const Cursos = () => {
   const navigate = useNavigate();
   const [cursos, setCursos] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const { loading, withMinLoadingTime } = useMinLoadingTime(800);
   const [filtros, setFiltros] = useState({
     area: 'todas',
     nivel: 'todos',
@@ -23,8 +24,12 @@ const Cursos = () => {
   });
 
   useEffect(() => {
-    // Simular carga de cursos desde API
-    setTimeout(() => {
+    loadCursos();
+  }, []);
+
+  const loadCursos = async () => {
+    await withMinLoadingTime(async () => {
+      // Simular carga de cursos desde API
       setCursos([
         {
           id: 1,
@@ -132,9 +137,8 @@ const Cursos = () => {
           certificado: false
         }
       ]);
-      setLoading(false);
-    }, 1000);
-  }, []);
+    });
+  };
 
   const filtrarCursos = () => {
     return cursos.filter(curso => {

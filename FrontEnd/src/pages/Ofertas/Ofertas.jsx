@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
+import { useMinLoadingTime } from '../../hooks/useMinLoadingTime';
 import * as ofertasService from '../../services/ofertasService';
 import './Ofertas.css';
 
@@ -13,7 +14,7 @@ const Ofertas = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
   const [ofertas, setOfertas] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const { loading, withMinLoadingTime } = useMinLoadingTime(800);
   const [error, setError] = useState(null);
   const [filtros, setFiltros] = useState({
     busqueda: '',
@@ -28,17 +29,16 @@ const Ofertas = () => {
   }, [filtros.area, filtros.tipo, filtros.modalidad]);
 
   const loadOfertas = async () => {
-    try {
-      setLoading(true);
-      setError(null);
-      const data = await ofertasService.getOfertas(filtros);
-      setOfertas(data);
-    } catch (err) {
-      setError('No se pudieron cargar las ofertas. Mostrando contenido de ejemplo.');
-      loadMockOfertas();
-    } finally {
-      setLoading(false);
-    }
+    await withMinLoadingTime(async () => {
+      try {
+        setError(null);
+        const data = await ofertasService.getOfertas(filtros);
+        setOfertas(data);
+      } catch (err) {
+        setError('No se pudieron cargar las ofertas. Mostrando contenido de ejemplo.');
+        loadMockOfertas();
+      }
+    });
   };
 
   const loadMockOfertas = () => {
