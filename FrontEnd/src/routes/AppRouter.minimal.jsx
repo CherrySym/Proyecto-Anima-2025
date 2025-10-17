@@ -27,4 +27,5 @@ const AppRouterMinimal = () => {
   );
 };
 
+
 export default AppRouterMinimal;

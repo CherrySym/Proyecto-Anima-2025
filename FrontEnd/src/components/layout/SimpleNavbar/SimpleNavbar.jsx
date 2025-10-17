@@ -20,7 +20,6 @@ const SimpleNavbar = ({ title = 'Job Path' }) => {
     es: {
       principal: 'Principal',
       inicio: 'Inicio',
-      jovenes: 'Jóvenes',
       companias: 'Compañías',
       about: 'Acerca De',
       orientacion: 'Orientación',
@@ -39,7 +38,6 @@ const SimpleNavbar = ({ title = 'Job Path' }) => {
     en: {
       principal: 'Main',
       inicio: 'Home',
-      jovenes: 'Young People',
       companias: 'Companies',
       about: 'About Us',
       orientacion: 'Guidance',
@@ -89,13 +87,7 @@ const SimpleNavbar = ({ title = 'Job Path' }) => {
         >
           {t.inicio}
         </a>
-        <a 
-          href="#" 
-          onClick={(e) => { e.preventDefault(); navigate('/jovenes'); }}
-          className={isActive('/jovenes') ? 'active' : ''}
-        >
-          {t.jovenes}
-        </a>
+       
         <a 
           href="#" 
           onClick={(e) => { e.preventDefault(); navigate('/companias'); }}

@@ -1,5 +1,6 @@
-/* Estilos Home Page - Migrado desde home.css */
-.home-page {
+/* Combined.css - Unificación de Home.css y Jovenes.css */
+
+.combined-page {
   min-height: 100vh;
   margin: 0;
   font-family: 'Segoe UI', sans-serif;
@@ -7,6 +8,7 @@
   color: #222;
 }
 
+/* Contenedor principal */
 .main-content {
   display: flex;
   justify-content: space-around;
@@ -14,8 +16,10 @@
   padding: 40px;
   gap: 40px;
   background-color: #ffffff;
+  flex-wrap: wrap; /* Para que las secciones no se salgan en pantallas pequeñas */
 }
 
+/* Sección de texto */
 .text-section {
   max-width: 400px;
 }
@@ -32,6 +36,7 @@
   margin-bottom: 20px;
 }
 
+/* Botón de suscripción */
 .subscribe-btn {
   background: #fff;
   border: 1px solid #000;
@@ -40,15 +45,25 @@
   cursor: pointer;
   font-weight: bold;
   letter-spacing: 1px;
+  transition: background 0.3s ease;
 }
 
 .subscribe-btn:hover {
   background: #f4f4f4;
 }
 
+/* Imagen grande */
 .img-large {
   width: 800px;
   border-radius: 15px;
+  max-width: 100%;
+}
+
+/* Línea divisoria entre secciones */
+.divider {
+  width: 80%;
+  margin: 60px auto;
+  border: 1px solid #ddd;
 }
 
 /* Responsive design */
@@ -65,5 +80,16 @@
 
   .img-large {
     width: 100%;
+  }
+}
+
+@media (max-width: 768px) {
+  .main-content {
+    gap: 20px;
+    padding: 20px;
+  }
+
+  .divider {
+    margin: 40px auto;
   }
 }

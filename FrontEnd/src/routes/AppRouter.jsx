@@ -8,7 +8,6 @@ import PrivateRoute from '../components/PrivateRoute';
 import Landing from '../pages/Landing/Landing';
 import About from '../pages/About/About';
 import Companias from '../pages/Companias/Companias';
-import Jovenes from '../pages/Jovenes/Jovenes';
 import Login from '../pages/Login/Login';
 import Register from '../pages/Register/Register';
 import OrientacionVocacional from '../pages/OrientacionVocacional/OrientacionVocacional';
@@ -88,6 +87,7 @@ const AppRouter = () => {
       </div>
     );
   }
+  
 
   return (
     <Routes>
@@ -99,7 +99,6 @@ const AppRouter = () => {
       <Route path="/about" element={<About />} />
       <Route path="/companias" element={<Companias />} />
       <Route path="/companias/:companyId" element={<CompanyProfilePublic />} />
-      <Route path="/jovenes" element={<Jovenes />} />
       <Route path="/orientacion-vocacional" element={<OrientacionVocacional />} />
       <Route path="/suscripciones" element={<Suscripciones />} />
       <Route path="/consejos" element={<Consejos />} />
