@@ -11,13 +11,13 @@
 }
 
 .header-container {
-  max-width: 1200px;
+  max-width: 100%;
   margin: 0 auto;
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 12px 20px;
-  gap: 20px;
+  gap: 12px;
 }
 
 /* Logo */
@@ -30,6 +30,7 @@
   font-weight: 700;
   font-size: 20px;
   flex-shrink: 0;
+  margin-right: 20px;
 }
 
 .logo img {
@@ -42,7 +43,7 @@
 .search-form {
   flex: 1;
   max-width: 400px;
-  margin: 0 20px;
+  margin: 0 12px;
 }
 
 .search-container {
@@ -55,8 +56,10 @@
   position: absolute;
   left: 12px;
   color: #657786;
-  font-size: 16px;
   z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .search-input {
@@ -83,22 +86,26 @@
 /* Navegación principal */
 .main-nav {
   display: flex;
-  gap: 8px;
+  gap: 4px;
   align-items: center;
+  flex-shrink: 0;
 }
 
 .nav-item {
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
   gap: 4px;
-  padding: 8px 12px;
+  padding: 8px 4px;
   text-decoration: none;
   color: #657786;
   border-radius: 8px;
-  transition: all 0.3s ease;
+  transition: background-color 0.3s ease, color 0.3s ease;
   position: relative;
-  min-width: 60px;
+  width: 80px;
+  min-width: 80px;
+  max-width: 80px;
 }
 
 .nav-item:hover {
@@ -125,12 +132,15 @@
 
 .nav-icon {
   font-size: 20px;
+  line-height: 1;
 }
 
 .nav-label {
   font-size: 12px;
   font-weight: 500;
   white-space: nowrap;
+  text-align: center;
+  line-height: 1.2;
 }
 
 .notification-badge {

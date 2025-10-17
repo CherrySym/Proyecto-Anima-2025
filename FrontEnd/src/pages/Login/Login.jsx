@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
+import { AlertTriangle } from 'lucide-react';
 import './Login.css';
 
 /**
@@ -138,7 +139,7 @@ const Login = () => {
               marginBottom: '10px',
               display: 'block'
             }}>
-              ⚠️ {errors.email}
+              <AlertTriangle size={14} /> {errors.email}
             </span>
           )}
 
@@ -161,7 +162,7 @@ const Login = () => {
               marginBottom: '10px',
               display: 'block'
             }}>
-              ⚠️ {errors.password}
+              <AlertTriangle size={14} /> {errors.password}
             </span>
           )}
 

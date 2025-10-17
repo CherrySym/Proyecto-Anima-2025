@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { useMinLoadingTime } from '../../hooks/useMinLoadingTime';
 import Post from '../../components/features/Post/Post';
+import { MapPin } from 'lucide-react';
 import './CompanyProfile.css';
 
 const CompanyProfile = () => {
@@ -204,7 +205,7 @@ const CompanyProfile = () => {
             <div className="company-details">
               <h1 className="company-name">{company.name}</h1>
               <p className="company-sector">{company.sector}</p>
-              <p className="company-location">📍 {company.location}</p>
+              <p className="company-location"><MapPin size={16} /> {company.location}</p>
               <p className="company-description">{company.description}</p>
               
               <div className="company-stats">
@@ -294,7 +295,7 @@ const CompanyProfile = () => {
                   <div key={job.id} className="job-card">
                     <h4>{job.title}</h4>
                     <p className="job-department">{job.department}</p>
-                    <p className="job-location">📍 {job.location}</p>
+                    <p className="job-location"><MapPin size={14} /> {job.location}</p>
                     <div className="job-tags">
                       <span className="job-type">{job.type}</span>
                       <span className="job-experience">{job.experience}</span>

@@ -4,6 +4,7 @@ import { useAuth } from '../../context/AuthContext';
 import { useMinLoadingTime } from '../../hooks/useMinLoadingTime';
 import SimpleNavbar from '../../components/layout/SimpleNavbar/SimpleNavbar';
 import { getAllCompanies } from '../../data/companiesData';
+import { Building2, Monitor, Heart, MapPin } from 'lucide-react';
 import './Companias.css';
 
 /**
@@ -112,7 +113,7 @@ const Companias = () => {
       
       <main className="companias-content">
         <div className="companias-header">
-          <h1>🏢 Empresas Aliadas</h1>
+          <h1><Building2 size={32} /> Empresas Aliadas</h1>
           <p>Conoce las empresas que confían en jóvenes talentos y ofrecen oportunidades reales</p>
           
           <div className="header-stats">
@@ -145,7 +146,7 @@ const Companias = () => {
               className={filtroSector === 'tecnologia' ? 'active' : ''}
               onClick={() => setFiltroSector('tecnologia')}
             >
-              🖥️ Tecnología
+              <Monitor size={16} /> Tecnología
             </button>
             <button 
               className={filtroSector === 'marketing' ? 'active' : ''}
@@ -207,7 +208,10 @@ const Companias = () => {
                       onClick={() => toggleLike(empresa.id)}
                       aria-label={likedCompanies.has(empresa.id) ? 'Quitar de favoritos' : 'Agregar a favoritos'}
                     >
-                      {likedCompanies.has(empresa.id) ? '❤️' : '🤍'}
+                      <Heart 
+                        size={20} 
+                        fill={likedCompanies.has(empresa.id) ? 'currentColor' : 'none'}
+                      />
                     </button>
                     <div className="empresa-rating">
                       ⭐ {empresa.puntuacion}
@@ -225,7 +229,7 @@ const Companias = () => {
                       <span>{empresa.empleados}</span>
                     </div>
                     <div className="detalle-item">
-                      <span className="label">📍 Ubicación:</span>
+                      <span className="label"><MapPin size={14} /> Ubicación:</span>
                       <span>{empresa.ubicacion}</span>
                     </div>
                     <div className="detalle-item">

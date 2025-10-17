@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useMinLoadingTime } from '../../hooks/useMinLoadingTime';
+import { BookOpen, AlertTriangle, Sprout, Leaf, TreePine, ScrollText, Clock, Monitor, DollarSign, Star, Building2 } from 'lucide-react';
 import './Cursos.css';
 
 /**
@@ -167,10 +168,10 @@ const Cursos = () => {
 
   const getNivelIcon = (nivel) => {
     switch(nivel) {
-      case 'principiante': return '🌱';
-      case 'intermedio': return '🌿';
-      case 'avanzado': return '🌳';
-      default: return '📚';
+      case 'principiante': return <Sprout size={16} />;
+      case 'intermedio': return <Leaf size={16} />;
+      case 'avanzado': return <TreePine size={16} />;
+      default: return <BookOpen size={16} />;
     }
   };
 
@@ -201,7 +202,7 @@ const Cursos = () => {
           alignItems: 'center',
           gap: '12px'
         }}>
-          <span style={{ fontSize: '24px' }}>⚠️</span>
+          <AlertTriangle size={24} color="#856404" />
           <div>
             <strong style={{ color: '#856404', display: 'block', marginBottom: '4px' }}>
               Versión MVP - Datos de Ejemplo
@@ -215,7 +216,7 @@ const Cursos = () => {
         </div>
 
         <div className="cursos-header">
-          <h1>📚 Cursos y Talleres</h1>
+          <h1><BookOpen size={32} /> Cursos y Talleres</h1>
           <p>Desarrolla nuevas habilidades con cursos seleccionados para jóvenes profesionales</p>
           
           <div className="stats-banner">
@@ -259,9 +260,9 @@ const Cursos = () => {
               onChange={(e) => setFiltros({...filtros, nivel: e.target.value})}
             >
               <option value="todos">Todos los niveles</option>
-              <option value="principiante">🌱 Principiante</option>
-              <option value="intermedio">🌿 Intermedio</option>
-              <option value="avanzado">🌳 Avanzado</option>
+              <option value="principiante">Principiante</option>
+              <option value="intermedio">Intermedio</option>
+              <option value="avanzado">Avanzado</option>
             </select>
           </div>
 
@@ -272,9 +273,9 @@ const Cursos = () => {
               onChange={(e) => setFiltros({...filtros, modalidad: e.target.value})}
             >
               <option value="todas">Todas</option>
-              <option value="online">💻 Online</option>
-              <option value="presencial">🏢 Presencial</option>
-              <option value="hibrido">🔄 Híbrido</option>
+              <option value="online">Online</option>
+              <option value="presencial">Presencial</option>
+              <option value="hibrido">Híbrido</option>
             </select>
           </div>
 
@@ -285,8 +286,8 @@ const Cursos = () => {
               onChange={(e) => setFiltros({...filtros, precio: e.target.value})}
             >
               <option value="todos">Todos</option>
-              <option value="gratuito">💚 Gratuitos</option>
-              <option value="pago">💰 De pago</option>
+              <option value="gratuito">Gratuitos</option>
+              <option value="pago">De pago</option>
             </select>
           </div>
         </div>
@@ -314,7 +315,7 @@ const Cursos = () => {
                       <span className="badge gratuito">GRATIS</span>
                     )}
                     {curso.certificado && (
-                      <span className="badge certificado">📜 Certificado</span>
+                      <span className="badge certificado"><ScrollText size={14} /> Certificado</span>
                     )}
                   </div>
                 </div>
@@ -350,18 +351,18 @@ const Cursos = () => {
                     </div>
                     
                     <div className="info-row">
-                      <span className="info-label">⏰ Duración:</span>
+                      <span className="info-label"><Clock size={16} /> Duración:</span>
                       <span className="info-value">{curso.duracion}</span>
                     </div>
                     
                     <div className="info-row">
-                      <span className="info-label">💻 Modalidad:</span>
+                      <span className="info-label"><Monitor size={16} /> Modalidad:</span>
                       <span className="info-value">{curso.modalidad}</span>
                     </div>
                     
                     {curso.precio === 'pago' && (
                       <div className="info-row">
-                        <span className="info-label">💰 Precio:</span>
+                        <span className="info-label"><DollarSign size={16} /> Precio:</span>
                         <span className="info-value precio">{curso.precio_valor}</span>
                       </div>
                     )}
@@ -369,7 +370,7 @@ const Cursos = () => {
 
                   <div className="curso-stats">
                     <div className="rating">
-                      ⭐ {curso.rating} ({curso.estudiantes.toLocaleString()} estudiantes)
+                      <Star size={16} fill="currentColor" /> {curso.rating} ({curso.estudiantes.toLocaleString()} estudiantes)
                     </div>
                   </div>
 

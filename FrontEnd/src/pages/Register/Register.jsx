@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
+import { AlertTriangle } from 'lucide-react';
 import './Register.css';
 
 /**
@@ -167,7 +168,7 @@ const Register = () => {
     if (!error) return null;
     return (
       <span className="field-error">
-        ⚠️ {error}
+        <AlertTriangle size={14} /> {error}
       </span>
     );
   };
@@ -264,8 +265,8 @@ const Register = () => {
                 return (
                   <small className="help-text">
                     {edad < 18
-                      ? `⚠️ Tienes ${edad} años - Cuenta ADOLESCENTE (algunas restricciones aplican)`
-                      : `✅ Tienes ${edad} años - Cuenta JOVEN (acceso completo)`}
+                      ? <><AlertTriangle size={14} /> Tienes {edad} años - Cuenta ADOLESCENTE (algunas restricciones aplican)</>
+                      : <>✅ Tienes {edad} años - Cuenta JOVEN (acceso completo)</>}
                   </small>
                 );
               })()}

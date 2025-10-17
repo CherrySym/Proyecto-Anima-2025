@@ -4,6 +4,7 @@ import { useAuth } from '../../context/AuthContext';
 import { useMinLoadingTime } from '../../hooks/useMinLoadingTime';
 import Post from '../../components/features/Post/Post';
 import * as userService from '../../services/userService';
+import { MapPin, BarChart3 } from 'lucide-react';
 import * as postService from '../../services/postService';
 import './UserProfile.css';
 
@@ -65,7 +66,7 @@ const UserProfile = () => {
       {
         title: "Curso Google Analytics Completado",
         date: "2023",
-        icon: "📊"
+        icon: <BarChart3 size={16} />
       }
     ],
     enrolledCourses: [
@@ -198,7 +199,7 @@ const UserProfile = () => {
             <div className="profile-details">
               <h1 className="profile-name">{user.name}</h1>
               <p className="profile-profession">{user.profession}</p>
-              <p className="profile-location">📍 {user.location}</p>
+              <p className="profile-location"><MapPin size={16} /> {user.location}</p>
               <p className="profile-bio">{user.bio}</p>
               
               <div className="profile-stats">

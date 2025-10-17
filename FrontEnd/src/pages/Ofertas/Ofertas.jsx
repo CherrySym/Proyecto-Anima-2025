@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { useMinLoadingTime } from '../../hooks/useMinLoadingTime';
 import * as ofertasService from '../../services/ofertasService';
+import { MapPin, Tag, AlertTriangle } from 'lucide-react';
 import './Ofertas.css';
 
 /**
@@ -140,13 +141,13 @@ const Ofertas = () => {
           
           {error && (
             <div className="error-banner">
-              ⚠️ {error}
+              <AlertTriangle size={16} /> {error}
             </div>
           )}
           
           {user?.edad && user.edad < 18 && (
             <div className="age-warning">
-              ⚠️ Como menor de 18 años (tipo: {user.tipo}), puedes explorar ofertas pero no postularte. 
+              <AlertTriangle size={16} /> Como menor de 18 años (tipo: {user.tipo}), puedes explorar ofertas pero no postularte. 
               ¡Prepárate con nuestros cursos y desafíos!
             </div>
           )}
@@ -215,13 +216,13 @@ const Ofertas = () => {
                   </div>
                   
                   <div className="oferta-info">
-                    {oferta.ubicacion && <p className="ubicacion">📍 {oferta.ubicacion}</p>}
-                    {oferta.tipo && <p className="tipo">💼 {oferta.tipo}</p>}
-                    {oferta.modalidad && <p className="modalidad">🌐 {oferta.modalidad}</p>}
-                    {oferta.salario && <p className="salario">💰 {oferta.salario}</p>}
+                    {oferta.ubicacion && <p className="ubicacion"><MapPin size={14} /> {oferta.ubicacion}</p>}
+                    {oferta.tipo && <p className="tipo">{oferta.tipo}</p>}
+                    {oferta.modalidad && <p className="modalidad">{oferta.modalidad}</p>}
+                    {oferta.salario && <p className="salario">{oferta.salario}</p>}
                     {oferta.area && (
                       <p className="area">
-                        🏷️ {oferta.area.charAt(0).toUpperCase() + oferta.area.slice(1)}
+                        <Tag size={14} /> {oferta.area.charAt(0).toUpperCase() + oferta.area.slice(1)}
                       </p>
                     )}
                   </div>

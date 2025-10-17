@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { useMinLoadingTime } from '../../hooks/useMinLoadingTime';
 import * as ofertasService from '../../services/ofertasService';
+import { MapPin, FileText, Building2, Rocket, AlertTriangle } from 'lucide-react';
 import './OfertaDetalle.css';
 
 /**
@@ -215,7 +216,7 @@ const OfertaDetalle = () => {
               alignItems: 'center',
               gap: '12px'
             }}>
-              <span style={{ fontSize: '24px' }}>⚠️</span>
+              <AlertTriangle size={24} color="#856404" />
               <div>
                 <strong style={{ color: '#856404', display: 'block', marginBottom: '4px' }}>
                   Aviso
@@ -237,7 +238,7 @@ const OfertaDetalle = () => {
               <h1>{oferta.titulo}</h1>
               <div className="empresa-info">
                 <h2>{oferta.empresa}</h2>
-                <p>📍 {oferta.ubicacion}</p>
+                <p><MapPin size={16} /> {oferta.ubicacion}</p>
               </div>
             </div>
 
@@ -258,7 +259,7 @@ const OfertaDetalle = () => {
         <div className="oferta-main-content">
             <div className="oferta-details">
               <section className="descripcion-section">
-                <h3>📋 Descripción del puesto</h3>
+                <h3><FileText size={20} /> Descripción del puesto</h3>
                 <p>{oferta.descripcion}</p>
                 {oferta.descripcionCompleta && (
                   <div 
@@ -282,7 +283,7 @@ const OfertaDetalle = () => {
               </section>
 
               <section className="empresa-section">
-                <h3>🏢 Sobre la empresa</h3>
+                <h3><Building2 size={20} /> Sobre la empresa</h3>
                 <div className="empresa-card">
                   <h4>{oferta.empresa_info.nombre}</h4>
                   <p>{oferta.empresa_info.descripcion}</p>
@@ -329,7 +330,7 @@ const OfertaDetalle = () => {
                     onClick={handlePostularse}
                     disabled={postulando}
                   >
-                    {postulando ? 'Enviando...' : '🚀 Postularse ahora'}
+                    {postulando ? 'Enviando...' : <><Rocket size={18} /> Postularse ahora</>}
                   </button>
                 )}
 

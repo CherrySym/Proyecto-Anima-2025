@@ -1,6 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import { useLanguage } from '../../context/LanguageContext';
 import SimpleNavbar from '../../components/layout/SimpleNavbar/SimpleNavbar';
+import { BarChart3 } from 'lucide-react';
 import './Consejos.css';
 
 /**
@@ -50,7 +51,7 @@ const Consejos = () => {
         },
         {
           title: '4. Tests de Personalidad',
-          icon: '📊',
+          icon: <BarChart3 size={24} />,
           content: 'Utiliza herramientas de evaluación profesional como el test de fortalezas VIA, el MBTI o el StrengthsFinder para obtener insights objetivos.',
           tips: [
             'Responde honestamente, no como quisieras ser',
@@ -136,7 +137,7 @@ const Consejos = () => {
         },
         {
           title: '4. Personality Tests',
-          icon: '📊',
+          icon: <BarChart3 size={24} />,
           content: 'Use professional assessment tools like the VIA Strengths test, MBTI, or StrengthsFinder for objective insights.',
           tips: [
             'Answer honestly, not as you wish to be',

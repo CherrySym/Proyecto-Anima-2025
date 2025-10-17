@@ -2,6 +2,10 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../../context/AuthContext';
 import { useLanguage } from '../../../context/LanguageContext';
+import { 
+  Home, Users, Briefcase, BookOpen, Target, MessageCircle, Bell, Search,
+  User, Settings, FileText, Compass, Lightbulb, Star, LogOut
+} from 'lucide-react';
 import './Header.css';
 
 const Header = () => {
@@ -70,7 +74,7 @@ const Header = () => {
   // Textos en diferentes idiomas
   const texts = {
     es: {
-      search: 'Buscar personas, empresas, cursos...',
+      search: 'Buscar...',
       home: 'Inicio',
       network: 'Red',
       jobs: 'Empleos',
@@ -85,7 +89,7 @@ const Header = () => {
       backToPublic: 'Volver al sitio público'
     },
     en: {
-      search: 'Search people, companies, courses...',
+      search: 'Search...',
       home: 'Home',
       network: 'Network',
       jobs: 'Jobs',
@@ -120,7 +124,7 @@ const Header = () => {
         {user && (
           <form className="search-form" onSubmit={handleSearch}>
             <div className="search-container">
-              <span className="search-icon">🔍</span>
+              <span className="search-icon"><Search size={16} /></span>
               <input
                 type="text"
                 placeholder={t.search}
@@ -140,7 +144,7 @@ const Header = () => {
               className={`nav-item ${isActivePath('/feed') ? 'active' : ''}`}
               title={t.home}
             >
-              <span className="nav-icon">🏠</span>
+              <span className="nav-icon"><Home size={20} /></span>
               <span className="nav-label">{t.home}</span>
             </Link>
             
@@ -149,7 +153,7 @@ const Header = () => {
               className={`nav-item ${isActivePath('/red') ? 'active' : ''}`}
               title={t.network}
             >
-              <span className="nav-icon">👥</span>
+              <span className="nav-icon"><Users size={20} /></span>
               <span className="nav-label">{t.network}</span>
             </Link>
             
@@ -159,7 +163,7 @@ const Header = () => {
                 className={`nav-item ${isActivePath('/ofertas') ? 'active' : ''}`}
                 title={t.jobs}
               >
-                <span className="nav-icon">💼</span>
+                <span className="nav-icon"><Briefcase size={20} /></span>
                 <span className="nav-label">{t.jobs}</span>
               </Link>
             )}
@@ -169,7 +173,7 @@ const Header = () => {
               className={`nav-item ${isActivePath('/cursos') ? 'active' : ''}`}
               title={t.courses}
             >
-              <span className="nav-icon">📚</span>
+              <span className="nav-icon"><BookOpen size={20} /></span>
               <span className="nav-label">{t.courses}</span>
             </Link>
             
@@ -178,7 +182,7 @@ const Header = () => {
               className={`nav-item ${isActivePath('/desafios') ? 'active' : ''}`}
               title={t.challenges}
             >
-              <span className="nav-icon">🎯</span>
+              <span className="nav-icon"><Target size={20} /></span>
               <span className="nav-label">{t.challenges}</span>
             </Link>
             
@@ -187,7 +191,7 @@ const Header = () => {
               className={`nav-item ${isActivePath('/mensajes') ? 'active' : ''}`}
               title={t.messages}
             >
-              <span className="nav-icon">💬</span>
+              <span className="nav-icon"><MessageCircle size={20} /></span>
               <span className="nav-label">{t.messages}</span>
             </Link>
             
@@ -196,7 +200,7 @@ const Header = () => {
               className={`nav-item ${isActivePath('/notificaciones') ? 'active' : ''}`}
               title={t.notifications}
             >
-              <span className="nav-icon">🔔</span>
+              <span className="nav-icon"><Bell size={20} /></span>
               <span className="nav-label">{t.notifications}</span>
               <span className="notification-badge">3</span>
             </Link>
@@ -233,37 +237,43 @@ const Header = () => {
               </button>
               <div className={`dropdown-menu ${isDropdownOpen ? 'dropdown-open' : ''}`}>
                 <Link to="/perfil" className="dropdown-item" onClick={closeDropdown}>
-                  <span>👤</span>
+                  <User size={18} />
                   <span>Ver perfil</span>
                 </Link>
                 <Link to="/configuracion" className="dropdown-item" onClick={closeDropdown}>
-                  <span>⚙️</span>
+                  <Settings size={18} />
                   <span>Configuración</span>
                 </Link>
                 <Link to="/mis-cursos" className="dropdown-item" onClick={closeDropdown}>
-                  <span>📚</span>
+                  <BookOpen size={18} />
                   <span>Mis cursos</span>
                 </Link>
-                <Link to="/desafios" className="dropdown-item" onClick={closeDropdown}>
-                  <span>🎯</span>
-                  <span>Desafíos</span>
+                <Link to="/mis-desafios" className="dropdown-item" onClick={closeDropdown}>
+                  <Target size={18} />
+                  <span>Mis desafíos</span>
                 </Link>
+                {user.edad >= 18 && (
+                  <Link to="/mis-postulaciones" className="dropdown-item" onClick={closeDropdown}>
+                    <FileText size={18} />
+                    <span>Mis postulaciones</span>
+                  </Link>
+                )}
                 <hr className="dropdown-divider" />
                 <Link to="/orientacion-vocacional" className="dropdown-item" onClick={closeDropdown}>
-                  <span>🧭</span>
+                  <Compass size={18} />
                   <span>Orientación vocacional</span>
                 </Link>
                 <Link to="/consejos" className="dropdown-item" onClick={closeDropdown}>
-                  <span>💡</span>
+                  <Lightbulb size={18} />
                   <span>Consejos</span>
                 </Link>
                 <Link to="/suscripciones" className="dropdown-item" onClick={closeDropdown}>
-                  <span>⭐</span>
+                  <Star size={18} />
                   <span>Suscripciones</span>
                 </Link>
                 <hr className="dropdown-divider" />
                 <button onClick={handleLogout} className="dropdown-item logout">
-                  <span>🚪</span>
+                  <LogOut size={18} />
                   <span>{t.logout}</span>
                 </button>
               </div>

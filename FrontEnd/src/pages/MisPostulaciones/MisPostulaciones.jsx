@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { useMinLoadingTime } from '../../hooks/useMinLoadingTime';
 import * as ofertasService from '../../services/ofertasService';
+import { FileText, BarChart3, AlertTriangle, MapPin, PartyPopper } from 'lucide-react';
 import './MisPostulaciones.css';
 
 /**
@@ -83,14 +84,14 @@ const MisPostulaciones = () => {
     <div className="mis-postulaciones-page">
       <div className="page-header">
         <div className="header-content">
-          <h1>📋 Mis Postulaciones</h1>
+          <h1><FileText size={32} /> Mis Postulaciones</h1>
           <p>Gestiona y da seguimiento a todas tus solicitudes de empleo</p>
         </div>
 
         {/* Estadísticas */}
         <div className="stats-grid">
           <div className="stat-card total">
-            <div className="stat-icon">📊</div>
+            <div className="stat-icon"><BarChart3 size={24} /></div>
             <div className="stat-info">
               <div className="stat-value">{contadores.total}</div>
               <div className="stat-label">Total</div>
@@ -154,7 +155,7 @@ const MisPostulaciones = () => {
       <div className="postulaciones-content">
         {error && (
           <div className="error-message">
-            <span className="error-icon">⚠️</span>
+            <span className="error-icon"><AlertTriangle size={24} /></span>
             <p>{error}</p>
             <button onClick={loadPostulaciones} className="retry-btn">
               Reintentar
@@ -223,7 +224,7 @@ const MisPostulaciones = () => {
                         <span className="info-value">{oferta.tipo || 'No especificado'}</span>
                       </div>
                       <div className="info-item">
-                        <span className="info-label">📍 Ubicación:</span>
+                        <span className="info-label"><MapPin size={14} /> Ubicación:</span>
                         <span className="info-value">{oferta.ubicacion || 'No especificada'}</span>
                       </div>
                       {oferta.salario && (
@@ -251,7 +252,7 @@ const MisPostulaciones = () => {
                     
                     {postulacion.estado === 'ACEPTADA' && (
                       <div className="success-message">
-                        <span className="success-icon">🎉</span>
+                        <span className="success-icon"><PartyPopper size={18} /></span>
                         <span>¡Felicidades! La empresa se pondrá en contacto contigo.</span>
                       </div>
                     )}

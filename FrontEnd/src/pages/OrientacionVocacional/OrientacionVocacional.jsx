@@ -1,6 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import { useLanguage } from '../../context/LanguageContext';
 import SimpleNavbar from '../../components/layout/SimpleNavbar/SimpleNavbar';
+import { Sparkles } from 'lucide-react';
 import './OrientacionVocacional.css';
 
 /**
@@ -84,7 +85,7 @@ const OrientacionVocacional = () => {
           </div>
 
           <div className="center-column">
-            <div className="stars">✨</div>
+            <div className="stars"><Sparkles size={32} /></div>
             <div className="button-list">
               <a href="#" onClick={(e) => { e.preventDefault(); navigate('/consejos'); }} className="action-button">
                 {t.adviceBtn}

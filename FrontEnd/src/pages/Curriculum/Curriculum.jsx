@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useLanguage } from '../../context/LanguageContext';
 import { useAuth } from '../../context/AuthContext';
 import SimpleNavbar from '../../components/layout/SimpleNavbar/SimpleNavbar';
+import { MapPin, GraduationCap } from 'lucide-react';
 import './Curriculum.css';
 
 /**
@@ -42,7 +43,7 @@ const Curriculum = () => {
       <div class="contact-info">
         <span>📧 email@ejemplo.com</span> |
         <span>📞 +34 123 456 789</span> |
-        <span>📍 Ciudad, País</span>
+        <span><MapPin size={14} /> Ciudad, País</span>
       </div>
     </header>
     
@@ -73,7 +74,7 @@ const Curriculum = () => {
     </section>
 
     <section>
-      <h2>🎓 Educación</h2>
+      <h2><GraduationCap size={20} /> Educación</h2>
       <div class="education-entry">
         <h3>Grado/Título en Universidad/Instituto</h3>
         <p class="date-range">2014 – 2018 | Ciudad, País</p>

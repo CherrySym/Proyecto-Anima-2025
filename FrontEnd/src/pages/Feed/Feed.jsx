@@ -4,6 +4,7 @@ import { useMinLoadingTime } from '../../hooks/useMinLoadingTime';
 import CreatePost from '../../components/features/CreatePost/CreatePost';
 import Post from '../../components/features/Post/Post';
 import Sidebar from '../../components/layout/Sidebar/Sidebar';
+import { AlertTriangle } from 'lucide-react';
 import * as postService from '../../services/postService';
 import './Feed.css';
 
@@ -182,7 +183,7 @@ const Feed = () => {
           <div className="feed-content">
             {error && (
               <div className="error-banner">
-                ⚠️ {error}
+                <AlertTriangle size={16} /> {error}
               </div>
             )}
             

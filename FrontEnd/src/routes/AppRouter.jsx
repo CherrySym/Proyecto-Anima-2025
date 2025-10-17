@@ -33,6 +33,7 @@ import Ofertas from '../pages/Ofertas/Ofertas';
 import OfertaDetalle from '../pages/OfertaDetalle/OfertaDetalle';
 import MisPostulaciones from '../pages/MisPostulaciones/MisPostulaciones';
 import Desafios from '../pages/Desafios/Desafios';
+import MisDesafios from '../pages/MisDesafios/MisDesafios';
 import Cursos from '../pages/Cursos/Cursos';
 import MisCursos from '../pages/MisCursos/MisCursos';
 
@@ -224,9 +225,7 @@ const AppRouter = () => {
           <PrivateRoute requireAdult>
             <div className="app">
               <Header />
-              <main className="main-content">
-                <OfertaDetalle />
-              </main>
+              <OfertaDetalle />
             </div>
           </PrivateRoute>
         } 
@@ -238,9 +237,7 @@ const AppRouter = () => {
           <PrivateRoute requireAdult>
             <div className="app">
               <Header />
-              <main className="main-content">
-                <MisPostulaciones />
-              </main>
+              <MisPostulaciones />
             </div>
           </PrivateRoute>
         } 
@@ -278,6 +275,19 @@ const AppRouter = () => {
             <div className="app">
               <Header />
               <MisCursos />
+            </div>
+          </PrivateRoute>
+        } 
+      />
+
+      {/* Mis Desafíos */}
+      <Route 
+        path="/mis-desafios" 
+        element={
+          <PrivateRoute>
+            <div className="app">
+              <Header />
+              <MisDesafios />
             </div>
           </PrivateRoute>
         } 

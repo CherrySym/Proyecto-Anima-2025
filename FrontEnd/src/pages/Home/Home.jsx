@@ -1,6 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import { useLanguage } from '../../context/LanguageContext';
 import SimpleNavbar from '../../components/layout/SimpleNavbar/SimpleNavbar';
+import { Sparkles } from 'lucide-react';
 import './Home.css';
 
 /**
@@ -23,7 +24,7 @@ const Home = () => {
       jovenes: 'Jóvenes',
       companias: 'Compañías',
       about: 'Acerca De..',
-      title: '✨ Conozca el futuro de los jóvenes',
+      title: <><Sparkles size={20} /> Conozca el futuro de los jóvenes</>,
       description: 'A través de experiencias laborales desafiantes, los jóvenes aprenden a innovar y a crecer. Cada proyecto y cada meta alcanzada les enseña a prosperar en un entorno dinámico, forjando el camino hacia una carrera exitosa y llena de oportunidades.',
       button: 'Ir a Suscripciones',
       spanish: 'Español',
@@ -35,7 +36,7 @@ const Home = () => {
       jovenes: 'Young People',
       companias: 'Companies',
       about: 'About Us..',
-      title: '✨ Discover the future of young people',
+      title: <><Sparkles size={20} /> Discover the future of young people</>,
       description: 'Through challenging work experiences, young people learn to innovate and grow. Each project and each goal achieved teaches them to thrive in a dynamic environment, forging the path to a successful career full of opportunities.',
       button: 'Go to Subscriptions',
       spanish: 'Spanish',

@@ -1,6 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import { useLanguage } from '../../context/LanguageContext';
 import SimpleNavbar from '../../components/layout/SimpleNavbar/SimpleNavbar';
+import { Map } from 'lucide-react';
 import './Entrevistas.css';
 
 /**
@@ -45,7 +46,7 @@ const Entrevistas = () => {
             content: 'Viste formal o business casual según la cultura de la empresa. Si dudas, mejor más formal.'
           },
           {
-            icon: '🗺️',
+            icon: <Map size={24} />,
             title: 'Planifica tu Llegada',
             content: 'Verifica la ubicación, medio de transporte y llega 10-15 minutos antes.'
           },
@@ -179,7 +180,7 @@ const Entrevistas = () => {
             content: 'Dress formal or business casual depending on company culture. When in doubt, go more formal.'
           },
           {
-            icon: '🗺️',
+            icon: <Map size={24} />,
             title: 'Plan Your Arrival',
             content: 'Verify location, transportation, and arrive 10-15 minutes early.'
           },

@@ -1,6 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import { useLanguage } from '../../context/LanguageContext';
 import SimpleNavbar from '../../components/layout/SimpleNavbar/SimpleNavbar';
+import { Sparkles } from 'lucide-react';
 import './Jovenes.css';
 
 /**
@@ -22,7 +23,7 @@ const Jovenes = () => {
       jovenes: 'Jóvenes',
       companias: 'Compañías',
       about: 'Acerca De..',
-      title: '✨ Encuentra a Jóvenes como empresa',
+      title: <><Sparkles size={20} /> Encuentra a Jóvenes como empresa</>,
       description: 'En un mercado laboral en constante evolución, las empresas necesitan una inyección constante de energía, nuevas perspectivas y talento fresco. Y es precisamente en los jóvenes donde reside esa fuente de innovación y crecimiento. Más que simples empleados, los jóvenes de hoy son motores de cambio, con una mentalidad digital innata, una pasión por aprender y una adaptabilidad que define la era moderna.',
       button: 'Ir a Suscripciones',
       spanish: 'Español',
@@ -34,7 +35,7 @@ const Jovenes = () => {
       jovenes: 'Young People',
       companias: 'Companies',
       about: 'About Us..',
-      title: '✨ Find Young Talent as a Company',
+      title: <><Sparkles size={20} /> Find Young Talent as a Company</>,
       description: 'In a constantly evolving labor market, companies need a constant injection of energy, new perspectives and fresh talent. And it is precisely in young people where that source of innovation and growth resides. More than just employees, today\'s young people are engines of change, with an innate digital mindset, a passion for learning and an adaptability that defines the modern era.',
       button: 'Go to Subscriptions',
       spanish: 'Spanish',

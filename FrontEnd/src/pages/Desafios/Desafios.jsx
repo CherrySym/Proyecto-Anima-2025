@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { useMinLoadingTime } from '../../hooks/useMinLoadingTime';
+import { Target, AlertTriangle, Star, Lightbulb, Clock, Users, Calendar, Trophy, DollarSign } from 'lucide-react';
 import './Desafios.css';
 
 /**
@@ -133,10 +134,10 @@ const Desafios = () => {
 
   const getDificultadIcon = (dificultad) => {
     switch(dificultad) {
-      case 'facil': return '⭐';
-      case 'medio': return '⭐⭐';
-      case 'dificil': return '⭐⭐⭐';
-      default: return '⭐';
+      case 'facil': return <Star size={16} fill="currentColor" />;
+      case 'medio': return <><Star size={16} fill="currentColor" /><Star size={16} fill="currentColor" /></>;
+      case 'dificil': return <><Star size={16} fill="currentColor" /><Star size={16} fill="currentColor" /><Star size={16} fill="currentColor" /></>;
+      default: return <Star size={16} fill="currentColor" />;
     }
   };
 
@@ -167,7 +168,7 @@ const Desafios = () => {
           alignItems: 'center',
           gap: '12px'
         }}>
-          <span style={{ fontSize: '24px' }}>⚠️</span>
+          <AlertTriangle size={24} color="#856404" />
           <div>
             <strong style={{ color: '#856404', display: 'block', marginBottom: '4px' }}>
               Versión MVP - Datos de Ejemplo
@@ -181,12 +182,12 @@ const Desafios = () => {
         </div>
 
         <div className="desafios-header">
-          <h1>🎯 Desafíos y Encargos</h1>
+          <h1><Target size={32} /> Desafíos y Encargos</h1>
           <p>Completa tareas reales de empresas y gana puntos y experiencia</p>
           
           {user?.edad < 18 && (
             <div className="age-info">
-              💡 Como menor de 18 años, puedes participar en todos los desafíos y ganar puntos. 
+              <Lightbulb size={16} /> Como menor de 18 años, puedes participar en todos los desafíos y ganar puntos. 
               Las recompensas monetarias estarán disponibles cuando cumplas 18 años.
             </div>
           )}
@@ -217,9 +218,9 @@ const Desafios = () => {
               onChange={(e) => setFiltros({...filtros, dificultad: e.target.value})}
             >
               <option value="todas">Todas</option>
-              <option value="facil">⭐ Fácil</option>
-              <option value="medio">⭐⭐ Medio</option>
-              <option value="dificil">⭐⭐⭐ Difícil</option>
+              <option value="facil">Fácil</option>
+              <option value="medio">Medio</option>
+              <option value="dificil">Difícil</option>
             </select>
           </div>
 
@@ -267,31 +268,31 @@ const Desafios = () => {
 
                 <div className="desafio-info">
                   <div className="info-item">
-                    <span className="label">⏱️ Tiempo:</span>
+                    <span className="label"><Clock size={16} /> Tiempo:</span>
                     <span>{desafio.tiempo_estimado}</span>
                   </div>
                   <div className="info-item">
-                    <span className="label">👥 Participantes:</span>
+                    <span className="label"><Users size={16} /> Participantes:</span>
                     <span>{desafio.participantes}</span>
                   </div>
                   <div className="info-item">
-                    <span className="label">📅 Límite:</span>
+                    <span className="label"><Calendar size={16} /> Límite:</span>
                     <span>{new Date(desafio.fecha_limite).toLocaleDateString('es-AR')}</span>
                   </div>
                 </div>
 
                 <div className="desafio-recompensa">
                   <div className="recompensa-puntos">
-                    🏆 {desafio.recompensa.puntos} puntos
+                    <Trophy size={16} /> {desafio.recompensa.puntos} puntos
                   </div>
                   {desafio.recompensa.dinero && (
                     <div className="recompensa-dinero">
-                      💰 {desafio.recompensa.dinero}
+                      <DollarSign size={16} /> {desafio.recompensa.dinero}
                     </div>
                   )}
                   {!desafio.recompensa.dinero && user?.edad < 18 && (
                     <div className="recompensa-futura">
-                      💰 Recompensa monetaria disponible a los 18+
+                      <DollarSign size={16} /> Recompensa monetaria disponible a los 18+
                     </div>
                   )}
                 </div>

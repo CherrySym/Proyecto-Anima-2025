@@ -1,13 +1,17 @@
 /* OfertaDetalle.css */
 .oferta-detalle-page {
+  width: 100%;
   min-height: 100vh;
-  background-color: #f8f9fa;
+  background-color: #f5f7fa;
+  padding: 0;
+  margin: 0;
 }
 
 .oferta-detalle-content {
   max-width: 1200px;
   margin: 0 auto;
   padding: 20px;
+  box-sizing: border-box;
 }
 
 .oferta-detalle-container {

@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { useMinLoadingTime } from '../../hooks/useMinLoadingTime';
+import { GraduationCap } from 'lucide-react';
 import './MisCursos.css';
 
 /**
@@ -301,7 +302,7 @@ const MisCursos = () => {
                     <span>⏰ {curso.tiempoInvertido}</span>
                     <span>📅 Última actividad: {curso.ultimaActividad}</span>
                     {curso.certificado && curso.completado && (
-                      <span className="certificado-disponible">🎓 Certificado disponible</span>
+                      <span className="certificado-disponible"><GraduationCap size={14} /> Certificado disponible</span>
                     )}
                   </div>
 
@@ -330,7 +331,7 @@ const MisCursos = () => {
                             className="btn-certificado"
                             onClick={() => handleDescargarCertificado(curso)}
                           >
-                            🎓 Descargar certificado
+                            <GraduationCap size={16} /> Descargar certificado
                           </button>
                         )}
                       </>
