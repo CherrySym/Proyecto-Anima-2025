@@ -1,7 +1,11 @@
 /* Companias.css */
+body {
+  overflow-x: hidden; /* Prevents horizontal scrolling */
+}
 .companias-page {
   min-height: 100vh;
   background-color: #f8f9fa;
+  padding-right: 0;
 }
 
 .companias-content {
@@ -13,6 +17,10 @@
 .companias-header {
   text-align: center;
   margin-bottom: 40px;
+}
+
+p {
+  color: black;
 }
 
 .companias-header h1 {
@@ -58,7 +66,6 @@
   height: 50vh;
 }
 
-/* Filtros */
 .filtros-section {
   margin-bottom: 30px;
   text-align: center;
@@ -99,7 +106,6 @@
   color: white;
 }
 
-/* Grid de empresas */
 .empresas-carousel-container {
   position: relative;
   display: flex;
@@ -396,7 +402,6 @@
   color: #333;
 }
 
-/* Indicadores de carrusel */
 .carousel-indicators {
   display: flex;
   flex-direction: column;
@@ -438,7 +443,6 @@
   border-radius: 6px;
 }
 
-/* Llamada a la acción */
 .llamada-accion {
   background: linear-gradient(135deg, #4f4fcf 0%, #3d3db8 100%);
   color: white;
@@ -454,6 +458,7 @@
 }
 
 .cta-content p {
+  color: white;
   margin: 0 0 25px 0;
   font-size: 1.2rem;
   opacity: 0.9;
@@ -476,12 +481,10 @@
   box-shadow: 0 5px 15px rgba(255, 255, 255, 0.3);
 }
 
-/* Responsive */
 @media (max-width: 1200px) {
   .empresas-grid {
     grid-template-columns: repeat(2, 1fr);
   }
-  
   .carousel-arrow {
     width: 50px;
     height: 50px;
@@ -493,64 +496,51 @@
   .companias-content {
     padding: 15px;
   }
-  
   .companias-header h1 {
     font-size: 2rem;
   }
-  
   .header-stats {
     gap: 20px;
   }
-  
   .filtros-buttons {
     flex-direction: column;
     align-items: center;
   }
-  
   .filtros-buttons button {
     width: 200px;
   }
-  
   .empresas-carousel-container {
     flex-direction: column;
     gap: 15px;
   }
-  
   .carousel-arrow {
     width: 45px;
     height: 45px;
     font-size: 2rem;
   }
-  
   .empresas-grid {
     grid-template-columns: 1fr;
   }
-  
   .empresa-header {
     flex-direction: column;
     align-items: flex-start;
     gap: 15px;
   }
-  
   .empresa-detalles {
     gap: 12px;
   }
-  
   .detalle-item {
     flex-direction: column;
     align-items: flex-start;
     gap: 3px;
   }
-  
   .opportunities-stats {
     flex-direction: column;
     gap: 15px;
   }
-  
   .llamada-accion {
     padding: 40px 25px;
   }
-  
   .cta-content h2 {
     font-size: 1.8rem;
   }
