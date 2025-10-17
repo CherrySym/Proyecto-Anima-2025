@@ -676,3 +676,46 @@ p {
     font-size: 1.8rem;
   }
 }
+
+.empresas-carousel-container {
+  display: flex;
+  align-items: flex-start; /* Cambiado de center a flex-start para alinear arriba */
+  justify-content: center;
+  gap: 20px;
+  margin-bottom: 40px;
+  width: 100%;
+  padding: 10px;
+  box-sizing: border-box;
+  position: relative; /* Necesario para las flechas absolutas */
+}
+
+.carousel-arrow.prev-arrow,
+.carousel-arrow.next-arrow {
+  position: absolute;
+  top: 20%; /* Ajusta este valor para moverlas más arriba o más abajo */
+  z-index: 10;
+}
+
+.carousel-arrow.prev-arrow {
+  left: -70px;/* Separación del lado izquierdo */
+  top:40%; 
+  
+}
+
+.carousel-arrow.next-arrow {
+  right: -70px; /* Separación del lado derecho */
+   top:40%; 
+}
+
+/* Opcional: reducimos tamaño en móvil */
+@media (max-width: 768px) {
+  .carousel-arrow.prev-arrow,
+  .carousel-arrow.next-arrow {
+    top: 15%; /* Ajusta si es necesario */
+    left: -40px;
+    right: -80px;
+    width: 45px;
+    height: 45px;
+    font-size: 2rem;
+  }
+}
