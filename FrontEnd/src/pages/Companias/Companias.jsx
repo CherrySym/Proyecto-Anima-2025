@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
+import { useMinLoadingTime } from '../../hooks/useMinLoadingTime';
 import SimpleNavbar from '../../components/layout/SimpleNavbar/SimpleNavbar';
 import { getAllCompanies } from '../../data/companiesData';
 import './Companias.css';
@@ -13,33 +14,35 @@ const Companias = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
   const [empresas, setEmpresas] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const { loading, withMinLoadingTime } = useMinLoadingTime(800);
   const [filtroSector, setFiltroSector] = useState('todos');
   const [paginaActual, setPaginaActual] = useState(0);
   const [likedCompanies, setLikedCompanies] = useState(new Set());
   const empresasPorPagina = 3;
 
   useEffect(() => {
-    // Cargar empresas desde data
-    setTimeout(() => {
-      const allCompanies = getAllCompanies();
-      const companiesFormatted = allCompanies.map(company => ({
-        id: company.id,
-        nombre: company.name,
-        sector: company.type.toLowerCase(),
-        descripcion: company.about.description.substring(0, 150) + '...',
-        empleados: '50-100',
-        ubicacion: 'Uruguay / Internacional',
-        logo: company.images.main,
-        sitio_web: company.contact,
-        ofertas_activas: Math.floor(Math.random() * 10) + 1,
-        desafios_activos: Math.floor(Math.random() * 8) + 1,
-        puntuacion: (4.5 + Math.random() * 0.5).toFixed(1),
-        beneficios: ['Trabajo remoto', 'Capacitaciones', 'Ambiente profesional']
-      }));
-      setEmpresas(companiesFormatted);
-      setLoading(false);
-    }, 800);
+    const loadCompanies = async () => {
+      await withMinLoadingTime(async () => {
+        const allCompanies = getAllCompanies();
+        const companiesFormatted = allCompanies.map(company => ({
+          id: company.id,
+          nombre: company.name,
+          sector: company.type.toLowerCase(),
+          descripcion: company.about.description.substring(0, 150) + '...',
+          empleados: '50-100',
+          ubicacion: 'Uruguay / Internacional',
+          logo: company.images.main,
+          sitio_web: company.contact,
+          ofertas_activas: Math.floor(Math.random() * 10) + 1,
+          desafios_activos: Math.floor(Math.random() * 8) + 1,
+          puntuacion: (4.5 + Math.random() * 0.5).toFixed(1),
+          beneficios: ['Trabajo remoto', 'Capacitaciones', 'Ambiente profesional']
+        }));
+        setEmpresas(companiesFormatted);
+      });
+    };
+    
+    loadCompanies();
   }, []);
 
   const filtrarEmpresas = () => {

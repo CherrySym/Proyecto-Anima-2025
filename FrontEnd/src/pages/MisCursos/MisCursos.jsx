@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
+import { useMinLoadingTime } from '../../hooks/useMinLoadingTime';
 import './MisCursos.css';
 
 /**
@@ -12,13 +13,17 @@ const MisCursos = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
   const [cursosInscritos, setCursosInscritos] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const { loading, withMinLoadingTime } = useMinLoadingTime(800);
   const [filtroEstado, setFiltroEstado] = useState('todos'); // todos, en-progreso, completados
 
   useEffect(() => {
-    // Simular carga de cursos inscritos del usuario desde API
-    // En producción: fetch(`/api/users/${user.id}/enrolled-courses`)
-    setTimeout(() => {
+    loadCursosInscritos();
+  }, []);
+
+  const loadCursosInscritos = async () => {
+    await withMinLoadingTime(async () => {
+      // Simular carga de cursos inscritos del usuario desde API
+      // En producción: fetch(`/api/users/${user.id}/enrolled-courses`)
       setCursosInscritos([
         {
           id: 1,
@@ -114,9 +119,8 @@ const MisCursos = () => {
           proximaLeccion: 'Estrategias de contenido'
         }
       ]);
-      setLoading(false);
-    }, 800);
-  }, [user]);
+    });
+  };
 
   const filtrarCursos = () => {
     switch (filtroEstado) {

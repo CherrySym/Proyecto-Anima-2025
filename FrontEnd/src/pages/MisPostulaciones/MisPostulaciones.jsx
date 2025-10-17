@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
+import { useMinLoadingTime } from '../../hooks/useMinLoadingTime';
 import * as ofertasService from '../../services/ofertasService';
 import './MisPostulaciones.css';
 
@@ -13,7 +14,7 @@ const MisPostulaciones = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
   const [postulaciones, setPostulaciones] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const { loading, withMinLoadingTime } = useMinLoadingTime(800);
   const [error, setError] = useState(null);
   const [filtroEstado, setFiltroEstado] = useState('TODAS');
 
@@ -22,16 +23,15 @@ const MisPostulaciones = () => {
   }, []);
 
   const loadPostulaciones = async () => {
-    try {
-      setLoading(true);
-      setError(null);
-      const data = await ofertasService.getMisPostulaciones();
-      setPostulaciones(data);
-    } catch (err) {
-      setError('No se pudieron cargar tus postulaciones. Intenta de nuevo más tarde.');
-    } finally {
-      setLoading(false);
-    }
+    await withMinLoadingTime(async () => {
+      try {
+        setError(null);
+        const data = await ofertasService.getMisPostulaciones();
+        setPostulaciones(data);
+      } catch (err) {
+        setError('No se pudieron cargar tus postulaciones. Intenta de nuevo más tarde.');
+      }
+    });
   };
 
   const getEstadoBadge = (estado) => {

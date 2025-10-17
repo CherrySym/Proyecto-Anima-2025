@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
+import { useMinLoadingTime } from '../../hooks/useMinLoadingTime';
 import * as ofertasService from '../../services/ofertasService';
 import './OfertaDetalle.css';
 
@@ -13,7 +14,7 @@ const OfertaDetalle = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
   const [oferta, setOferta] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const { loading, withMinLoadingTime } = useMinLoadingTime(800);
   const [error, setError] = useState(null);
   const [postulando, setPostulando] = useState(false);
   const [yaPostulado, setYaPostulado] = useState(false);
@@ -23,20 +24,19 @@ const OfertaDetalle = () => {
   }, [id]);
 
   const loadOferta = async () => {
-    try {
-      setLoading(true);
-      setError(null);
-      const data = await ofertasService.getOfertaById(id);
-      setOferta(data);
-      
-      // Verificar si ya se postuló (esta info vendría en el objeto de oferta del backend)
-      setYaPostulado(data.yaPostulado || false);
-    } catch (err) {
-      setError('No se pudo cargar la oferta. Mostrando contenido de ejemplo.');
-      loadMockOferta();
-    } finally {
-      setLoading(false);
-    }
+    await withMinLoadingTime(async () => {
+      try {
+        setError(null);
+        const data = await ofertasService.getOfertaById(id);
+        setOferta(data);
+        
+        // Verificar si ya se postuló (esta info vendría en el objeto de oferta del backend)
+        setYaPostulado(data.yaPostulado || false);
+      } catch (err) {
+        setError('No se pudo cargar la oferta. Mostrando contenido de ejemplo.');
+        loadMockOferta();
+      }
+    });
   };
 
   const loadMockOferta = () => {

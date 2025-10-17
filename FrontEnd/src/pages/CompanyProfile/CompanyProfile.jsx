@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
+import { useMinLoadingTime } from '../../hooks/useMinLoadingTime';
 import Post from '../../components/features/Post/Post';
 import './CompanyProfile.css';
 
@@ -7,7 +8,7 @@ const CompanyProfile = () => {
   const { companyId } = useParams();
   const [company, setCompany] = useState(null);
   const [posts, setPosts] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const { loading, withMinLoadingTime } = useMinLoadingTime(800);
   const [isFollowing, setIsFollowing] = useState(false);
   const [activeTab, setActiveTab] = useState('publicaciones');
 
@@ -136,13 +137,15 @@ const CompanyProfile = () => {
   ];
 
   useEffect(() => {
-    // Simular carga de datos
-    setTimeout(() => {
-      setCompany(mockCompany);
-      setPosts(mockCompanyPosts);
-      setIsFollowing(false);
-      setLoading(false);
-    }, 1000);
+    const loadCompanyData = async () => {
+      await withMinLoadingTime(async () => {
+        setCompany(mockCompany);
+        setPosts(mockCompanyPosts);
+        setIsFollowing(false);
+      });
+    };
+    
+    loadCompanyData();
   }, [companyId]);
 
   const handleFollow = () => {

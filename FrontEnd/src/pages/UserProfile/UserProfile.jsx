@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
+import { useMinLoadingTime } from '../../hooks/useMinLoadingTime';
 import Post from '../../components/features/Post/Post';
 import * as userService from '../../services/userService';
 import * as postService from '../../services/postService';
@@ -12,7 +13,7 @@ const UserProfile = () => {
   const { user: currentUser } = useAuth();
   const [user, setUser] = useState(null);
   const [posts, setPosts] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const { loading, withMinLoadingTime } = useMinLoadingTime(800);
   const [isOwnProfile, setIsOwnProfile] = useState(false);
   const [isFollowing, setIsFollowing] = useState(false);
 
@@ -129,15 +130,18 @@ const UserProfile = () => {
   ];
 
   useEffect(() => {
-    // Simular carga de datos
-    setTimeout(() => {
+    loadUserProfile();
+  }, [userId, currentUser]);
+
+  const loadUserProfile = async () => {
+    await withMinLoadingTime(async () => {
+      // Simular carga de datos
       setUser(mockUser);
       setPosts(mockUserPosts);
       setIsOwnProfile(!userId || userId === currentUser?.id?.toString());
       setIsFollowing(false); // Por defecto no seguimos al usuario
-      setLoading(false);
-    }, 1000);
-  }, [userId, currentUser]);
+    });
+  };
 
   const handleFollow = () => {
     setIsFollowing(!isFollowing);
