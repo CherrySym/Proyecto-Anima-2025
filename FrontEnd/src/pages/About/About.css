@@ -5,12 +5,13 @@ body {
   background: #f4f4f4;
 }
 
-.about-page {
+#jp-about-page-container {
   min-height: 100vh;
   background: #f4f4f4;
 }
 
-.language-nav button {
+/* Original: .language-nav button */
+.jp-language-toggle-btn { 
   background: none;
   border: 2px solid white;
   color: rgba(255, 255, 255, 0.9);
@@ -21,16 +22,19 @@ body {
   transition: all 0.3s ease;
 }
 
-.language-nav button:hover {
+/* Original: .language-nav button:hover */
+.jp-language-toggle-btn:hover {
   background: white;
   color: #2d2d3f;
 }
 
-.active {
+/* Original: .active */
+.jp-active-link {
   border-bottom: 2px solid white;
 }
 
-.header {
+/* Original: .header */
+.jp-global-header {
   background: linear-gradient(to right, #000000, #4b29d0);
   color: white;
   padding: 20px 40px;
@@ -39,17 +43,20 @@ body {
   align-items: center;
 }
 
-.about-title {
+/* Original: .about-title */
+#jp-page-header-title {
   font-size: 36px;
   font-weight: bold;
   margin: 0;
 }
 
-.header nav {
+/* Original: .header nav */
+.jp-nav-links {
   display: flex;
 }
 
-.header nav a {
+/* Original: .header nav a */
+.jp-nav-links a {
   color: white;
   text-decoration: none;
   margin-left: 20px;
@@ -58,15 +65,18 @@ body {
   transition: border-bottom 0.3s ease;
 }
 
-.header nav a:hover {
+/* Original: .header nav a:hover */
+.jp-nav-links a:hover {
   border-bottom: 2px solid white;
 }
 
-.header nav a.active {
+/* Original: .header nav a.active */
+.jp-nav-links a.jp-active-link {
   border-bottom: 2px solid white;
 }
 
-.logo-bar {
+/* Original: .logo-bar */
+#jp-logo-user-bar {
   background: white;
   display: flex;
   justify-content: space-between;
@@ -75,17 +85,20 @@ body {
   border-bottom: 1px solid #ccc;
 }
 
-.logo-jobpath {
+/* Original: .logo-jobpath */
+.jp-app-logo-box {
   display: flex;
   align-items: center;
   gap: 10px;
 }
 
-.logo-jobpath img {
+/* Original: .logo-jobpath img */
+.jp-app-logo-box img {
   width: 30px;
 }
 
-.logo-jobpath span {
+/* Original: .logo-jobpath span */
+.jp-app-logo-box span {
   font-size: 20px;
   font-weight: bold;
   background: #eee;
@@ -93,7 +106,8 @@ body {
   border-radius: 20px;
 }
 
-.login-btn {
+/* Original: .login-btn */
+.jp-profile-btn {
   background: none;
   border: none;
   font-weight: bold;
@@ -105,34 +119,40 @@ body {
   cursor: pointer;
 }
 
-.login-btn img {
+/* Original: .login-btn img */
+.jp-profile-btn img {
   width: 30px;
   border-radius: 50%;
 }
 
-.main-content {
+/* Original: .main-content */
+#jp-main-sections {
   display: grid;
   grid-template-columns: 1fr 2fr 1fr;
   gap: 20px;
   padding: 30px;
 }
 
-.main-content section {
+/* Original: .main-content section */
+.jp-section-box {
   background: white;
   border-radius: 10px;
   padding: 20px;
   border: 1px solid #ddd;
 }
 
-.left-box {
+/* Original: .left-box */
+.jp-left-panel {
   text-align: center;
 }
 
-.left-box h2 {
+/* Original: .left-box h2 */
+.jp-left-panel h2 {
   font-size: 20px;
 }
 
-.get-started {
+/* Original: .get-started */
+.jp-get-started-btn {
   margin-top: 15px;
   background: #3c8efc;
   border: none;
@@ -144,43 +164,51 @@ body {
   display: inline-block;
 }
 
-.center-box {
+/* Original: .center-box */
+.jp-center-panel {
   text-align: center;
 }
 
-.center-box .icon {
+/* Original: .center-box .icon */
+.jp-center-panel .jp-center-icon {
   font-size: 30px;
   margin-bottom: 15px;
 }
 
-.center-box p {
+/* Original: .center-box p */
+.jp-center-panel .jp-center-text {
   text-align: justify;
   margin-bottom: 10px;
 }
 
-.right-box {
+/* Original: .right-box */
+.jp-right-panel {
   background: #1d1d2c;
   color: white;
 }
 
-.right-box h3 {
+/* Original: .right-box h3 */
+.jp-right-panel .jp-right-title {
   font-size: 16px;
   margin-bottom: 10px;
 }
 
-.right-box ul {
+/* Original: .right-box ul */
+.jp-reason-list {
   list-style: none;
   padding: 0;
 }
 
-.right-box ul li {
+/* Original: .right-box ul li */
+.jp-reason-list li {
   background: #2e2e40;
   margin: 5px 0;
   padding: 10px;
   border-radius: 5px;
 }
 
-.right-box small {
+/* Original: .right-box small */
+.jp-vote-info {
   display: block;
   margin-top: 10px;
   font-size: 12px;
@@ -189,17 +217,17 @@ body {
 
 /* Responsive */
 @media (max-width: 968px) {
-  .main-content {
+  #jp-main-sections {
     grid-template-columns: 1fr;
   }
   
-  .header {
+  .jp-global-header {
     flex-direction: column;
     gap: 15px;
     text-align: center;
   }
   
-  .header nav {
+  .jp-nav-links {
     flex-direction: column;
     gap: 10px;
   }
