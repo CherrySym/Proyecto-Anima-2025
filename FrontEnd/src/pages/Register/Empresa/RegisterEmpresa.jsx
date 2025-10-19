@@ -1,26 +1,24 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../../context/AuthContext';
-import { AlertTriangle } from 'lucide-react';
-import './Register.css';
+import { useAuth } from '../../../context/AuthContext';
+import { AlertTriangle, ArrowLeft } from 'lucide-react';
+import './RegisterEmpresa.css';
 
 /**
- * Página de Registro
- * Permite registro de Usuarios (jóvenes) y Empresas
+ * Página de Registro para Empresas
+ * Permite registro específico de Empresas
  * Conectado con backend: POST /auth/register
  */
-const Register = () => {
+const RegisterEmpresa = () => {
   const navigate = useNavigate();
   const { register, loading } = useAuth();
 
   // Estados del formulario
   const [formData, setFormData] = useState({
-    tipoUsuario: 'USUARIO',
     nombre: '',
     email: '',
     password: '',
     confirmPassword: '',
-    fechaNacimiento: '', // Cambiado de 'edad' a 'fechaNacimiento'
     descripcion: ''
   });
 
@@ -29,7 +27,6 @@ const Register = () => {
     email: '',
     password: '',
     confirmPassword: '',
-    fechaNacimiento: '', // Cambiado de 'edad' a 'fechaNacimiento'
     descripcion: '',
     general: ''
   });
@@ -48,20 +45,19 @@ const Register = () => {
 
   // Validaciones
   const validateForm = () => {
-    const { tipoUsuario, nombre, email, password, confirmPassword, fechaNacimiento, descripcion } = formData;
+    const { nombre, email, password, confirmPassword, descripcion } = formData;
     const newErrors = {
       nombre: '',
       email: '',
       password: '',
       confirmPassword: '',
-      fechaNacimiento: '',
       descripcion: '',
       general: ''
     };
     let hasErrors = false;
 
     if (!nombre.trim()) {
-      newErrors.nombre = 'El nombre es obligatorio';
+      newErrors.nombre = 'El nombre de la empresa es obligatorio';
       hasErrors = true;
     }
 
@@ -83,31 +79,9 @@ const Register = () => {
       hasErrors = true;
     }
 
-    if (tipoUsuario === 'USUARIO') {
-      if (!fechaNacimiento) {
-        newErrors.fechaNacimiento = 'La fecha de nacimiento es obligatoria';
-        hasErrors = true;
-      } else {
-        // Validar que la fecha sea válida y el usuario tenga entre 13 y 100 años
-        const fecha = new Date(fechaNacimiento);
-        const hoy = new Date();
-        const edad = Math.floor((hoy - fecha) / (365.25 * 24 * 60 * 60 * 1000));
-        
-        if (edad < 13) {
-          newErrors.fechaNacimiento = 'Debes tener al menos 13 años';
-          hasErrors = true;
-        } else if (edad > 100) {
-          newErrors.fechaNacimiento = 'La fecha de nacimiento no es válida';
-          hasErrors = true;
-        }
-      }
-    }
-
-    if (tipoUsuario === 'EMPRESA') {
-      if (!descripcion.trim()) {
-        newErrors.descripcion = 'La descripción de la empresa es obligatoria';
-        hasErrors = true;
-      }
+    if (!descripcion.trim()) {
+      newErrors.descripcion = 'La descripción de la empresa es obligatoria';
+      hasErrors = true;
     }
 
     setErrors(newErrors);
@@ -122,7 +96,6 @@ const Register = () => {
       email: '',
       password: '',
       confirmPassword: '',
-      fechaNacimiento: '',
       descripcion: '',
       general: ''
     });
@@ -131,21 +104,16 @@ const Register = () => {
       return;
     }
 
-    const { tipoUsuario, nombre, email, password, fechaNacimiento, descripcion } = formData;
+    const { nombre, email, password, descripcion } = formData;
 
-    // Preparar datos según tipo de usuario
+    // Preparar datos para empresa
     const userData = {
-      tipoUsuario,
+      tipoUsuario: 'EMPRESA',
       nombre,
       email,
-      password
+      password,
+      descripcion
     };
-
-    if (tipoUsuario === 'USUARIO') {
-      userData.fechaNacimiento = fechaNacimiento; // Enviar fecha completa
-    } else {
-      userData.descripcion = descripcion;
-    }
 
     // Llamar al registro
     const result = await register(userData);
@@ -176,16 +144,12 @@ const Register = () => {
   return (
     <div className="register-page">
       <div className="register-container">
-        <button 
-          onClick={() => navigate('/login')} 
-          className="btn-volver"
-        >
-          ← Volver al Login
-        </button>
-
-        <h1>CREAR CUENTA</h1>
-        <h3>----------------------------------------------------</h3>
-        <p className="subtitle">Únete a JobPath</p>
+        <div className="back-arrow" onClick={() => navigate('/empresas-info')}>
+          <ArrowLeft size={24} />
+          <span>Volver</span>
+        </div>
+        <h2>Crear Cuenta - Empresa</h2>
+        <p className="subtitle">Encuentra el talento que necesitas</p>
 
         {success && (
           <div className="success-message">
@@ -200,30 +164,15 @@ const Register = () => {
         )}
 
         <form onSubmit={handleSubmit}>
-          {/* Tipo de Usuario */}
-          <label htmlFor="tipoUsuario">Tipo de Cuenta</label>
-          <select
-            id="tipoUsuario"
-            name="tipoUsuario"
-            value={formData.tipoUsuario}
-            onChange={handleChange}
-            required
-          >
-            <option value="USUARIO">Usuario / Joven</option>
-            <option value="EMPRESA">Empresa</option>
-          </select>
-
           {/* Nombre */}
-          <label htmlFor="nombre">
-            {formData.tipoUsuario === 'USUARIO' ? 'Nombre Completo' : 'Nombre de la Empresa'}
-          </label>
+          <label htmlFor="nombre">Nombre de la Empresa</label>
           <input
             type="text"
             id="nombre"
             name="nombre"
             value={formData.nombre}
             onChange={handleChange}
-            placeholder={formData.tipoUsuario === 'USUARIO' ? 'Juan Pérez' : 'Mi Empresa S.A.'}
+            placeholder="Mi Empresa S.A."
             style={errors.nombre ? { borderColor: '#dc3545' } : {}}
             required
           />
@@ -237,59 +186,29 @@ const Register = () => {
             name="email"
             value={formData.email}
             onChange={handleChange}
-            placeholder="tu@email.com"
+            placeholder="contacto@empresa.com"
             style={errors.email ? { borderColor: '#dc3545' } : {}}
             required
           />
           <ErrorMessage error={errors.email} />
 
-          {/* Fecha de Nacimiento - Solo para usuarios */}
-          {formData.tipoUsuario === 'USUARIO' && (
-            <>
-              <label htmlFor="fechaNacimiento">Fecha de Nacimiento</label>
-              <input
-                type="date"
-                id="fechaNacimiento"
-                name="fechaNacimiento"
-                value={formData.fechaNacimiento}
-                onChange={handleChange}
-                max={new Date().toISOString().split('T')[0]} // No permitir fechas futuras
-                style={errors.fechaNacimiento ? { borderColor: '#dc3545' } : {}}
-                required
-              />
-              <ErrorMessage error={errors.fechaNacimiento} />
-              {!errors.fechaNacimiento && formData.fechaNacimiento && (() => {
-                const fecha = new Date(formData.fechaNacimiento);
-                const hoy = new Date();
-                const edad = Math.floor((hoy - fecha) / (365.25 * 24 * 60 * 60 * 1000));
-                return (
-                  <small className="help-text">
-                    {edad < 18
-                      ? <><AlertTriangle size={14} /> Tienes {edad} años - Cuenta ADOLESCENTE (algunas restricciones aplican)</>
-                      : <>✅ Tienes {edad} años - Cuenta JOVEN (acceso completo)</>}
-                  </small>
-                );
-              })()}
-            </>
-          )}
-
-          {/* Descripción - Solo para empresas */}
-          {formData.tipoUsuario === 'EMPRESA' && (
-            <>
-              <label htmlFor="descripcion">Descripción de la Empresa</label>
-              <textarea
-                id="descripcion"
-                name="descripcion"
-                value={formData.descripcion}
-                onChange={handleChange}
-                placeholder="Describe tu empresa, sector, actividad..."
-                rows="4"
-                style={errors.descripcion ? { borderColor: '#dc3545' } : {}}
-                required
-              />
-              <ErrorMessage error={errors.descripcion} />
-            </>
-          )}
+          {/* Descripción */}
+          <label htmlFor="descripcion">Descripción de la Empresa</label>
+          <textarea
+            id="descripcion"
+            name="descripcion"
+            value={formData.descripcion}
+            onChange={handleChange}
+            placeholder="Describe tu empresa, sector, actividad..."
+            rows="4"
+            maxLength={500}
+            style={errors.descripcion ? { borderColor: '#dc3545' } : {}}
+            required
+          />
+          <small style={{textAlign: 'right', display: 'block', color: '#666', fontSize: '0.85em'}}>
+            {formData.descripcion.length}/500 caracteres
+          </small>
+          <ErrorMessage error={errors.descripcion} />
 
           {/* Contraseña */}
           <label htmlFor="password">Contraseña</label>
@@ -329,12 +248,12 @@ const Register = () => {
           </button>
         </form>
 
-        <p className="login-link">
-          ¿Ya tienes cuenta? <a href="/login">Inicia sesión aquí</a>
+        <p className="login-hint">
+          ¿Ya tienes cuenta? <span onClick={() => navigate('/login')} className="link-text">Inicia sesión aquí</span>
         </p>
       </div>
     </div>
   );
 };
 
-export default Register;
+export default RegisterEmpresa;

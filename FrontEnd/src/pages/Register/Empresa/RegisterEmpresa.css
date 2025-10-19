@@ -1,10 +1,10 @@
-/* Estilos para la página de Registro */
+/* Estilos para la página de Registro de Empresas */
 .register-page {
   min-height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
-  background: linear-gradient(135deg, #2d2d3f 0%, #4f4fcf 100%);
+  background: linear-gradient(to right, #2d2d3f, #4f4fcf);
   padding: 20px;
 }
 
@@ -15,43 +15,47 @@
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
   max-width: 500px;
   width: 100%;
+  position: relative;
 }
 
-.register-container h1 {
+.back-arrow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #4f4fcf;
+  font-weight: 600;
+  cursor: pointer;
+  margin-bottom: 20px;
+  transition: all 0.3s;
+  width: fit-content;
+}
+
+.back-arrow:hover {
+  color: #2d2d3f;
+  transform: translateX(-5px);
+}
+
+.back-arrow svg {
+  transition: transform 0.3s;
+}
+
+.back-arrow:hover svg {
+  transform: translateX(-3px);
+}
+
+.register-container h2 {
   color: #2d2d3f;
   text-align: center;
-  margin-bottom: 10px;
-  font-size: 2em;
+  margin-bottom: 4px;
+  font-size: 1.8em;
 }
 
-.register-container h3 {
-  color: #666;
-  text-align: center;
-  margin-bottom: 10px;
-  font-size: 0.8em;
-}
-
-.subtitle {
+ .register-container .subtitle {
   text-align: center;
   color: #666;
-  margin-bottom: 20px;
-  font-size: 1.1em;
-}
-
-.btn-volver {
-  background: transparent;
-  border: none;
-  color: #4f4fcf;
-  cursor: pointer;
-  font-size: 1em;
-  margin-bottom: 15px;
-  padding: 5px 10px;
-  transition: all 0.3s;
-}
-
-.btn-volver:hover {
-  color: #3a3aa0;
-  transform: translateX(-5px);
+  margin-bottom: 16px;
+  margin-top: -5px;
+  font-size: 0.95em;
 }
 
 .success-message,
@@ -79,6 +83,7 @@
   display: flex;
   flex-direction: column;
   gap: 15px;
+  margin-top: 18px;
 }
 
 .register-container label {
@@ -102,19 +107,13 @@
 .register-container select:focus,
 .register-container textarea:focus {
   outline: none;
-  border-color: #4f4fcf;
+  border-color: #667eea;
 }
 
 .register-container textarea {
   resize: vertical;
   min-height: 100px;
-}
-
-.help-text {
-  color: #666;
-  font-size: 0.85em;
-  margin-top: -10px;
-  display: block;
+  max-height: 200px;
 }
 
 /* Mensajes de error por campo */
@@ -128,7 +127,7 @@
 }
 
 .submit-button {
-  background: linear-gradient(135deg, #4f4fcf 0%, #6a6aef 100%);
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   color: white;
   border: none;
   padding: 15px;
@@ -142,7 +141,7 @@
 
 .submit-button:hover:not(:disabled) {
   transform: translateY(-2px);
-  box-shadow: 0 5px 20px rgba(79, 79, 207, 0.4);
+  box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
 }
 
 .submit-button:disabled {
@@ -151,21 +150,24 @@
   opacity: 0.6;
 }
 
-.login-link {
+.login-hint {
   text-align: center;
   margin-top: 20px;
-  color: #666;
+  color: #333;
+  text-shadow: none;
 }
 
-.login-link a {
+.link-text {
   color: #4f4fcf;
   text-decoration: none;
   font-weight: 600;
+  cursor: pointer;
   transition: color 0.3s;
+  text-shadow: none;
 }
 
-.login-link a:hover {
-  color: #3a3aa0;
+.link-text:hover {
+  color: #2d2d3f;
   text-decoration: underline;
 }
 
@@ -175,7 +177,7 @@
     padding: 25px;
   }
 
-  .register-container h1 {
+  .register-container h2 {
     font-size: 1.5em;
   }
 }

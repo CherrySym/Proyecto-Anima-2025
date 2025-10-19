@@ -14,7 +14,7 @@
 
 .simple-navbar .simple-logo {
   color: white;
-  font-size: 28px !important;
+    font-size: 28px;
   font-weight: bold;
   margin: 0;
   cursor: pointer;
@@ -39,7 +39,7 @@
   color: white;
   text-decoration: none;
   font-weight: bold;
-  font-size: 15px !important;
+    font-size: 15px;
   padding: 8px 12px;
   border-radius: 5px;
   transition: opacity 0.3s ease, background-color 0.3s ease;
@@ -134,20 +134,15 @@
   display: flex;
   align-items: center;
   gap: 10px;
-  color: #2d2d3f !important;
+  color: #2d2d3f;
   padding: 12px 20px;
-  text-decoration: none;
-  font-size: 14px !important;
+  font-size: 14px;
   font-weight: 500;
-  transition: background-color 0.2s ease;
+    font-size: 14px;
   min-height: auto;
   min-width: auto;
   border-radius: 0;
   justify-content: flex-start;
-}
-
-.simple-dropdown-menu a::after {
-  display: none;
 }
 
 .simple-dropdown-menu a:hover {
@@ -215,7 +210,7 @@
 
 @media (max-width: 480px) {
   .simple-navbar .simple-logo {
-    font-size: 24px !important;
+    font-size: 24px;
   }
   
   .simple-nav a {

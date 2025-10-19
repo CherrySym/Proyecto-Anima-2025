@@ -9,8 +9,11 @@ import Landing from '../pages/Landing/Landing';
 import About from '../pages/About/About';
 import Companias from '../pages/Companias/Companias';
 import Jovenes from '../pages/Jovenes/Jovenes';
+import JovenesInfo from '../pages/JovenesInfo/JovenesInfo';
+import EmpresasInfo from '../pages/EmpresasInfo/EmpresasInfo';
 import Login from '../pages/Login/Login';
-import Register from '../pages/Register/Register';
+import RegisterJoven from '../pages/Register/Joven/RegisterJoven';
+import RegisterEmpresa from '../pages/Register/Empresa/RegisterEmpresa';
 import OrientacionVocacional from '../pages/OrientacionVocacional/OrientacionVocacional';
 import Suscripciones from '../pages/Suscripciones/Suscripciones';
 import Consejos from '../pages/Consejos/Consejos';
@@ -94,6 +97,10 @@ const AppRouter = () => {
       {/* Página principal - Landing sin autenticación */}
       <Route path="/" element={<Landing />} />
       
+      {/* Páginas informativas para tipos de usuario */}
+      <Route path="/jovenes-info" element={<JovenesInfo />} />
+      <Route path="/empresas-info" element={<EmpresasInfo />} />
+      
       {/* Páginas públicas (con SimpleNavbar integrado) */}
       <Route path="/home" element={<Home />} />
       <Route path="/about" element={<About />} />
@@ -112,7 +119,8 @@ const AppRouter = () => {
       
       {/* Autenticación (sin navbar) */}
       <Route path="/login" element={<Login />} />
-      <Route path="/register" element={<Register />} />
+      <Route path="/register-joven" element={<RegisterJoven />} />
+      <Route path="/register-empresa" element={<RegisterEmpresa />} />
 
       {/* Páginas protegidas (con Header) */}
       <Route 
