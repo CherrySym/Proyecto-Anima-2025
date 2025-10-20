@@ -4,41 +4,55 @@ import { useAuth } from '../context/AuthContext';
 import Header from '../components/layout/Header/Header';
 import PrivateRoute from '../components/PrivateRoute';
 
-// Páginas públicas
-import Landing from '../pages/Landing/Landing';
-import About from '../pages/About/About';
-import Companias from '../pages/Companias/Companias';
-import Jovenes from '../pages/Jovenes/Jovenes';
-import JovenesInfo from '../pages/JovenesInfo/JovenesInfo';
-import EmpresasInfo from '../pages/EmpresasInfo/EmpresasInfo';
-import Login from '../pages/Login/Login';
-import RegisterJoven from '../pages/Register/Joven/RegisterJoven';
-import RegisterEmpresa from '../pages/Register/Empresa/RegisterEmpresa';
-import OrientacionVocacional from '../pages/OrientacionVocacional/OrientacionVocacional';
-import Suscripciones from '../pages/Suscripciones/Suscripciones';
-import Consejos from '../pages/Consejos/Consejos';
-import CVyCarta from '../pages/CVyCarta/CVyCarta';
-import Entrevistas from '../pages/Entrevistas/Entrevistas';
-import Contacto from '../pages/Contacto/Contacto';
-import Curriculum from '../pages/Curriculum/Curriculum';
-import Pago from '../pages/Pago/Pago';
-import OrientacionPersonalizada from '../pages/OrientacionPersonalizada/OrientacionPersonalizada';
-import CompanyProfilePublic from '../pages/CompanyProfilePublic/CompanyProfilePublic';
+// Páginas públicas - INFO
+import Landing from '../features/informacion/pages/Landing/Landing';
+import About from '../features/informacion/pages/About/About';
+import Jovenes from '../features/informacion/pages/Jovenes/Jovenes';
+import JovenesInfo from '../features/informacion/pages/JovenesInfo/JovenesInfo';
+import Contacto from '../features/informacion/pages/Contacto/Contacto';
+import Home from '../features/informacion/pages/Home/Home';
 
-// Páginas de red social (requieren autenticación)
-import Feed from '../pages/Feed/Feed';
-import UserProfile from '../pages/UserProfile/UserProfile';
-import CompanyProfile from '../pages/CompanyProfile/CompanyProfile';
+// AUTH
+import Login from '../features/autenticacion/pages/Login/Login';
+import RegisterJoven from '../features/autenticacion/pages/Register/Joven/RegisterJoven';
+import RegisterEmpresa from '../features/autenticacion/pages/Register/Empresa/RegisterEmpresa';
 
-// Páginas existentes
-import Home from '../pages/Home/Home';
-import Ofertas from '../pages/Ofertas/Ofertas';
-import OfertaDetalle from '../pages/OfertaDetalle/OfertaDetalle';
-import MisPostulaciones from '../pages/MisPostulaciones/MisPostulaciones';
-import Desafios from '../pages/Desafios/Desafios';
-import MisDesafios from '../pages/MisDesafios/MisDesafios';
-import Cursos from '../pages/Cursos/Cursos';
-import MisCursos from '../pages/MisCursos/MisCursos';
+// COMPANIES
+import Companias from '../features/empresas/pages/Companias/Companias';
+import EmpresasInfo from '../features/empresas/pages/EmpresasInfo/EmpresasInfo';
+import CompanyProfile from '../features/empresas/pages/CompanyProfile/CompanyProfile';
+import CompanyProfilePublic from '../features/empresas/pages/CompanyProfilePublic/CompanyProfilePublic';
+
+// GUIDANCE
+import OrientacionVocacional from '../features/orientacion/pages/OrientacionVocacional/OrientacionVocacional';
+import OrientacionPersonalizada from '../features/orientacion/pages/OrientacionPersonalizada/OrientacionPersonalizada';
+import Consejos from '../features/orientacion/pages/Consejos/Consejos';
+import Entrevistas from '../features/orientacion/pages/Entrevistas/Entrevistas';
+
+// CAREER
+import CVyCarta from '../features/trayectoria/pages/CVyCarta/CVyCarta';
+import Curriculum from '../features/trayectoria/pages/Curriculum/Curriculum';
+
+// SUBSCRIPTION
+import Suscripciones from '../features/suscripciones/pages/Suscripciones/Suscripciones';
+import Pago from '../features/suscripciones/pages/Pago/Pago';
+
+// FEED
+import Feed from '../features/inicio/pages/Feed/Feed';
+import UserProfile from '../features/inicio/pages/Perfil/UserProfile';
+
+// JOBS
+import Ofertas from '../features/empleos/pages/Ofertas/Ofertas';
+import OfertaDetalle from '../features/empleos/pages/OfertaDetalle/OfertaDetalle';
+import MisPostulaciones from '../features/empleos/pages/MisPostulaciones/MisPostulaciones';
+
+// CHALLENGES
+import Desafios from '../features/desafios/pages/Desafios/Desafios';
+import MisDesafios from '../features/desafios/pages/MisDesafios/MisDesafios';
+
+// COURSES
+import Cursos from '../features/cursos/pages/Cursos/Cursos';
+import MisCursos from '../features/cursos/pages/MisCursos/MisCursos';
 
 const AppRouter = () => {
   const { user, loading, error } = useAuth();

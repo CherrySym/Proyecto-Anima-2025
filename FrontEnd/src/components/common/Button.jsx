@@ -55,9 +55,9 @@ const Button = ({
         </>
       ) : (
         <>
-          {icon && iconPosition === 'left' && <span className="btn-icon-element">{icon}</span>}
+          {icon && iconPosition === 'left' && <span style={{ marginRight: '0.5rem', display: 'inline-flex', alignItems: 'center' }}>{icon}</span>}
           {children && <span>{children}</span>}
-          {icon && iconPosition === 'right' && <span className="btn-icon-element">{icon}</span>}
+          {icon && iconPosition === 'right' && <span style={{ marginLeft: '0.5rem', display: 'inline-flex', alignItems: 'center' }}>{icon}</span>}
         </>
       )}
     </button>

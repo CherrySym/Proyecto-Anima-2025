@@ -1,0 +1,86 @@
+/* Feed.module.css — copia de Feed.css para migración a CSS Modules */
+.feed-page {
+  min-height: 100vh;
+  background-color: #f5f7fa;
+  padding: 20px 0;
+  margin: 0;
+  width: 100%;
+}
+
+.feed-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 300px;
+  gap: 20px;
+  padding: 0 20px;
+  box-sizing: border-box;
+}
+
+.feed-main {
+  display: flex;
+  flex-direction: column;
+}
+
+.feed-content {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.posts-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 50vh;
+  color: #666;
+}
+
+.error-banner {
+  background-color: #fff3cd;
+  color: #856404;
+  padding: 12px 20px;
+  border-radius: 8px;
+  border: 1px solid #ffeeba;
+  margin-bottom: 20px;
+  text-align: center;
+  font-size: 14px;
+}
+
+.no-posts {
+  background-color: white;
+  padding: 60px 20px;
+  border-radius: 12px;
+  text-align: center;
+  color: #666;
+}
+
+.no-posts h3 {
+  margin-bottom: 10px;
+  color: #333;
+}
+
+/* Responsive */
+@media (max-width: 968px) {
+  .feed-container {
+    grid-template-columns: 1fr;
+    max-width: 600px;
+  }
+}
+
+@media (max-width: 768px) {
+  .feed-container {
+    padding: 0 15px;
+  }
+  
+  .feed-page {
+    padding-top: 15px;
+  }
+}

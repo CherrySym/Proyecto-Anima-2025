@@ -2,7 +2,8 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useMinLoadingTime } from '../../hooks/useMinLoadingTime';
 import { BookOpen, AlertTriangle, Sprout, Leaf, TreePine, ScrollText, Clock, Monitor, DollarSign, Star, Building2 } from 'lucide-react';
-import './Cursos.css';
+import styles from './Cursos.module.css';
+// import './Cursos.css'; // backup preserved as commented file
 
 /**
  * Página de Cursos y Talleres
@@ -177,9 +178,9 @@ const Cursos = () => {
 
   if (loading) {
     return (
-      <div className="cursos-page">
-        <div className="loading-container">
-          <div className="loading-spinner"></div>
+      <div className={styles['cursos-page']}>
+        <div className={styles['loading-container']}>
+          <div className={styles['loading-spinner']}></div>
           <p>Cargando cursos disponibles...</p>
         </div>
       </div>
@@ -188,9 +189,9 @@ const Cursos = () => {
 
   const cursosFiltrados = filtrarCursos();
 
-  return (
-    <div className="cursos-page">
-      <main className="cursos-content">
+    return (
+      <div className={styles['cursos-page']}>
+        <main className={styles['cursos-content']}>
         {/* Banner de advertencia MVP */}
         <div style={{
           backgroundColor: '#fff3cd',
@@ -215,20 +216,20 @@ const Cursos = () => {
           </div>
         </div>
 
-        <div className="cursos-header">
+  <div className={styles['cursos-header']}>
           <h1><BookOpen size={32} /> Cursos y Talleres</h1>
           <p>Desarrolla nuevas habilidades con cursos seleccionados para jóvenes profesionales</p>
           
-          <div className="stats-banner">
-            <div className="stat-item">
+          <div className={styles['stats-banner']}>
+            <div className={styles['stat-item']}>
               <strong>{cursos.length}</strong>
               <span>Cursos disponibles</span>
             </div>
-            <div className="stat-item">
+            <div className={styles['stat-item']}>
               <strong>15+</strong>
               <span>Áreas de estudio</span>
             </div>
-            <div className="stat-item">
+            <div className={styles['stat-item']}>
               <strong>Gratuitos</strong>
               <span>y de pago</span>
             </div>
@@ -236,8 +237,8 @@ const Cursos = () => {
         </div>
 
         {/* Filtros */}
-        <div className="filtros-container">
-          <div className="filtro-grupo">
+        <div className={styles['filtros-container']}>
+          <div className={styles['filtro-grupo']}>
             <label>Área de estudio:</label>
             <select 
               value={filtros.area} 
@@ -253,7 +254,7 @@ const Cursos = () => {
             </select>
           </div>
 
-          <div className="filtro-grupo">
+          <div className={styles['filtro-grupo']}>
             <label>Nivel:</label>
             <select 
               value={filtros.nivel} 
@@ -266,7 +267,7 @@ const Cursos = () => {
             </select>
           </div>
 
-          <div className="filtro-grupo">
+          <div className={styles['filtro-grupo']}>
             <label>Modalidad:</label>
             <select 
               value={filtros.modalidad} 
@@ -279,7 +280,7 @@ const Cursos = () => {
             </select>
           </div>
 
-          <div className="filtro-grupo">
+          <div className={styles['filtro-grupo']}>
             <label>Precio:</label>
             <select 
               value={filtros.precio} 
@@ -293,16 +294,16 @@ const Cursos = () => {
         </div>
 
         {/* Grid de cursos */}
-        <div className="cursos-grid">
+        <div className={styles['cursos-grid']}>
           {cursosFiltrados.length === 0 ? (
-            <div className="no-cursos">
+            <div className={styles['no-cursos']}>
               <h3>No se encontraron cursos</h3>
               <p>Intenta con otros filtros para encontrar el curso perfecto para ti</p>
             </div>
           ) : (
             cursosFiltrados.map(curso => (
-              <div key={curso.id} className="curso-card">
-                <div className="curso-image">
+              <div key={curso.id} className={styles['curso-card']}>
+                <div className={styles['curso-image']}>
                   <img 
                     src={curso.imagen} 
                     alt={curso.titulo}
@@ -310,72 +311,72 @@ const Cursos = () => {
                       e.target.src = '/img/default-course.jpg';
                     }}
                   />
-                  <div className="curso-badges">
+                  <div className={styles['curso-badges']}>
                     {curso.precio === 'gratuito' && (
-                      <span className="badge gratuito">GRATIS</span>
+                      <span className={`${styles['badge']} ${styles['gratuito']}`}>GRATIS</span>
                     )}
                     {curso.certificado && (
-                      <span className="badge certificado"><ScrollText size={14} /> Certificado</span>
+                      <span className={`${styles['badge']} ${styles['certificado']}`}><ScrollText size={14} /> Certificado</span>
                     )}
                   </div>
                 </div>
 
-                <div className="curso-content">
-                  <div className="curso-header">
+                <div className={styles['curso-content']}>
+                  <div className={styles['curso-header']}>
                     <h3>{curso.titulo}</h3>
-                    <div className="curso-proveedor">{curso.proveedor}</div>
+                    <div className={styles['curso-proveedor']}>{curso.proveedor}</div>
                   </div>
 
-                  <p className="curso-descripcion">{curso.descripcion}</p>
+                  <p className={styles['curso-descripcion']}>{curso.descripcion}</p>
 
-                  <div className="curso-skills">
+                  <div className={styles['curso-skills']}>
                     {curso.skills.slice(0, 3).map(skill => (
-                      <span key={skill} className="skill-tag">{skill}</span>
+                      <span key={skill} className={styles['skill-tag']}>{skill}</span>
                     ))}
                     {curso.skills.length > 3 && (
-                      <span className="skill-tag more">+{curso.skills.length - 3}</span>
+                      <span className={`${styles['skill-tag']} ${styles['more']}`}>+{curso.skills.length - 3}</span>
                     )}
                   </div>
 
-                  <div className="curso-info">
-                    <div className="info-row">
-                      <span className="info-label">
+                  <div className={styles['curso-info']}>
+                    <div className={styles['info-row']}>
+                      <span className={styles['info-label']}>
                         {getNivelIcon(curso.nivel)} Nivel:
                       </span>
                       <span 
-                        className="info-value nivel"
+                        className={`${styles['info-value']} ${styles['nivel']}`}
                         style={{ color: getNivelColor(curso.nivel) }}
                       >
                         {curso.nivel}
                       </span>
                     </div>
                     
-                    <div className="info-row">
-                      <span className="info-label"><Clock size={16} /> Duración:</span>
-                      <span className="info-value">{curso.duracion}</span>
+                    <div className={styles['info-row']}>
+                      <span className={styles['info-label']}><Clock size={16} /> Duración:</span>
+                      <span className={styles['info-value']}>{curso.duracion}</span>
                     </div>
                     
-                    <div className="info-row">
-                      <span className="info-label"><Monitor size={16} /> Modalidad:</span>
-                      <span className="info-value">{curso.modalidad}</span>
+                    <div className={styles['info-row']}>
+                      <span className={styles['info-label']}><Monitor size={16} /> Modalidad:</span>
+                      <span className={styles['info-value']}>{curso.modalidad}</span>
                     </div>
                     
                     {curso.precio === 'pago' && (
-                      <div className="info-row">
-                        <span className="info-label"><DollarSign size={16} /> Precio:</span>
-                        <span className="info-value precio">{curso.precio_valor}</span>
+                      <div className={styles['info-row']}>
+                        <span className={styles['info-label']}><DollarSign size={16} /> Precio:</span>
+                        <span className={`${styles['info-value']} ${styles['precio']}`}>{curso.precio_valor}</span>
                       </div>
                     )}
                   </div>
 
-                  <div className="curso-stats">
-                    <div className="rating">
+                  <div className={styles['curso-stats']}>
+                    <div className={styles['rating']}>
                       <Star size={16} fill="currentColor" /> {curso.rating} ({curso.estudiantes.toLocaleString()} estudiantes)
                     </div>
                   </div>
 
                   <button 
-                    className="btn-ver-curso"
+                    className={styles['btn-ver-curso']}
                     onClick={() => handleVerCurso(curso)}
                   >
                     Ver Curso

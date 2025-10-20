@@ -1,7 +1,8 @@
 import React from 'react';
 import { useLanguage } from '../../context/LanguageContext';
 import PropTypes from 'prop-types';
-import './LanguageSelector.css';
+import styles from './LanguageSelector.module.css';
+// import './LanguageSelector.css'; // backup preserved as LanguageSelector.css (commented)
 
 /**
  * Componente LanguageSelector reutilizable
@@ -17,21 +18,21 @@ const LanguageSelector = ({
 }) => {
   const { language, changeLanguage } = useLanguage();
 
-  const variantClass = variant !== 'default' ? `language-selector-${variant}` : '';
-  const classes = ['language-selector', variantClass, className].filter(Boolean).join(' ');
+  const variantClass = variant !== 'default' ? styles[`language-selector-${variant}`] : '';
+  const classes = [styles['language-selector'], variantClass, className].filter(Boolean).join(' ');
 
   return (
     <div className={classes}>
       <button
         onClick={() => changeLanguage('es')}
-        className={language === 'es' ? 'active' : ''}
+        className={language === 'es' ? styles['active'] : ''}
         aria-label="Cambiar a Español"
       >
         ES
       </button>
       <button
         onClick={() => changeLanguage('en')}
-        className={language === 'en' ? 'active' : ''}
+        className={language === 'en' ? styles['active'] : ''}
         aria-label="Change to English"
       >
         EN

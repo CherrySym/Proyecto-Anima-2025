@@ -2,7 +2,8 @@ import { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useLanguage } from '../../../context/LanguageContext';
 import { useAuth } from '../../../context/AuthContext';
-import './SimpleNavbar.css';
+import styles from './SimpleNavbar.module.css';
+// import './SimpleNavbar.css'; // backup preserved
 
 /**
  * SimpleNavbar - Navbar compartido con diseño del HTML original
@@ -77,63 +78,63 @@ const SimpleNavbar = ({ title = 'Job Path' }) => {
   };
 
   return (
-    <header className="simple-navbar">
-      <h1 className="simple-logo" onClick={() => navigate('/')} style={{ cursor: 'pointer' }}>
+    <header className={styles['simple-navbar']}>
+      <h1 className={styles['simple-logo']} onClick={() => navigate('/')} style={{ cursor: 'pointer' }}>
         {title}
       </h1>
-      <nav className="simple-nav">
+      <nav className={styles['simple-nav']}>
         <a 
           href="#" 
           onClick={(e) => { e.preventDefault(); navigate('/home'); }}
-          className={isActive('/home') ? 'active' : ''}
+          className={isActive('/home') ? styles['active'] : ''}
         >
           {t.inicio}
         </a>
         <a 
           href="#" 
           onClick={(e) => { e.preventDefault(); navigate('/jovenes'); }}
-          className={isActive('/jovenes') ? 'active' : ''}
+          className={isActive('/jovenes') ? styles['active'] : ''}
         >
           {t.jovenes}
         </a>
         <a 
           href="#" 
           onClick={(e) => { e.preventDefault(); navigate('/companias'); }}
-          className={isActive('/companias') ? 'active' : ''}
+          className={isActive('/companias') ? styles['active'] : ''}
         >
           {t.companias}
         </a>
         <a 
           href="#" 
           onClick={(e) => { e.preventDefault(); navigate('/about'); }}
-          className={isActive('/about') ? 'active' : ''}
+          className={isActive('/about') ? styles['active'] : ''}
         >
           {t.about}
         </a>
         <a 
           href="#" 
           onClick={(e) => { e.preventDefault(); navigate('/orientacion-vocacional'); }}
-          className={isActive('/orientacion-vocacional') ? 'active' : ''}
+          className={isActive('/orientacion-vocacional') ? styles['active'] : ''}
         >
           {t.orientacion}
         </a>
         
         {/* Menú desplegable de Recursos */}
         <div 
-          className="simple-dropdown"
+          className={styles['simple-dropdown']}
           onMouseEnter={handleMouseEnter}
           onMouseLeave={handleMouseLeave}
         >
           <a 
             href="#" 
             onClick={(e) => e.preventDefault()}
-            className="dropdown-trigger"
+            className={styles['dropdown-trigger']}
           >
             {t.recursos} ▼
           </a>
           {showResourcesMenu && (
             <div 
-              className="simple-dropdown-menu"
+              className={styles['simple-dropdown-menu']}
               onMouseEnter={handleMouseEnter}
               onMouseLeave={handleMouseLeave}
             >
@@ -163,7 +164,7 @@ const SimpleNavbar = ({ title = 'Job Path' }) => {
           <a 
             href="#" 
             onClick={(e) => { e.preventDefault(); navigate('/feed'); }}
-            className={isActive('/feed') ? 'active' : ''}
+            className={isActive('/feed') ? styles['active'] : ''}
           >
             {t.profile}
           </a>
@@ -171,13 +172,13 @@ const SimpleNavbar = ({ title = 'Job Path' }) => {
           <a 
             href="#" 
             onClick={(e) => { e.preventDefault(); navigate('/login'); }}
-            className={isActive('/login') ? 'active' : ''}
+            className={isActive('/login') ? styles['active'] : ''}
           >
             {t.login}
           </a>
         )}
       </nav>
-      <nav className="language-nav">
+      <nav className={styles['language-nav']}>
         <button onClick={() => changeLanguage('es')}>{t.spanish}</button>
         <button onClick={() => changeLanguage('en')}>{t.english}</button>
       </nav>

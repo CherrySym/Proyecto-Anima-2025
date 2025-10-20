@@ -5,7 +5,8 @@ import { useMinLoadingTime } from '../../hooks/useMinLoadingTime';
 import SimpleNavbar from '../../components/layout/SimpleNavbar/SimpleNavbar';
 import { getAllCompanies } from '../../data/companiesData';
 import { Building2, Monitor, Heart, MapPin } from 'lucide-react';
-import './Companias.css';
+import styles from './Companias.module.css';
+// import './Companias.css'; // comentado: backup
 
 /**
  * Página Compañías
@@ -97,35 +98,35 @@ const Companias = () => {
 
   if (loading) {
     return (
-      <div className="companias-page">
+      <div className={styles['companias-page']}>
         <SimpleNavbar title="Job Path" />
-        <div className="loading-container">
-          <div className="loading-spinner"></div>
+        <div className={styles['loading-container']}>
+          <div className={styles['loading-spinner']}></div>
           <p>Cargando empresas aliadas...</p>
         </div>
       </div>
     );
   }
 
-  return (
-    <div className="companias-page">
+    return (
+    <div className={styles['companias-page']}>
       <SimpleNavbar title="Job Path" />
       
-      <main className="companias-content">
-        <div className="companias-header">
+      <main className={styles['companias-content']}>
+        <div className={styles['companias-header']}>
           <h1><Building2 size={32} /> Empresas Aliadas</h1>
           <p>Conoce las empresas que confían en jóvenes talentos y ofrecen oportunidades reales</p>
           
-          <div className="header-stats">
-            <div className="stat">
+          <div className={styles['header-stats']}>
+            <div className={styles.stat}>
               <strong>{empresas.length}</strong>
               <span>Empresas aliadas</span>
             </div>
-            <div className="stat">
+            <div className={styles.stat}>
               <strong>{empresas.reduce((total, emp) => total + emp.ofertas_activas, 0)}</strong>
               <span>Ofertas activas</span>
             </div>
-            <div className="stat">
+            <div className={styles.stat}>
               <strong>{empresas.reduce((total, emp) => total + emp.desafios_activos, 0)}</strong>
               <span>Desafíos disponibles</span>
             </div>
@@ -133,35 +134,35 @@ const Companias = () => {
         </div>
 
         {/* Filtros */}
-        <div className="filtros-section">
+        <div className={styles['filtros-section']}>
           <h3>Filtrar por sector:</h3>
-          <div className="filtros-buttons">
+          <div className={styles['filtros-buttons']}>
             <button 
-              className={filtroSector === 'todos' ? 'active' : ''}
+              className={filtroSector === 'todos' ? styles.active : ''}
               onClick={() => setFiltroSector('todos')}
             >
               Todos los sectores
             </button>
             <button 
-              className={filtroSector === 'tecnologia' ? 'active' : ''}
+              className={filtroSector === 'tecnologia' ? styles.active : ''}
               onClick={() => setFiltroSector('tecnologia')}
             >
               <Monitor size={16} /> Tecnología
             </button>
             <button 
-              className={filtroSector === 'marketing' ? 'active' : ''}
+              className={filtroSector === 'marketing' ? styles.active : ''}
               onClick={() => setFiltroSector('marketing')}
             >
               📱 Marketing
             </button>
             <button 
-              className={filtroSector === 'diseño' ? 'active' : ''}
+              className={filtroSector === 'diseño' ? styles.active : ''}
               onClick={() => setFiltroSector('diseño')}
             >
               🎨 Diseño
             </button>
             <button 
-              className={filtroSector === 'finanzas' ? 'active' : ''}
+              className={filtroSector === 'finanzas' ? styles.active : ''}
               onClick={() => setFiltroSector('finanzas')}
             >
               💰 Finanzas
@@ -170,9 +171,9 @@ const Companias = () => {
         </div>
 
         {/* Carrusel de empresas */}
-        <div className="empresas-carousel-container">
+        <div className={styles['empresas-carousel-container']}>
           {empresasFiltradas.length === 0 ? (
-            <div className="no-empresas">
+            <div className={styles['no-empresas']}>
               <h3>No hay empresas en este sector</h3>
               <p>Prueba con otro filtro o revisa más tarde</p>
             </div>
@@ -180,7 +181,7 @@ const Companias = () => {
             <>
               {/* Flecha Anterior */}
               <button 
-                className="carousel-arrow prev-arrow"
+                className={`${styles['carousel-arrow']} ${styles['prev-arrow']}`}
                 onClick={handlePrevPage}
                 disabled={paginaActual === 0}
                 aria-label="Página anterior"
@@ -189,11 +190,11 @@ const Companias = () => {
               </button>
 
               {/* Grid de empresas actuales */}
-              <div className="empresas-grid">
+              <div className={styles['empresas-grid']}>
                 {empresasActuales.map(empresa => (
-                  <div key={empresa.id} className="empresa-card">
-                <div className="empresa-header">
-                  <div className="empresa-logo">
+                  <div key={empresa.id} className={styles['empresa-card']}>
+                <div className={styles['empresa-header']}>
+                  <div className={styles['empresa-logo']}>
                     <img 
                       src={empresa.logo} 
                       alt={`${empresa.nombre} logo`}
@@ -202,9 +203,9 @@ const Companias = () => {
                       }}
                     />
                   </div>
-                  <div className="empresa-header-actions">
+                  <div className={styles['empresa-header-actions']}>
                     <button 
-                      className={`like-button ${likedCompanies.has(empresa.id) ? 'liked' : ''}`}
+                      className={`${styles['like-button']} ${likedCompanies.has(empresa.id) ? styles.liked : ''}`}
                       onClick={() => toggleLike(empresa.id)}
                       aria-label={likedCompanies.has(empresa.id) ? 'Quitar de favoritos' : 'Agregar a favoritos'}
                     >
@@ -213,36 +214,36 @@ const Companias = () => {
                         fill={likedCompanies.has(empresa.id) ? 'currentColor' : 'none'}
                       />
                     </button>
-                    <div className="empresa-rating">
+                    <div className={styles['empresa-rating']}>
                       ⭐ {empresa.puntuacion}
                     </div>
                   </div>
                 </div>
 
-                <div className="empresa-info">
+                <div className={styles['empresa-info']}>
                   <h3>{empresa.nombre}</h3>
-                  <p className="empresa-descripcion">{empresa.descripcion}</p>
+                  <p className={styles['empresa-descripcion']}>{empresa.descripcion}</p>
                   
-                  <div className="empresa-detalles">
-                    <div className="detalle-item">
-                      <span className="label">👥 Empleados:</span>
+                  <div className={styles['empresa-detalles']}>
+                    <div className={styles['detalle-item']}>
+                      <span className={styles.label}>👥 Empleados:</span>
                       <span>{empresa.empleados}</span>
                     </div>
-                    <div className="detalle-item">
-                      <span className="label"><MapPin size={14} /> Ubicación:</span>
+                    <div className={styles['detalle-item']}>
+                      <span className={styles.label}><MapPin size={14} /> Ubicación:</span>
                       <span>{empresa.ubicacion}</span>
                     </div>
-                    <div className="detalle-item">
-                      <span className="label">🌐 Sector:</span>
-                      <span className="sector-badge">{empresa.sector}</span>
+                    <div className={styles['detalle-item']}>
+                      <span className={styles.label}>🌐 Sector:</span>
+                      <span className={styles['sector-badge']}>{empresa.sector}</span>
                     </div>
                   </div>
 
-                  <div className="empresa-beneficios">
+                  <div className={styles['empresa-beneficios']}>
                     <h4>Beneficios:</h4>
-                    <div className="beneficios-list">
+                    <div className={styles['beneficios-list']}>
                       {empresa.beneficios.map((beneficio, index) => (
-                        <span key={index} className="beneficio-tag">
+                        <span key={index} className={styles['beneficio-tag']}>
                           {beneficio}
                         </span>
                       ))}
@@ -250,23 +251,23 @@ const Companias = () => {
                   </div>
                 </div>
 
-                <div className="empresa-opportunities">
-                  <div className="opportunities-stats">
-                    <div className="opportunity-stat">
+                <div className={styles['empresa-opportunities']}>
+                  <div className={styles['opportunities-stats']}>
+                    <div className={styles['opportunity-stat']}>
                       <strong>{empresa.ofertas_activas}</strong>
                       <span>Ofertas activas</span>
                     </div>
-                    <div className="opportunity-stat">
+                    <div className={styles['opportunity-stat']}>
                       <strong>{empresa.desafios_activos}</strong>
                       <span>Desafíos activos</span>
                     </div>
                   </div>
 
-                  <div className="empresa-actions">
+                  <div className={styles['empresa-actions']}>
                     {empresa.ofertas_activas > 0 && (
                       <button 
                         onClick={() => handleVerOfertas(empresa.id)}
-                        className="btn-ofertas"
+                        className={styles['btn-ofertas']}
                         disabled={user?.edad < 18}
                       >
                         {user?.edad < 18 ? 'Ver Ofertas (18+)' : 'Ver Ofertas'}
@@ -276,7 +277,7 @@ const Companias = () => {
                     {empresa.desafios_activos > 0 && (
                       <button 
                         onClick={() => handleVerDesafios(empresa.id)}
-                        className="btn-desafios"
+                        className={styles['btn-desafios']}
                       >
                         Ver Desafíos
                       </button>
@@ -287,7 +288,7 @@ const Companias = () => {
                         href={empresa.sitio_web} 
                         target="_blank" 
                         rel="noopener noreferrer"
-                        className="btn-sitio-web"
+                        className={styles['btn-sitio-web']}
                       >
                         🌐 Sitio Web
                       </a>
@@ -300,7 +301,7 @@ const Companias = () => {
 
               {/* Flecha Siguiente */}
               <button 
-                className="carousel-arrow next-arrow"
+                className={`${styles['carousel-arrow']} ${styles['next-arrow']}`}
                 onClick={handleNextPage}
                 disabled={paginaActual >= totalPaginas - 1}
                 aria-label="Página siguiente"
@@ -313,15 +314,15 @@ const Companias = () => {
 
         {/* Indicador de páginas */}
         {empresasFiltradas.length > empresasPorPagina && (
-          <div className="carousel-indicators">
-            <span className="page-info">
+          <div className={styles['carousel-indicators']}>
+            <span className={styles['page-info']}>
               Página {paginaActual + 1} de {totalPaginas}
             </span>
-            <div className="dots">
+            <div className={styles.dots}>
               {Array.from({ length: totalPaginas }).map((_, index) => (
                 <button
                   key={index}
-                  className={`dot ${index === paginaActual ? 'active' : ''}`}
+                  className={`${styles.dot} ${index === paginaActual ? styles.active : ''}`}
                   onClick={() => setPaginaActual(index)}
                   aria-label={`Ir a página ${index + 1}`}
                 />
@@ -330,13 +331,13 @@ const Companias = () => {
           </div>
         )}
 
-        <div className="llamada-accion">
-          <div className="cta-content">
+        <div className={styles['llamada-accion']}>
+          <div className={styles['cta-content']}>
             <h2>¿Eres una empresa?</h2>
             <p>Únete a nuestra red de empresas aliadas y encuentra jóvenes talentos</p>
             <button 
               onClick={() => navigate('/register')}
-              className="btn-cta"
+              className={styles['btn-cta']}
             >
               Registrar mi Empresa
             </button>

@@ -6,7 +6,8 @@ import {
   Home, Users, Briefcase, BookOpen, Target, MessageCircle, Bell, Search,
   User, Settings, FileText, Compass, Lightbulb, Star, LogOut
 } from 'lucide-react';
-import './Header.css';
+import styles from './Header.module.css';
+// import './Header.css'; // antiguo: comentado tras migración a CSS Modules
 
 const Header = () => {
   const { user, logout } = useAuth();
@@ -112,25 +113,25 @@ const Header = () => {
   };
 
   return (
-    <header className="header">
-      <div className="header-container">
+    <header className={styles.header}>
+      <div className={styles['header-container']}>
         {/* Logo */}
-        <Link to={user ? "/feed" : "/"} className="logo">
+        <Link to={user ? "/feed" : "/"} className={styles.logo}>
           <img src="/img/logo.png" alt="JobPath" />
           <span>JobPath</span>
         </Link>
 
         {/* Barra de búsqueda */}
         {user && (
-          <form className="search-form" onSubmit={handleSearch}>
-            <div className="search-container">
-              <span className="search-icon"><Search size={16} /></span>
+          <form className={styles['search-form']} onSubmit={handleSearch}>
+            <div className={styles['search-container']}>
+              <span className={styles['search-icon']}><Search size={16} /></span>
               <input
                 type="text"
                 placeholder={t.search}
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="search-input"
+                className={styles['search-input']}
               />
             </div>
           </form>
@@ -138,156 +139,156 @@ const Header = () => {
 
         {/* Navegación principal para usuarios autenticados */}
         {user ? (
-          <nav className="main-nav">
+          <nav className={styles['main-nav']}>
             <Link 
               to="/feed" 
-              className={`nav-item ${isActivePath('/feed') ? 'active' : ''}`}
+              className={`${styles['nav-item']} ${isActivePath('/feed') ? styles.active : ''}`}
               title={t.home}
             >
-              <span className="nav-icon"><Home size={20} /></span>
-              <span className="nav-label">{t.home}</span>
+              <span className={styles['nav-icon']}><Home size={20} /></span>
+              <span className={styles['nav-label']}>{t.home}</span>
             </Link>
             
             <Link 
               to="/red" 
-              className={`nav-item ${isActivePath('/red') ? 'active' : ''}`}
+              className={`${styles['nav-item']} ${isActivePath('/red') ? styles.active : ''}`}
               title={t.network}
             >
-              <span className="nav-icon"><Users size={20} /></span>
-              <span className="nav-label">{t.network}</span>
+              <span className={styles['nav-icon']}><Users size={20} /></span>
+              <span className={styles['nav-label']}>{t.network}</span>
             </Link>
             
             {user.edad >= 18 && (
               <Link 
                 to="/ofertas" 
-                className={`nav-item ${isActivePath('/ofertas') ? 'active' : ''}`}
+                className={`${styles['nav-item']} ${isActivePath('/ofertas') ? styles.active : ''}`}
                 title={t.jobs}
               >
-                <span className="nav-icon"><Briefcase size={20} /></span>
-                <span className="nav-label">{t.jobs}</span>
+                <span className={styles['nav-icon']}><Briefcase size={20} /></span>
+                <span className={styles['nav-label']}>{t.jobs}</span>
               </Link>
             )}
             
             <Link 
               to="/cursos" 
-              className={`nav-item ${isActivePath('/cursos') ? 'active' : ''}`}
+              className={`${styles['nav-item']} ${isActivePath('/cursos') ? styles.active : ''}`}
               title={t.courses}
             >
-              <span className="nav-icon"><BookOpen size={20} /></span>
-              <span className="nav-label">{t.courses}</span>
+              <span className={styles['nav-icon']}><BookOpen size={20} /></span>
+              <span className={styles['nav-label']}>{t.courses}</span>
             </Link>
             
             <Link 
               to="/desafios" 
-              className={`nav-item ${isActivePath('/desafios') ? 'active' : ''}`}
+              className={`${styles['nav-item']} ${isActivePath('/desafios') ? styles.active : ''}`}
               title={t.challenges}
             >
-              <span className="nav-icon"><Target size={20} /></span>
-              <span className="nav-label">{t.challenges}</span>
+              <span className={styles['nav-icon']}><Target size={20} /></span>
+              <span className={styles['nav-label']}>{t.challenges}</span>
             </Link>
             
             <Link 
               to="/mensajes" 
-              className={`nav-item ${isActivePath('/mensajes') ? 'active' : ''}`}
+              className={`${styles['nav-item']} ${isActivePath('/mensajes') ? styles.active : ''}`}
               title={t.messages}
             >
-              <span className="nav-icon"><MessageCircle size={20} /></span>
-              <span className="nav-label">{t.messages}</span>
+              <span className={styles['nav-icon']}><MessageCircle size={20} /></span>
+              <span className={styles['nav-label']}>{t.messages}</span>
             </Link>
             
             <Link 
               to="/notificaciones" 
-              className={`nav-item ${isActivePath('/notificaciones') ? 'active' : ''}`}
+              className={`${styles['nav-item']} ${isActivePath('/notificaciones') ? styles.active : ''}`}
               title={t.notifications}
             >
-              <span className="nav-icon"><Bell size={20} /></span>
-              <span className="nav-label">{t.notifications}</span>
-              <span className="notification-badge">3</span>
+              <span className={styles['nav-icon']}><Bell size={20} /></span>
+              <span className={styles['nav-label']}>{t.notifications}</span>
+              <span className={styles['notification-badge']}>3</span>
             </Link>
           </nav>
         ) : (
           // Navegación para usuarios no autenticados
-          <nav className={`guest-nav ${isMenuOpen ? 'nav-open' : ''}`}>
-            <Link to="/" className="nav-link">Inicio</Link>
-            <Link to="/about" className="nav-link">Nosotros</Link>
-            <Link to="/companias" className="nav-link">Empresas</Link>
-            <Link to="/jovenes" className="nav-link">Jóvenes</Link>
+          <nav className={`${styles['guest-nav']} ${isMenuOpen ? styles['nav-open'] : ''}`}>
+            <Link to="/" className={styles['nav-link']}>Inicio</Link>
+            <Link to="/about" className={styles['nav-link']}>Nosotros</Link>
+            <Link to="/companias" className={styles['nav-link']}>Empresas</Link>
+            <Link to="/jovenes" className={styles['nav-link']}>Jóvenes</Link>
           </nav>
         )}
 
         {/* Acciones del usuario */}
-        <div className="header-actions">
-          <button 
-            className="language-toggle"
+        <div className={styles['header-actions']}>
+          <button
+            className={styles['language-toggle']}
             onClick={toggleLanguage}
             title={language === 'es' ? 'Switch to English' : 'Cambiar a Español'}
           >
-            {language === 'es' ? '🇺🇸' : '🇪🇸'}
+            {language === 'es' ? '\ud83c\uddfa\ud83c\uddf8' : '\ud83c\uddea\ud83c\uddf8'}
           </button>
 
           {user ? (
-            <div className="user-menu" ref={dropdownRef}>
-              <button onClick={toggleDropdown} className="profile-link">
-                <img 
-                  src={user.avatar || "/img/usuario.png"} 
-                  alt={user.name || "Usuario"} 
-                  className="user-avatar"
+            <div className={styles['user-menu']} ref={dropdownRef}>
+              <button onClick={toggleDropdown} className={styles['profile-link']}>
+                <img
+                  src={user.avatar || '/img/usuario.png'}
+                  alt={user.name || 'Usuario'}
+                  className={styles['user-avatar']}
                 />
-                <span className="user-name">{user.name || t.profile}</span>
+                <span className={styles['user-name']}>{user.name || t.profile}</span>
               </button>
-              <div className={`dropdown-menu ${isDropdownOpen ? 'dropdown-open' : ''}`}>
-                <Link to="/perfil" className="dropdown-item" onClick={closeDropdown}>
+              <div className={`${styles['dropdown-menu']} ${isDropdownOpen ? styles['dropdown-open'] : ''}`}>
+                <Link to="/perfil" className={styles['dropdown-item']} onClick={closeDropdown}>
                   <User size={18} />
                   <span>Ver perfil</span>
                 </Link>
-                <Link to="/configuracion" className="dropdown-item" onClick={closeDropdown}>
+                <Link to="/configuracion" className={styles['dropdown-item']} onClick={closeDropdown}>
                   <Settings size={18} />
                   <span>Configuración</span>
                 </Link>
-                <Link to="/mis-cursos" className="dropdown-item" onClick={closeDropdown}>
+                <Link to="/mis-cursos" className={styles['dropdown-item']} onClick={closeDropdown}>
                   <BookOpen size={18} />
                   <span>Mis cursos</span>
                 </Link>
-                <Link to="/mis-desafios" className="dropdown-item" onClick={closeDropdown}>
+                <Link to="/mis-desafios" className={styles['dropdown-item']} onClick={closeDropdown}>
                   <Target size={18} />
                   <span>Mis desafíos</span>
                 </Link>
                 {user.edad >= 18 && (
-                  <Link to="/mis-postulaciones" className="dropdown-item" onClick={closeDropdown}>
+                  <Link to="/mis-postulaciones" className={styles['dropdown-item']} onClick={closeDropdown}>
                     <FileText size={18} />
                     <span>Mis postulaciones</span>
                   </Link>
                 )}
-                <hr className="dropdown-divider" />
-                <Link to="/orientacion-vocacional" className="dropdown-item" onClick={closeDropdown}>
+                <hr className={styles['dropdown-divider']} />
+                <Link to="/orientacion-vocacional" className={styles['dropdown-item']} onClick={closeDropdown}>
                   <Compass size={18} />
                   <span>Orientación vocacional</span>
                 </Link>
-                <Link to="/consejos" className="dropdown-item" onClick={closeDropdown}>
+                <Link to="/consejos" className={styles['dropdown-item']} onClick={closeDropdown}>
                   <Lightbulb size={18} />
                   <span>Consejos</span>
                 </Link>
-                <Link to="/suscripciones" className="dropdown-item" onClick={closeDropdown}>
+                <Link to="/suscripciones" className={styles['dropdown-item']} onClick={closeDropdown}>
                   <Star size={18} />
                   <span>Suscripciones</span>
                 </Link>
-                <hr className="dropdown-divider" />
-                <button onClick={handleLogout} className="dropdown-item logout">
+                <hr className={styles['dropdown-divider']} />
+                <button onClick={handleLogout} className={`${styles['dropdown-item']} ${styles.logout}`}>
                   <LogOut size={18} />
                   <span>{t.logout}</span>
                 </button>
               </div>
             </div>
           ) : (
-            <div className="auth-buttons">
-              <Link to="/login" className="login-btn">{t.login}</Link>
-              <Link to="/register" className="register-btn">{t.register}</Link>
+            <div className={styles['auth-buttons']}>
+              <Link to="/login" className={styles['login-btn']}>{t.login}</Link>
+              <Link to="/register" className={styles['register-btn']}>{t.register}</Link>
             </div>
           )}
         </div>
 
         {/* Menú móvil toggle */}
-        <button className="mobile-menu-toggle" onClick={toggleMenu}>
+        <button className={styles['mobile-menu-toggle']} onClick={toggleMenu}>
           <span></span>
           <span></span>
           <span></span>

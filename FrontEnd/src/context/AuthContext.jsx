@@ -1,5 +1,5 @@
-import { createContext, useContext, useState, useEffect } from 'react';
-import * as authService from '../services/authService';
+import React, { createContext, useContext, useState, useEffect } from 'react';
+import * as authService from '../features/autenticacion/services/authService';
 
 // Context para manejar la autenticación del usuario
 const AuthContext = createContext();
@@ -122,8 +122,9 @@ export const AuthProvider = ({ children }) => {
           }
           
           return { success: true, user: userData };
-        } catch (err) {
+        } catch (error) {
           // Si falla obtener datos, hacer fallback a decodificación de token
+          console.warn('Error obteniendo datos de usuario:', error);
           const payload = JSON.parse(atob(response.token.split('.')[1]));
           const fallbackUser = {
             id: payload.id,

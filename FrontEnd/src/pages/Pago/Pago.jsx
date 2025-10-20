@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useLanguage } from '../../context/LanguageContext';
-import './Pago.css';
+import styles from './Pago.module.css';
+// import './Pago.css'; // comentado: backup
 
 /**
  * Pago - Página de pago de suscripciones
@@ -105,30 +106,30 @@ const Pago = () => {
   };
 
   return (
-    <div className="pago-page">
-      <div className="pago-container">
-        <header className="pago-header">
-          <nav className="language-nav-pago">
+    <div className={styles['pago-page']}>
+      <div className={styles['pago-container']}>
+        <header className={styles['pago-header']}>
+          <nav className={styles['language-nav-pago']}>
             <button onClick={() => changeLanguage('es')}>{t.spanish}</button>
             <button onClick={() => changeLanguage('en')}>{t.english}</button>
           </nav>
-          <button onClick={() => navigate('/suscripciones')} className="btn-back">
+          <button onClick={() => navigate('/suscripciones')} className={styles['btn-back']}>
             {t.backBtn}
           </button>
-          <h1 className="pago-title">
+          <h1 className={styles['pago-title']}>
             {t.title}
-            <span className="crown">👑</span>
+            <span className={styles.crown}>👑</span>
           </h1>
-          <div className="purple-line"></div>
+          <div className={styles['purple-line']}></div>
         </header>
 
-        <main className="payment-layout">
-          <form className="payment-form-card" onSubmit={handlePayment}>
-            <div className="input-group">
+        <main className={styles['payment-layout']}>
+          <form className={styles['payment-form-card']} onSubmit={handlePayment}>
+            <div className={styles['input-group']}>
               <label htmlFor="subscription-select">{t.selectSubscription}</label>
               <select
                 id="subscription-select"
-                className="custom-select"
+                className={styles['custom-select']}
                 value={formData.subscription}
                 onChange={handleSubscriptionChange}
               >
@@ -140,10 +141,10 @@ const Pago = () => {
               </select>
             </div>
 
-            <div className="input-group">
+            <div className={styles['input-group']}>
               <label htmlFor="email">{t.email}</label>
-              <div className="input-icon-wrapper">
-                <span className="icon">📧</span>
+              <div className={styles['input-icon-wrapper']}>
+                <span className={styles.icon}>📧</span>
                 <input
                   type="email"
                   id="email"
@@ -156,26 +157,26 @@ const Pago = () => {
               </div>
             </div>
 
-            <div className="payment-method-selector">
+            <div className={styles['payment-method-selector']}>
               <div
-                className={`payment-option ${paymentMethod === 'card' ? 'selected' : ''}`}
+                className={`${styles['payment-option']} ${paymentMethod === 'card' ? styles.selected : ''}`}
                 onClick={() => setPaymentMethod('card')}
               >
-                <span className="icon">💳</span> {t.card}
+                <span className={styles.icon}>💳</span> {t.card}
               </div>
               <div
-                className={`payment-option ${paymentMethod === 'bank' ? 'selected' : ''}`}
+                className={`${styles['payment-option']} ${paymentMethod === 'bank' ? styles.selected : ''}`}
                 onClick={() => setPaymentMethod('bank')}
               >
-                <span className="icon">🏦</span> {t.bank} <span className="badge">USD 5</span>
+                <span className={styles.icon}>🏦</span> {t.bank} <span className={styles.badge}>USD 5</span>
               </div>
             </div>
 
             {paymentMethod === 'card' && (
               <>
-                <div className="input-group">
+                <div className={styles['input-group']}>
                   <label htmlFor="card-number">{t.cardNumber}</label>
-                  <div className="card-input-wrapper">
+                  <div className={styles['card-input-wrapper']}>
                     <input
                       type="text"
                       id="card-number"
@@ -189,8 +190,8 @@ const Pago = () => {
                   </div>
                 </div>
 
-                <div className="card-details-group">
-                  <div className="input-group expiry">
+                <div className={styles['card-details-group']}>
+                  <div className={`${styles['input-group']} ${styles.expiry}`}>
                     <label htmlFor="expiry-date">{t.expiryDate}</label>
                     <input
                       type="text"
@@ -203,9 +204,9 @@ const Pago = () => {
                       required
                     />
                   </div>
-                  <div className="input-group cvc">
+                  <div className={`${styles['input-group']} ${styles.cvc}`}>
                     <label htmlFor="cvc-code">{t.securityCode}</label>
-                    <div className="cvc-input-wrapper">
+                    <div className={styles['cvc-input-wrapper']}>
                       <input
                         type="text"
                         id="cvc-code"
@@ -216,14 +217,14 @@ const Pago = () => {
                         maxLength="4"
                         required
                       />
-                      <span className="icon-cvc">🎴</span>
+                      <span className={styles['icon-cvc']}>🎴</span>
                     </div>
                   </div>
                 </div>
               </>
             )}
 
-            <div className="input-group">
+            <div className={styles['input-group']}>
               <label htmlFor="country">{t.country}</label>
               <select
                 id="country"
@@ -245,20 +246,20 @@ const Pago = () => {
               </select>
             </div>
 
-            <button type="submit" className="btn-pay">
+            <button type="submit" className={styles['btn-pay']}>
               {t.payBtn}
             </button>
-            <p className="secure-text">{t.secure}</p>
+            <p className={styles['secure-text']}>{t.secure}</p>
           </form>
 
-          <div className="summary-card">
-            <div className="summary-info">
-              <p className="plan-name-display">{t.summaryText}</p>
-              <p className="price">${formData.subscription}</p>
+          <div className={styles['summary-card']}>
+            <div className={styles['summary-info']}>
+              <p className={styles['plan-name-display']}>{t.summaryText}</p>
+              <p className={styles.price}>${formData.subscription}</p>
             </div>
-            <div className="total-section">
-              <p className="label">{t.total}</p>
-              <p className="price">${formData.subscription}</p>
+            <div className={styles['total-section']}>
+              <p className={styles.label}>{t.total}</p>
+              <p className={styles.price}>${formData.subscription}</p>
             </div>
           </div>
         </main>
