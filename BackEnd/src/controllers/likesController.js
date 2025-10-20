@@ -10,15 +10,17 @@ const prisma = new PrismaClient();
 export const toggleLike = async (req, res) => {
   try {
     const { postId } = req.body;
-    const usuarioId = req.user?.id;
-    const userTipo = req.user?.tipo;
+  const usuarioId = req.user?.id;
+  // Compatibilidad: tokens nuevos tienen tipoUsuario y opcionalmente tipoEdad
+  const tipoUsuario = req.user?.tipoUsuario || req.user?.tipo; // 'USUARIO' | 'EMPRESA'
+  const tipoEdad = req.user?.tipoEdad; // 'ADOLESCENTE' | 'JOVEN'
 
     if (!usuarioId) {
       return res.status(401).json({ error: "Debes iniciar sesión" });
     }
 
-    // Solo usuarios pueden dar like (no empresas)
-    const isUsuario = ['ADOLESCENTE', 'JOVEN'].includes(userTipo) || userTipo === 'Usuario';
+    // Solo usuarios (no empresas) pueden dar like
+    const isUsuario = tipoUsuario === 'USUARIO';
     if (!isUsuario) {
       return res.status(403).json({ error: "Solo usuarios pueden dar like" });
     }

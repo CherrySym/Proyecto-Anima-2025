@@ -65,16 +65,17 @@ const Post = ({ post, onLike }) => {
       };
       
       const savedComment = await postService.addComment(commentData);
-      
+      // El backend responde con { id, contenido, usuario, author }
+      const autor = savedComment.author || savedComment.usuario;
       // Agregar el comentario nuevo a la lista local
       const newCommentObj = {
         id: savedComment.id,
         user: {
-          name: savedComment.autor?.nombre || 'Tú',
-          avatar: savedComment.autor?.avatar || '/img/usuario.png',
-          isCompany: savedComment.autorTipo === 'Empresa'
+          name: autor?.nombre || 'Tú',
+          avatar: autor?.avatar || '/img/usuario.png',
+          isCompany: false
         },
-        content: savedComment.contenido,
+        content: savedComment.content || savedComment.contenido,
         timestamp: 'Ahora'
       };
       

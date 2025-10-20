@@ -150,9 +150,20 @@ export const login = async (req, res) => {
       return res.status(400).json({ error: "Credenciales inválidas" });
     }
 
+    // Crear payload JWT más explícito para evitar ambigüedades en el backend
+    // tipoUsuario: 'USUARIO' | 'EMPRESA'
+    // tipoEdad: 'ADOLESCENTE' | 'JOVEN' (solo aplica para USUARIO)
+    const payload = {
+      id: account.id,
+      tipoUsuario,
+      ...(tipoUsuario === 'USUARIO' && account?.tipo
+        ? { tipoEdad: account.tipo }
+        : {})
+    };
+
     // Crear JWT (expira en 1 día)
     const token = jwt.sign(
-      { id: account.id, tipo: tipoUsuario },
+      payload,
       process.env.JWT_SECRET || "secretito", // ⚠️ Cambiar en producción
       { expiresIn: "1d" }
     );
@@ -172,11 +183,13 @@ export const login = async (req, res) => {
  */
 export const getMe = async (req, res) => {
   try {
-    const { id, tipo } = req.user; // Viene del middleware de autenticación
+    // Compat: tokens antiguos usan 'tipo'; nuevos usan 'tipoUsuario'
+    const { id } = req.user;
+    const tipoUsuario = req.user.tipoUsuario || req.user.tipo; // 'USUARIO' | 'EMPRESA'
     
-    console.log('getMe called with:', { id, tipo });
+    console.log('getMe called with:', { id, tipoUsuario });
 
-    if (tipo === "USUARIO") {
+    if (tipoUsuario === "USUARIO") {
       const user = await prisma.usuario.findUnique({
         where: { id },
         select: {

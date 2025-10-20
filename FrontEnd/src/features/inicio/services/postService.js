@@ -121,7 +121,12 @@ export const getCompanyPosts = async (empresaId) => {
 export const toggleLike = async (postId) => {
   try {
     const response = await api.post('/likes/toggle', { postId });
-    return response.data;
+    // Normalizar campos para el frontend
+    const d = response.data || {};
+    return {
+      liked: d.isLiked ?? d.liked ?? false,
+      totalLikes: d.likesCount ?? d.totalLikes ?? 0
+    };
   } catch (error) {
     console.error('Error toggling like:', error);
     throw error;

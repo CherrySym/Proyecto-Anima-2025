@@ -18,6 +18,8 @@ API.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem('authToken');
     console.log('🔑 API Interceptor - Token:', token ? `${token.substring(0, 20)}...` : 'NO TOKEN');
+    console.log('📍 Request:', config.method?.toUpperCase(), config.baseURL + (config.url || ''));
+    if (!config.headers) config.headers = {};
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
       console.log('✅ Authorization header agregado');
@@ -27,6 +29,7 @@ API.interceptors.request.use(
     return config;
   },
   (error) => {
+    console.error('❌ Error en interceptor request:', error?.message);
     return Promise.reject(error);
   }
 );
@@ -34,16 +37,22 @@ API.interceptors.request.use(
 // Interceptor para manejar respuestas y errores
 API.interceptors.response.use(
   (response) => {
+    console.log('✅ Response:', response.status, response.config?.url);
     return response;
   },
   (error) => {
-    // Si el token expiró, limpiar localStorage y redirigir a login
+    console.error('❌ Error en response:', {
+      url: error.config?.url,
+      status: error.response?.status,
+      data: error.response?.data
+    });
+    // Si el token expiró, limpiar localStorage
     if (error.response?.status === 401 || error.response?.status === 403) {
+      console.warn('🚪 Token inválido/expirado. Limpiando almacenamiento local.');
       localStorage.removeItem('authToken');
       localStorage.removeItem('userName');
       localStorage.removeItem('userLastname');
       localStorage.removeItem('userEmail');
-      // No redirigimos aquí, dejamos que el componente lo maneje
     }
     return Promise.reject(error);
   }

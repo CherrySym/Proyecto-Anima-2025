@@ -10,15 +10,16 @@ const prisma = new PrismaClient();
 export const createComentario = async (req, res) => {
   try {
     const { postId, contenido, parentId } = req.body;
-    const usuarioId = req.user?.id;
-    const userTipo = req.user?.tipo;
+  const usuarioId = req.user?.id;
+  // Compatibilidad de payloads: tokens nuevos usan tipoUsuario y tipoEdad
+  const tipoUsuario = req.user?.tipoUsuario || req.user?.tipo; // 'USUARIO' | 'EMPRESA'
 
     if (!usuarioId) {
       return res.status(401).json({ error: "Debes iniciar sesión" });
     }
 
     // Solo usuarios pueden comentar (no empresas)
-    const isUsuario = ['ADOLESCENTE', 'JOVEN'].includes(userTipo) || userTipo === 'Usuario';
+    const isUsuario = tipoUsuario === 'USUARIO';
     if (!isUsuario) {
       return res.status(403).json({ error: "Solo usuarios pueden comentar" });
     }
