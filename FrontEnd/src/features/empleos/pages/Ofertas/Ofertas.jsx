@@ -25,10 +25,21 @@ const Ofertas = () => {
     modalidad: ''
   });
 
-  // Cargar ofertas desde la API
+  // Cargar ofertas desde la API cuando cambian filtros de selects
   useEffect(() => {
     loadOfertas();
   }, [filtros.area, filtros.tipo, filtros.modalidad]);
+
+  // Cargar ofertas con debounce para búsqueda (500ms delay)
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (filtros.busqueda !== undefined) {
+        loadOfertas();
+      }
+    }, 500);
+
+    return () => clearTimeout(timer);
+  }, [filtros.busqueda]);
 
   const loadOfertas = async () => {
     await withMinLoadingTime(async () => {
@@ -107,14 +118,6 @@ const Ofertas = () => {
     });
   };
 
-  const filtrarOfertas = () => {
-    return ofertas.filter(oferta => {
-      const coincideBusqueda = oferta.titulo.toLowerCase().includes(filtros.busqueda.toLowerCase()) ||
-                              (oferta.empresa_info?.nombre || oferta.empresa || '').toLowerCase().includes(filtros.busqueda.toLowerCase());
-      return coincideBusqueda;
-    });
-  };
-
   const esOfertaVencida = (fechaVencimiento) => {
     if (!fechaVencimiento) return false;
     return new Date(fechaVencimiento) < new Date();
@@ -130,8 +133,6 @@ const Ofertas = () => {
       </div>
     );
   }
-
-  const ofertasFiltradas = filtrarOfertas();
 
   return (
     <div className={styles['ofertas-page']}>
@@ -199,13 +200,13 @@ const Ofertas = () => {
 
         {/* Lista de ofertas */}
         <div className={styles['ofertas-grid']}>
-          {ofertasFiltradas.length === 0 ? (
+          {ofertas.length === 0 ? (
             <div className={styles['no-ofertas']}>
               <h3>No se encontraron ofertas</h3>
               <p>Intenta con otros filtros o revisa más tarde</p>
             </div>
           ) : (
-            ofertasFiltradas.map(oferta => {
+            ofertas.map(oferta => {
               const vencida = esOfertaVencida(oferta.fechaVencimiento);
               const empresaNombre = oferta.empresa_info?.nombre || oferta.empresa || 'Empresa';
               

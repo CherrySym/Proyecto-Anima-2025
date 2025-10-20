@@ -5,17 +5,35 @@
 import API from '../../../services/api';
 
 /**
- * Obtener todas las ofertas laborales
+ * Obtener todas las ofertas laborales con filtros avanzados
  */
 export const getOfertas = async (filtros = {}) => {
   try {
     const params = new URLSearchParams();
     
+    // Filtro por área
     if (filtros.area && filtros.area !== 'todas') {
       params.append('area', filtros.area);
     }
-    if (filtros.busqueda) {
-      params.append('search', filtros.busqueda);
+    
+    // Filtro por tipo (Tiempo completo, Medio tiempo, etc.)
+    if (filtros.tipo && filtros.tipo !== '') {
+      params.append('tipo', filtros.tipo);
+    }
+    
+    // Filtro por modalidad (Presencial, Remoto, Híbrido)
+    if (filtros.modalidad && filtros.modalidad !== '') {
+      params.append('modalidad', filtros.modalidad);
+    }
+    
+    // Búsqueda por texto (título, descripción, empresa)
+    if (filtros.busqueda && filtros.busqueda.trim()) {
+      params.append('search', filtros.busqueda.trim());
+    }
+    
+    // Solo ofertas activas por defecto
+    if (filtros.activa !== false) {
+      params.append('activa', 'true');
     }
     
     const response = await API.get(`/ofertas?${params}`);
