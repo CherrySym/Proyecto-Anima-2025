@@ -23,17 +23,22 @@ const Post = ({ post, onLike }) => {
       const data = await postService.getPostComments(post.id);
       
       // Transformar comentarios del backend al formato del frontend
-      const commentsTransformed = data.map(comment => ({
-        id: comment.id,
-        user: {
-          name: comment.autor?.nombre || 'Usuario',
-          avatar: comment.autor?.avatar || '/img/usuario.png',
-          isCompany: comment.autorTipo === 'Empresa'
-        },
-        content: comment.contenido,
-        timestamp: formatTimestamp(comment.createdAt),
-        parentId: comment.parentId
-      }));
+      const commentsTransformed = data.map(comment => {
+        // Backend puede enviar author o usuario
+        const autor = comment.author || comment.usuario;
+        
+        return {
+          id: comment.id,
+          user: {
+            name: autor?.nombre || 'Usuario',
+            avatar: autor?.avatar || '/img/usuario.png',
+            isCompany: comment.autorTipo === 'Empresa'
+          },
+          content: comment.contenido,
+          timestamp: formatTimestamp(comment.createdAt),
+          parentId: comment.parentId
+        };
+      });
       
       setComments(commentsTransformed);
     } catch (err) {

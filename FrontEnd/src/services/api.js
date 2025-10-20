@@ -46,13 +46,21 @@ API.interceptors.response.use(
       status: error.response?.status,
       data: error.response?.data
     });
-    // Si el token expiró, limpiar localStorage
+    // Si el token expiró, limpiar localStorage SOLO si el mensaje lo confirma
+    // Evitamos limpiar en errores transitorios o de autorización de operación específica
     if (error.response?.status === 401 || error.response?.status === 403) {
-      console.warn('🚪 Token inválido/expirado. Limpiando almacenamiento local.');
-      localStorage.removeItem('authToken');
-      localStorage.removeItem('userName');
-      localStorage.removeItem('userLastname');
-      localStorage.removeItem('userEmail');
+      const errorMsg = error.response?.data?.error || '';
+      if (errorMsg.includes('Token') || errorMsg.includes('sesión') || errorMsg.includes('inválido')) {
+        console.warn('🚪 Token inválido/expirado. Limpiando almacenamiento local.');
+        localStorage.removeItem('authToken');
+        localStorage.removeItem('userName');
+        localStorage.removeItem('userLastname');
+        localStorage.removeItem('userEmail');
+        localStorage.removeItem('userId');
+        localStorage.removeItem('userType');
+      } else {
+        console.warn('⚠️ Error de autorización (operación no permitida), token preservado');
+      }
     }
     return Promise.reject(error);
   }

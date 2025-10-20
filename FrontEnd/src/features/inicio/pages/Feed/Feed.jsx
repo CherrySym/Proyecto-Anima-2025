@@ -27,23 +27,34 @@ const Feed = () => {
         setError(null);
         const data = await postService.getAllPosts();
         
+        console.log('🔍 Feed: Posts recibidos del backend:', data.map(p => ({ 
+          id: p.id, 
+          isLiked: p.isLiked, 
+          likesCount: p.likesCount 
+        })));
+        
         // Transformar datos del backend al formato del frontend
-        const postsTransformados = data.map(post => ({
-          id: post.id,
-          user: {
-            id: post.author?.id,
-            name: post.authorName || post.author?.nombre,
-            avatar: post.authorAvatar || post.author?.avatar || post.author?.logo || "/img/usuario.png",
-            isCompany: post.autorTipo === 'Empresa',
-            profession: post.author?.tipo || post.author?.sector || "Usuario"
-          },
-          content: post.contenido || post.content,
-          image: post.imagenUrl || post.image,
-          timestamp: formatTimestamp(post.createdAt),
-          likes: post.likesCount || 0,
-          comments: post.commentsCount || 0,
-          isLiked: post.isLiked || false
-        }));
+        const postsTransformados = data.map(post => {
+          const transformed = {
+            id: post.id,
+            user: {
+              id: post.author?.id,
+              name: post.authorName || post.author?.nombre,
+              avatar: post.authorAvatar || post.author?.avatar || post.author?.logo || "/img/usuario.png",
+              isCompany: post.autorTipo === 'Empresa',
+              profession: post.author?.tipo || post.author?.sector || "Usuario"
+            },
+            content: post.contenido || post.content,
+            image: post.imagenUrl || post.image,
+            timestamp: formatTimestamp(post.createdAt),
+            likes: post.likesCount || 0,
+            comments: post.commentsCount || 0,
+            isLiked: post.isLiked ?? false // Usar ?? en vez de || para preservar false explícito
+          };
+          
+          console.log(`🎯 Post ${post.id}: isLiked del backend=${post.isLiked}, isLiked final=${transformed.isLiked}`);
+          return transformed;
+        });
         
         setPosts(postsTransformados);
       } catch (err) {

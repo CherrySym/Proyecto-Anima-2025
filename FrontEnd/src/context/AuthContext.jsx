@@ -61,7 +61,7 @@ export const AuthProvider = ({ children }) => {
         // Si el token es inválido o hay error de conexión, limpiar todo
         
         // Distintos tipos de errores
-        if (err.code === 'ECONNREFUSED' || err.message.includes('Network Error') || err.message.includes('Timeout')) {
+        if (err.code === 'ECONNREFUSED' || err.message?.includes('Network Error') || err.message?.includes('Timeout')) {
           setError('Backend no disponible. La app funcionará sin autenticación.');
         } else {
           authService.logout();

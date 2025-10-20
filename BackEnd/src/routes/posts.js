@@ -9,13 +9,13 @@ import {
   getPostsByUsuario,
   getPostsByEmpresa
 } from "../controllers/postsController.js";
-import { authMiddleware } from "../middlewares/authMiddleware.js";
+import { authMiddleware, optionalAuthMiddleware } from "../middlewares/authMiddleware.js";
 
 const router = express.Router();
 
-// Rutas públicas (con paginación opcional)
-router.get("/", getPosts);
-router.get("/:id", getPostById);
+// Rutas públicas con autenticación opcional (para personalización)
+router.get("/", optionalAuthMiddleware, getPosts);
+router.get("/:id", optionalAuthMiddleware, getPostById);
 
 // Rutas por autor
 router.get("/usuario/:usuarioId", getPostsByUsuario);

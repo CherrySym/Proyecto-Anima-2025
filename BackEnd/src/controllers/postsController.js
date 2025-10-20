@@ -11,18 +11,22 @@ export const createPost = async (req, res) => {
   try {
     const { contenido, imagenUrl } = req.body;
     const userId = req.user?.id;
-    const userTipo = req.user?.tipo; // 'Usuario' o 'Empresa'
+    // Compatibilidad: usar tipoUsuario si existe, sino tipo
+    const tipoUsuario = req.user?.tipoUsuario || req.user?.tipo;
+
+    console.log('🆕 createPost called:', { userId, tipoUsuario, tipo: req.user?.tipo, contenido: contenido?.substring(0, 50) });
 
     if (!contenido) {
       return res.status(400).json({ error: "El contenido es obligatorio" });
     }
 
-    if (!userId || !userTipo) {
+    if (!userId || !tipoUsuario) {
+      console.error('❌ createPost: Missing userId or tipoUsuario:', { userId, tipoUsuario });
       return res.status(401).json({ error: "Debes iniciar sesión" });
     }
 
     // Determinar si es usuario o empresa
-    const isUsuario = ['ADOLESCENTE', 'JOVEN'].includes(userTipo) || userTipo === 'Usuario';
+    const isUsuario = tipoUsuario === 'USUARIO';
     
     const post = await prisma.post.create({
       data: {
@@ -77,6 +81,13 @@ export const getPosts = async (req, res) => {
   try {
     const { page = 1, limit = 20, tipoAutor } = req.query;
     const userId = req.user?.id;
+    
+    console.log('📍 getPosts llamado:', { 
+      userId, 
+      hasUser: !!req.user, 
+      userKeys: req.user ? Object.keys(req.user) : 'no user',
+      tipoUsuario: req.user?.tipoUsuario 
+    });
 
     const skip = (parseInt(page) - 1) * parseInt(limit);
 
@@ -128,22 +139,27 @@ export const getPosts = async (req, res) => {
     });
 
     // Transformar respuesta
-    const postsTransformados = posts.map(p => ({
-      id: p.id,
-      contenido: p.contenido,
-      content: p.contenido, // Alias para frontend
-      imagenUrl: p.imagenUrl,
-      image: p.imagenUrl, // Alias para frontend
-      autorTipo: p.usuarioId ? 'Usuario' : 'Empresa', // Calculado dinámicamente
-      createdAt: p.createdAt,
-      updatedAt: p.updatedAt,
-      likesCount: p._count.likes,
-      commentsCount: p._count.comentarios,
-      isLiked: userId ? p.likes?.length > 0 : false,
-      author: p.usuario || p.empresa,
-      authorName: p.usuario?.nombre || p.empresa?.nombre,
-      authorAvatar: p.usuario?.avatar || p.empresa?.logo
-    }));
+    const postsTransformados = posts.map(p => {
+      const isLiked = userId ? p.likes?.length > 0 : false;
+      console.log(`📊 Post ${p.id}: userId=${userId}, likes array length=${p.likes?.length}, isLiked=${isLiked}`);
+      
+      return {
+        id: p.id,
+        contenido: p.contenido,
+        content: p.contenido, // Alias para frontend
+        imagenUrl: p.imagenUrl,
+        image: p.imagenUrl, // Alias para frontend
+        autorTipo: p.usuarioId ? 'Usuario' : 'Empresa', // Calculado dinámicamente
+        createdAt: p.createdAt,
+        updatedAt: p.updatedAt,
+        likesCount: p._count.likes,
+        commentsCount: p._count.comentarios,
+        isLiked,
+        author: p.usuario || p.empresa,
+        authorName: p.usuario?.nombre || p.empresa?.nombre,
+        authorAvatar: p.usuario?.avatar || p.empresa?.logo
+      };
+    });
 
     return res.json(postsTransformados);
   } catch (err) {
