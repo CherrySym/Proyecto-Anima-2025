@@ -51,5 +51,39 @@ export function sanitizePostulacion(postulacion) {
   };
 }
 
-// ❌ ELIMINADOS: sanitizeCurso y sanitizeDesafio (modelos no existen en schema)
+// Desafíos
+export function sanitizeDesafio(desafio) {
+  if (!desafio) return null;
+  return {
+    id: desafio.id,
+    empresaId: desafio.empresaId,
+    empresa: desafio.empresa,
+    titulo: desafio.titulo,
+    descripcion: desafio.descripcion,
+    recompensa: desafio.recompensa,
+    dificultad: desafio.dificultad,
+    categoria: desafio.categoria,
+    activo: desafio.activo,
+    fechaCreacion: desafio.fechaCreacion,
+    fechaActualizacion: desafio.fechaActualizacion
+  };
+}
 
+// Cursos Externos
+export function sanitizeCurso(curso) {
+  if (!curso) return null;
+  return {
+    id: curso.id,
+    titulo: curso.titulo,
+    descripcion: curso.descripcion,
+    url: curso.url,
+    proveedor: curso.proveedor,
+    duracion: curso.duracion,
+    nivel: curso.nivel,
+    area: curso.area,
+    costo: curso.costo,
+    activo: curso.activo,
+    fechaCreacion: curso.fechaCreacion,
+    fechaActualizacion: curso.fechaActualizacion
+  };
+}

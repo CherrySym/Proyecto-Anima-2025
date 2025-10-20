@@ -144,11 +144,25 @@ const OfertaDetalle = () => {
     setPostulando(true);
     
     try {
-      await ofertasService.postularseOferta(oferta.id);
+      const result = await ofertasService.postularseOferta(oferta.id);
       setYaPostulado(true);
       alert('¡Postulación enviada exitosamente! La empresa revisará tu perfil y se pondrá en contacto contigo.');
+      
+      // Opcional: redirigir a Mis Postulaciones después de un segundo
+      setTimeout(() => {
+        navigate('/mis-postulaciones');
+      }, 2000);
     } catch (err) {
-      alert(err.error || 'Error al postularse. Puede que ya te hayas postulado antes.');
+      console.error('Error al postularse:', err);
+      
+      // Manejar diferentes tipos de errores
+      if (err.error) {
+        alert(err.error);
+      } else if (err.message) {
+        alert(err.message);
+      } else {
+        alert('Error al postularse. Por favor intenta nuevamente.');
+      }
     } finally {
       setPostulando(false);
     }

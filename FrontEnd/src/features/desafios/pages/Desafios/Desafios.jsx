@@ -2,7 +2,8 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../../../context/AuthContext';
 import { useMinLoadingTime } from '../../../../hooks/useMinLoadingTime';
-import { Target, AlertTriangle, Star, Lightbulb, Clock, Users, Calendar, Trophy, DollarSign } from 'lucide-react';
+import { getDesafios } from '../../services/desafiosService';
+import { Target, Star, Lightbulb, Clock, Users, Calendar, Trophy, DollarSign } from 'lucide-react';
 import styles from './Desafios.module.css';
 // import './Desafios.css'; // backup preserved
 
@@ -10,10 +11,6 @@ import styles from './Desafios.module.css';
  * Página de Desafíos
  * Accesible para todos los usuarios (menores y mayores de 18)
  * Los menores pueden participar pero con recompensas limitadas
- * 
- * ⚠️ ESTADO MVP: Esta página usa datos de ejemplo (mock data)
- * Los desafíos NO están conectados al backend en esta versión MVP
- * Funcionalidad completa se implementará en fase 2
  */
 const Desafios = () => {
   const navigate = useNavigate();
@@ -28,93 +25,38 @@ const Desafios = () => {
 
   useEffect(() => {
     loadDesafios();
-  }, [user]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const loadDesafios = async () => {
     await withMinLoadingTime(async () => {
-      // Simular carga de desafíos desde API
-      setDesafios([
-        {
-          id: 1,
-          titulo: 'Crea un Logo para StartUp Tech',
-          empresa: 'InnovateTech',
-          categoria: 'diseño',
-          dificultad: 'facil',
-          descripcion: 'Diseña un logo moderno para una startup de tecnología. Debe ser minimalista y memorable.',
-          recompensa: {
-            puntos: 150,
-            dinero: user?.edad >= 18 ? '$5,000' : null,
-            tipo: 'diseño'
-          },
-          tiempo_estimado: '2-4 horas',
-          participantes: 23,
-          fecha_limite: '2025-10-20',
-          estado: 'disponible',
-          tags: ['logo', 'branding', 'diseño gráfico']
-        },
-        {
-          id: 2,
-          titulo: 'Investigación de Mercado: Hábitos Gen Z',
-          empresa: 'MarketingPro',
-          categoria: 'investigacion',
-          dificultad: 'medio',
-          descripcion: 'Realiza una encuesta a 50 personas de 16-25 años sobre sus hábitos de consumo digital.',
-          recompensa: {
-            puntos: 200,
-            dinero: user?.edad >= 18 ? '$8,000' : null,
-            tipo: 'investigación'
-          },
-          tiempo_estimado: '1 semana',
-          participantes: 12,
-          fecha_limite: '2025-10-25',
-          estado: 'disponible',
-          tags: ['encuestas', 'marketing', 'análisis']
-        },
-        {
-          id: 3,
-          titulo: 'Video Tutorial: Introducción a React',
-          empresa: 'EduTech',
-          categoria: 'contenido',
-          dificultad: 'medio',
-          descripcion: 'Crea un video tutorial de 10-15 minutos explicando los conceptos básicos de React.',
-          recompensa: {
-            puntos: 300,
-            dinero: user?.edad >= 18 ? '$12,000' : null,
-            tipo: 'educativo'
-          },
-          tiempo_estimado: '3-5 días',
-          participantes: 8,
-          fecha_limite: '2025-10-30',
-          estado: 'disponible',
-          tags: ['video', 'programación', 'tutorial']
-        },
-        {
-          id: 4,
-          titulo: 'Optimización de Página Web',
-          empresa: 'WebSolutions',
-          categoria: 'desarrollo',
-          dificultad: 'dificil',
-          descripcion: 'Mejora la velocidad de carga de una página web. Requiere conocimientos de optimización web.',
-          recompensa: {
-            puntos: 500,
-            dinero: user?.edad >= 18 ? '$20,000' : null,
-            tipo: 'técnico'
-          },
-          tiempo_estimado: '1-2 semanas',
-          participantes: 5,
-          fecha_limite: '2025-11-05',
-          estado: 'disponible',
-          tags: ['optimización', 'performance', 'web development']
-        }
-      ]);
+      try {
+        const filtrosAPI = {
+          categoria: filtros.categoria !== 'todos' ? filtros.categoria : undefined,
+          dificultad: filtros.dificultad !== 'todas' ? filtros.dificultad : undefined,
+          estado: filtros.estado !== 'todos' ? filtros.estado : undefined
+        };
+        
+        const data = await getDesafios(filtrosAPI);
+        setDesafios(data);
+      } catch (error) {
+        console.error('Error al cargar desafíos:', error);
+        setDesafios([]);
+      }
     });
   };
 
   const filtrarDesafios = () => {
     return desafios.filter(desafio => {
-      const coincideCategoria = filtros.categoria === 'todos' || desafio.categoria === filtros.categoria;
-      const coincideDificultad = filtros.dificultad === 'todas' || desafio.dificultad === filtros.dificultad;
-      const coincideEstado = filtros.estado === 'todos' || desafio.estado === filtros.estado;
+      // Normalizar valores para comparación (lowercase, sin acentos)
+      const normalize = (str) => str?.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+      
+      const coincideCategoria = filtros.categoria === 'todos' || 
+        normalize(desafio.categoria) === normalize(filtros.categoria);
+      const coincideDificultad = filtros.dificultad === 'todas' || 
+        normalize(desafio.dificultad) === normalize(filtros.dificultad);
+      const coincideEstado = filtros.estado === 'todos' || 
+        (filtros.estado === 'disponibles' && desafio.activo);
       
       return coincideCategoria && coincideDificultad && coincideEstado;
     });
@@ -125,7 +67,8 @@ const Desafios = () => {
   };
 
   const getDificultadColor = (dificultad) => {
-    switch(dificultad) {
+    const normalized = dificultad?.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+    switch(normalized) {
       case 'facil': return '#28a745';
       case 'medio': return '#ffc107';
       case 'dificil': return '#dc3545';
@@ -134,7 +77,8 @@ const Desafios = () => {
   };
 
   const getDificultadIcon = (dificultad) => {
-    switch(dificultad) {
+    const normalized = dificultad?.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+    switch(normalized) {
       case 'facil': return <Star size={16} fill="currentColor" />;
       case 'medio': return <><Star size={16} fill="currentColor" /><Star size={16} fill="currentColor" /></>;
       case 'dificil': return <><Star size={16} fill="currentColor" /><Star size={16} fill="currentColor" /><Star size={16} fill="currentColor" /></>;
@@ -158,30 +102,6 @@ const Desafios = () => {
   return (
     <div className={styles['desafios-page']}>
       <main className={styles['desafios-content']}>
-        {/* Banner de advertencia MVP */}
-        <div style={{
-          backgroundColor: '#fff3cd',
-          border: '1px solid #ffc107',
-          borderRadius: '8px',
-          padding: '16px',
-          marginBottom: '24px',
-          display: 'flex',
-          alignItems: 'center',
-          gap: '12px'
-        }}>
-          <AlertTriangle size={24} color="#856404" />
-          <div>
-            <strong style={{ color: '#856404', display: 'block', marginBottom: '4px' }}>
-              Versión MVP - Datos de Ejemplo
-            </strong>
-            <p style={{ margin: 0, color: '#856404', fontSize: '14px' }}>
-              Esta página muestra desafíos de ejemplo. La funcionalidad de participación real 
-              se implementará en una futura actualización. Por ahora, puedes explorar la interfaz 
-              y ver cómo funcionará el sistema de desafíos.
-            </p>
-          </div>
-        </div>
-
   <div className={styles['desafios-header']}>
           <h1><Target size={32} /> Desafíos y Encargos</h1>
           <p>Completa tareas reales de empresas y gana puntos y experiencia</p>
@@ -249,7 +169,7 @@ const Desafios = () => {
             desafiosFiltrados.map(desafio => (
               <div key={desafio.id} className={styles['desafio-card']}>
                 <div className={styles['desafio-header']}>
-                  <div className={styles['desafio-empresa']}>{desafio.empresa}</div>
+                  <div className={styles['desafio-empresa']}>{desafio.empresa?.nombre || 'Empresa'}</div>
                   <div 
                     className={styles['desafio-dificultad']}
                     style={{ color: getDificultadColor(desafio.dificultad) }}
@@ -262,36 +182,29 @@ const Desafios = () => {
                 <p className={styles['desafio-descripcion']}>{desafio.descripcion}</p>
 
                 <div className={styles['desafio-tags']}>
-                  {desafio.tags.map(tag => (
-                    <span key={tag} className={styles['tag']}>#{tag}</span>
-                  ))}
+                  <span className={styles['tag']}>#{desafio.categoria}</span>
                 </div>
 
                 <div className={styles['desafio-info']}>
                   <div className={styles['info-item']}>
-                    <span className={styles['label']}><Clock size={16} /> Tiempo:</span>
-                    <span>{desafio.tiempo_estimado}</span>
+                    <span className={styles['label']}><Clock size={16} /> Categoría:</span>
+                    <span>{desafio.categoria}</span>
                   </div>
                   <div className={styles['info-item']}>
-                    <span className={styles['label']}><Users size={16} /> Participantes:</span>
-                    <span>{desafio.participantes}</span>
+                    <span className={styles['label']}><Trophy size={16} /> Recompensa:</span>
+                    <span>{desafio.recompensa}</span>
                   </div>
                   <div className={styles['info-item']}>
-                    <span className={styles['label']}><Calendar size={16} /> Límite:</span>
-                    <span>{new Date(desafio.fecha_limite).toLocaleDateString('es-AR')}</span>
+                    <span className={styles['label']}><Calendar size={16} /> Creado:</span>
+                    <span>{new Date(desafio.fechaCreacion).toLocaleDateString('es-AR')}</span>
                   </div>
                 </div>
 
                 <div className={styles['desafio-recompensa']}>
                   <div className={styles['recompensa-puntos']}>
-                    <Trophy size={16} /> {desafio.recompensa.puntos} puntos
+                    <Trophy size={16} /> {desafio.recompensa}
                   </div>
-                  {desafio.recompensa.dinero && (
-                    <div className={styles['recompensa-dinero']}>
-                      <DollarSign size={16} /> {desafio.recompensa.dinero}
-                    </div>
-                  )}
-                  {!desafio.recompensa.dinero && user?.edad < 18 && (
+                  {user?.edad < 18 && (
                     <div className={styles['recompensa-futura']}>
                       <DollarSign size={16} /> Recompensa monetaria disponible a los 18+
                     </div>

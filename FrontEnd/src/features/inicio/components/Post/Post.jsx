@@ -199,6 +199,8 @@ const Post = ({ post, onLike }) => {
                 className={styles['comment-avatar']}
               />
               <input
+                id={`comment-input-${post.id}`}
+                name="commentContent"
                 type="text"
                 placeholder="Escribe un comentario..."
                 value={newComment}

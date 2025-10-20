@@ -151,6 +151,7 @@ export const getOfertas = async (req, res) => {
 export const getOfertaById = async (req, res) => {
   try {
     const id = parseInt(req.params.id);
+    const usuarioId = req.user?.id; // Viene de optionalAuthMiddleware
     
     const oferta = await prisma.oferta.findUnique({ 
       where: { id },
@@ -167,13 +168,23 @@ export const getOfertaById = async (req, res) => {
         },
         _count: {
           select: { postulaciones: true }
-        }
+        },
+        // Si hay usuario logueado, verificar si ya se postuló
+        ...(usuarioId && {
+          postulaciones: {
+            where: { usuarioId },
+            select: { id: true }
+          }
+        })
       }
     });
 
     if (!oferta) {
       return res.status(404).json({ error: "Oferta no encontrada" });
     }
+
+    // Verificar si el usuario ya se postuló
+    const yaPostulado = usuarioId ? oferta.postulaciones?.length > 0 : false;
 
     // Transformar respuesta
     const ofertaTransformada = {
@@ -191,6 +202,7 @@ export const getOfertaById = async (req, res) => {
       activa: oferta.activa,
       fechaPublicacion: oferta.createdAt,
       fechaVencimiento: oferta.fechaVencimiento,
+      yaPostulado, // Nuevo campo
       empresa_info: {
         nombre: oferta.empresa.nombre,
         descripcion: oferta.empresa.descripcion,

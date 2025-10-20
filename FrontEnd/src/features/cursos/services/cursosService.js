@@ -1,24 +1,13 @@
 /**
  * Servicios para Cursos y Talleres
- * 
- * ⚠️ ADVERTENCIA MVP: Cursos NO están implementados en el backend actualmente
- * Este servicio está DESHABILITADO hasta que se implemente la funcionalidad completa
- * Todas las funciones lanzarán un error indicando que la característica no está disponible
- * 
- * Endpoints: /cursos (NO IMPLEMENTADOS)
+ * Endpoints: /cursos
  */
 import API from '../../../services/api';
 
-const MVP_WARNING = '⚠️ CURSOS: Funcionalidad no disponible en MVP. Próximamente.';
-
 /**
- * Obtener todos los cursos disponibles (NO IMPLEMENTADO)
+ * Obtener todos los cursos disponibles
  */
 export const getCursos = async (filtros = {}) => {
-  console.warn(MVP_WARNING);
-  throw new Error(MVP_WARNING);
-  
-  /* CÓDIGO DESHABILITADO TEMPORALMENTE
   try {
     const params = new URLSearchParams();
     
@@ -28,11 +17,8 @@ export const getCursos = async (filtros = {}) => {
     if (filtros.nivel && filtros.nivel !== 'todos') {
       params.append('nivel', filtros.nivel);
     }
-    if (filtros.modalidad && filtros.modalidad !== 'todas') {
-      params.append('modalidad', filtros.modalidad);
-    }
-    if (filtros.precio && filtros.precio !== 'todos') {
-      params.append('precio', filtros.precio);
+    if (filtros.proveedor && filtros.proveedor !== 'todos') {
+      params.append('proveedor', filtros.proveedor);
     }
     
     const response = await API.get(`/cursos?${params}`);
@@ -40,77 +26,52 @@ export const getCursos = async (filtros = {}) => {
   } catch (error) {
     throw error.response?.data || { error: 'Error al cargar cursos' };
   }
-  */
 };
 
 /**
- * Obtener un curso específico por ID (NO IMPLEMENTADO)
+ * Obtener un curso específico por ID
  */
 export const getCursoById = async (id) => {
-  console.warn(MVP_WARNING);
-  throw new Error(MVP_WARNING);
-  
-  /* CÓDIGO DESHABILITADO TEMPORALMENTE
   try {
     const response = await API.get(`/cursos/${id}`);
     return response.data;
   } catch (error) {
     throw error.response?.data || { error: 'Error al cargar el curso' };
   }
-  */
 };
 
 /**
- * Marcar un curso como favorito (NO IMPLEMENTADO)
+ * Guardar un curso (agregar a favoritos)
  */
-export const toggleFavoritoCurso = async (cursoId) => {
-  console.warn(MVP_WARNING);
-  throw new Error(MVP_WARNING);
-  
-  /* CÓDIGO DESHABILITADO TEMPORALMENTE
+export const guardarCurso = async (cursoId) => {
   try {
-    const response = await API.post(`/cursos/${cursoId}/favorito`);
+    const response = await API.post(`/cursos/${cursoId}/guardar`);
     return response.data;
   } catch (error) {
-    throw error.response?.data || { error: 'Error al marcar como favorito' };
+    throw error.response?.data || { error: 'Error al guardar curso' };
   }
-  */
 };
 
 /**
- * Obtener cursos favoritos del usuario (NO IMPLEMENTADO)
+ * Quitar un curso guardado
  */
-export const getCursosFavoritos = async () => {
-  console.warn(MVP_WARNING);
-  throw new Error(MVP_WARNING);
-  
-  /* CÓDIGO DESHABILITADO TEMPORALMENTE
+export const quitarCursoGuardado = async (cursoId) => {
   try {
-    const response = await API.get('/cursos/favoritos');
+    const response = await API.delete(`/cursos/${cursoId}/guardar`);
     return response.data;
   } catch (error) {
-    throw error.response?.data || { error: 'Error al cargar cursos favoritos' };
+    throw error.response?.data || { error: 'Error al quitar curso' };
   }
-  */
 };
 
 /**
- * Registrar progreso en un curso (NO IMPLEMENTADO)
+ * Obtener cursos guardados del usuario
  */
-export const registrarProgresoCurso = async (cursoId, progreso) => {
-  console.warn(MVP_WARNING);
-  throw new Error(MVP_WARNING);
-  
-  /* CÓDIGO DESHABILITADO TEMPORALMENTE
+export const getMisCursosGuardados = async () => {
   try {
-    const response = await API.post(`/cursos/${cursoId}/progreso`, {
-      porcentaje: progreso.porcentaje,
-      leccionActual: progreso.leccionActual,
-      tiempoEstudio: progreso.tiempoEstudio
-    });
+    const response = await API.get('/cursos/mis-cursos/guardados');
     return response.data;
   } catch (error) {
-    throw error.response?.data || { error: 'Error al registrar progreso' };
+    throw error.response?.data || { error: 'Error al cargar cursos guardados' };
   }
-  */
 };

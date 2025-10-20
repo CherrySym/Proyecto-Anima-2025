@@ -159,6 +159,8 @@ const Ofertas = () => {
         <div className={styles['filtros-container']}>
           <div className={styles['filtro-busqueda']}>
             <input
+              id="ofertas-busqueda"
+              name="busqueda"
               type="text"
               placeholder="Buscar por título o empresa..."
               value={filtros.busqueda}
@@ -168,7 +170,13 @@ const Ofertas = () => {
           </div>
           
           <div className={styles['filtro-area']}>
-            <select value={filtros.area} onChange={handleAreaChange} className={styles['area-select']}>
+            <select 
+              id="ofertas-area"
+              name="area"
+              value={filtros.area} 
+              onChange={handleAreaChange} 
+              className={styles['area-select']}
+            >
               <option value="todas">Todas las áreas</option>
               <option value="tecnologia">Tecnología</option>
               <option value="marketing">Marketing</option>
@@ -179,7 +187,13 @@ const Ofertas = () => {
           </div>
 
           <div className={styles['filtro-tipo']}>
-            <select value={filtros.tipo} onChange={handleTipoChange} className={styles['tipo-select']}>
+            <select 
+              id="ofertas-tipo"
+              name="tipo"
+              value={filtros.tipo} 
+              onChange={handleTipoChange} 
+              className={styles['tipo-select']}
+            >
               <option value="">Todos los tipos</option>
               <option value="Tiempo completo">Tiempo completo</option>
               <option value="Medio tiempo">Medio tiempo</option>
@@ -189,7 +203,13 @@ const Ofertas = () => {
           </div>
 
           <div className={styles['filtro-modalidad']}>
-            <select value={filtros.modalidad} onChange={handleModalidadChange} className={styles['modalidad-select']}>
+            <select 
+              id="ofertas-modalidad"
+              name="modalidad"
+              value={filtros.modalidad} 
+              onChange={handleModalidadChange} 
+              className={styles['modalidad-select']}
+            >
               <option value="">Todas las modalidades</option>
               <option value="Presencial">Presencial</option>
               <option value="Remoto">Remoto</option>

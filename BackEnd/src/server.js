@@ -13,9 +13,8 @@ import authRouter from "./routes/auth.js";
 import postsRouter from "./routes/posts.js";
 import likesRouter from "./routes/likes.js";
 import comentariosRouter from "./routes/comentarios.js";
-// ❌ Rutas deshabilitadas (modelos no existen en schema):
-// import desafiosRouter from "./routes/desafios.js";
-// import cursosRouter from "./routes/cursos.js";
+import desafiosRouter from "./routes/desafios.js";
+import cursosRouter from "./routes/cursos.js";
 
 // Configuración
 dotenv.config();
@@ -61,9 +60,8 @@ app.use("/likes", likesRouter);
 app.use("/comentarios", comentariosRouter);
 app.use("/ofertas", ofertasRouter);
 app.use("/postulaciones", postulacionesRouter);
-// ❌ Deshabilitadas (modelos no existen en schema):
-// app.use("/desafios", desafiosRouter);
-// app.use("/cursos", cursosRouter);
+app.use("/desafios", desafiosRouter);
+app.use("/cursos", cursosRouter);
 
 // -------------------- START SERVER --------------------
 const PORT = process.env.PORT || 4000;

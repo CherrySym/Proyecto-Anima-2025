@@ -39,6 +39,7 @@ model Usuario {
   likes         Like[]
   comentarios   Comentario[]
   postulaciones Postulacion[]
+  cursosGuardados CursoGuardado[]
 
   @@index([email])
   @@map("usuarios")
@@ -64,6 +65,7 @@ model Empresa {
   // Relaciones
   posts   Post[]
   ofertas Oferta[]
+  desafios Desafio[]
 
   @@index([email])
   @@map("empresas")
@@ -183,6 +185,74 @@ model Postulacion {
   @@index([ofertaId])
   @@index([estado])
   @@map("postulaciones")
+}
+
+// ==================== DESAFÍOS ====================
+
+/// Desafio - Reto publicado por empresa para que usuarios ganen puntos
+/// Puede ser completado por usuarios adolescentes y jóvenes
+model Desafio {
+  id          Int     @id @default(autoincrement())
+  empresaId   Int
+  titulo      String
+  descripcion String  @db.Text
+  recompensa  Int // Puntos que gana el usuario al completar
+  dificultad  String? // Ej: "Fácil", "Medio", "Difícil"
+  categoria   String? // Ej: "Programación", "Diseño", "Marketing"
+  activo      Boolean @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  empresa Empresa @relation(fields: [empresaId], references: [id], onDelete: Cascade)
+
+  @@index([empresaId])
+  @@index([activo])
+  @@index([categoria])
+  @@map("desafios")
+}
+
+// ==================== CURSOS ====================
+
+/// CursoExterno - Curso externo recomendado (no alojado en la plataforma)
+/// Recursos educativos para ayudar a jóvenes a desarrollarse
+model CursoExterno {
+  id          Int     @id @default(autoincrement())
+  titulo      String
+  descripcion String  @db.Text
+  url         String // Link externo al curso
+  proveedor   String? // Ej: "Coursera", "Udemy", "YouTube"
+  duracion    String? // Ej: "4 semanas", "10 horas"
+  nivel       String? // Ej: "Principiante", "Intermedio", "Avanzado"
+  area        String? // Ej: "tecnologia", "marketing", "ventas"
+  costo       String? // Ej: "Gratis", "$50 USD"
+  activo      Boolean @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  // Relaciones
+  cursosGuardados CursoGuardado[]
+
+  @@index([area])
+  @@index([activo])
+  @@map("cursos_externos")
+}
+
+/// CursoGuardado - Relación entre usuario y cursos que ha guardado
+/// Permite a los usuarios marcar cursos de interés y verlos en "Mis Cursos"
+model CursoGuardado {
+  id        Int      @id @default(autoincrement())
+  usuarioId Int
+  cursoId   Int
+  createdAt DateTime @default(now())
+
+  // Relaciones
+  usuario Usuario      @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
+  curso   CursoExterno @relation(fields: [cursoId], references: [id], onDelete: Cascade)
+
+  @@unique([usuarioId, cursoId]) // Un usuario no puede guardar el mismo curso dos veces
+  @@index([usuarioId])
+  @@index([cursoId])
+  @@map("cursos_guardados")
 }
 
 // ==================== ENUMS ====================

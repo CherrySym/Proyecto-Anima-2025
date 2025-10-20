@@ -13,6 +13,8 @@ async function main() {
   await prisma.post.deleteMany();
   await prisma.postulacion.deleteMany();
   await prisma.oferta.deleteMany();
+  await prisma.desafio.deleteMany();
+  await prisma.cursoExterno.deleteMany();
   await prisma.usuario.deleteMany();
   await prisma.empresa.deleteMany();
 
@@ -397,6 +399,200 @@ async function main() {
 
   console.log(`✅ ${5} comentarios creados`);
 
+  // ==================== DESAFÍOS ====================
+  console.log('🎯 Creando desafíos...');
+
+  await prisma.desafio.create({
+    data: {
+      empresaId: empresa1.id, // Globant
+      titulo: 'Crea tu primera página web',
+      descripcion: 'Desarrolla una landing page personal usando HTML, CSS y JavaScript. Debe incluir: header, about, portfolio y contacto. ¡Demuestra tu creatividad!',
+      recompensa: 50,
+      dificultad: 'Fácil',
+      categoria: 'Programación',
+      activo: true
+    }
+  });
+
+  await prisma.desafio.create({
+    data: {
+      empresaId: empresa1.id, // Globant
+      titulo: 'Implementa un componente React interactivo',
+      descripcion: 'Crea un componente de carrito de compras en React con funcionalidad de agregar/eliminar items y calcular totales. Usa hooks (useState, useEffect).',
+      recompensa: 100,
+      dificultad: 'Medio',
+      categoria: 'Programación',
+      activo: true
+    }
+  });
+
+  await prisma.desafio.create({
+    data: {
+      empresaId: empresa2.id, // MercadoLibre
+      titulo: 'Diseña una estrategia de marketing digital',
+      descripcion: 'Desarrolla una estrategia completa de marketing para un producto ficticio: identifica público objetivo, canales, contenido y métricas de éxito.',
+      recompensa: 75,
+      dificultad: 'Medio',
+      categoria: 'Marketing',
+      activo: true
+    }
+  });
+
+  await prisma.desafio.create({
+    data: {
+      empresaId: empresa2.id, // MercadoLibre
+      titulo: 'Crea un plan de contenido para redes sociales',
+      descripcion: 'Diseña un calendario de contenido para redes sociales (Instagram, TikTok, LinkedIn) para una marca de tecnología. Incluye 10 posts con copy, hashtags y tipo de contenido.',
+      recompensa: 60,
+      dificultad: 'Fácil',
+      categoria: 'Marketing',
+      activo: true
+    }
+  });
+
+  await prisma.desafio.create({
+    data: {
+      empresaId: empresa3.id, // TechCorp
+      titulo: 'Optimiza el rendimiento de una web',
+      descripcion: 'Analiza una página web y propone mejoras de rendimiento (velocidad de carga, SEO, accesibilidad). Usa herramientas como Lighthouse y presenta un reporte.',
+      recompensa: 80,
+      dificultad: 'Medio',
+      categoria: 'Programación',
+      activo: true
+    }
+  });
+
+  await prisma.desafio.create({
+    data: {
+      empresaId: empresa1.id, // Globant
+      titulo: 'Diseña un prototipo de app móvil',
+      descripcion: 'Crea un prototipo interactivo en Figma de una app de delivery. Debe incluir: login, home, menú, carrito y checkout. Enfócate en UX/UI.',
+      recompensa: 90,
+      dificultad: 'Difícil',
+      categoria: 'Diseño',
+      activo: true
+    }
+  });
+
+  console.log(`✅ ${6} desafíos creados`);
+
+  // ==================== CURSOS EXTERNOS ====================
+  console.log('📚 Creando cursos externos...');
+
+  await prisma.cursoExterno.create({
+    data: {
+      titulo: 'Fundamentos de HTML y CSS',
+      descripcion: 'Aprende los conceptos básicos de desarrollo web desde cero. Ideal para principiantes que quieren entrar al mundo de la programación.',
+      url: 'https://www.freecodecamp.org/learn/2022/responsive-web-design/',
+      proveedor: 'freeCodeCamp',
+      duracion: '300 horas',
+      nivel: 'Principiante',
+      area: 'tecnologia',
+      costo: 'Gratis',
+      activo: true
+    }
+  });
+
+  await prisma.cursoExterno.create({
+    data: {
+      titulo: 'JavaScript para Principiantes',
+      descripcion: 'Curso completo de JavaScript moderno (ES6+). Aprende desde variables hasta programación orientada a objetos y asincronía.',
+      url: 'https://www.codecademy.com/learn/introduction-to-javascript',
+      proveedor: 'Codecademy',
+      duracion: '30 horas',
+      nivel: 'Principiante',
+      area: 'tecnologia',
+      costo: 'Gratis (con opción Pro)',
+      activo: true
+    }
+  });
+
+  await prisma.cursoExterno.create({
+    data: {
+      titulo: 'React - La Guía Completa',
+      descripcion: 'Domina React desde lo básico hasta temas avanzados. Incluye hooks, context, routing, y mejores prácticas.',
+      url: 'https://www.udemy.com/course/react-the-complete-guide/',
+      proveedor: 'Udemy',
+      duracion: '48 horas',
+      nivel: 'Intermedio',
+      area: 'tecnologia',
+      costo: '$19.99 USD',
+      activo: true
+    }
+  });
+
+  await prisma.cursoExterno.create({
+    data: {
+      titulo: 'Marketing Digital para Principiantes',
+      descripcion: 'Introducción al marketing digital: SEO, SEM, redes sociales, email marketing y analítica web. Perfecto para comenzar tu carrera.',
+      url: 'https://learndigital.withgoogle.com/digitalgarage',
+      proveedor: 'Google Digital Garage',
+      duracion: '40 horas',
+      nivel: 'Principiante',
+      area: 'marketing',
+      costo: 'Gratis',
+      activo: true
+    }
+  });
+
+  await prisma.cursoExterno.create({
+    data: {
+      titulo: 'Fundamentos de Diseño UX/UI',
+      descripcion: 'Aprende los principios del diseño de experiencia de usuario y diseño de interfaces. Incluye teoría del color, tipografía, y herramientas como Figma.',
+      url: 'https://www.coursera.org/learn/ux-design-fundamentals',
+      proveedor: 'Coursera',
+      duracion: '4 semanas',
+      nivel: 'Principiante',
+      area: 'diseno',
+      costo: 'Gratis (certificado pago)',
+      activo: true
+    }
+  });
+
+  await prisma.cursoExterno.create({
+    data: {
+      titulo: 'Python para Data Science',
+      descripcion: 'Curso completo de Python orientado a análisis de datos. Incluye pandas, numpy, matplotlib y visualización de datos.',
+      url: 'https://www.kaggle.com/learn/python',
+      proveedor: 'Kaggle',
+      duracion: '7 horas',
+      nivel: 'Intermedio',
+      area: 'tecnologia',
+      costo: 'Gratis',
+      activo: true
+    }
+  });
+
+  await prisma.cursoExterno.create({
+    data: {
+      titulo: 'Estrategias de Contenido para Redes Sociales',
+      descripcion: 'Aprende a crear, planificar y ejecutar estrategias de contenido efectivas para Instagram, TikTok, LinkedIn y más.',
+      url: 'https://www.hubspot.com/resources/courses/social-media',
+      proveedor: 'HubSpot Academy',
+      duracion: '3 horas',
+      nivel: 'Principiante',
+      area: 'marketing',
+      costo: 'Gratis',
+      activo: true
+    }
+  });
+
+  await prisma.cursoExterno.create({
+    data: {
+      titulo: 'Git y GitHub para Principiantes',
+      descripcion: 'Domina el control de versiones con Git y colaboración en GitHub. Esencial para todo desarrollador.',
+      url: 'https://www.freecodecamp.org/news/git-and-github-for-beginners/',
+      proveedor: 'freeCodeCamp',
+      duracion: '1 hora',
+      nivel: 'Principiante',
+      area: 'tecnologia',
+      costo: 'Gratis',
+      activo: true
+    }
+  });
+
+  console.log(`✅ ${8} cursos externos creados`);
+
   // ==================== RESUMEN ====================
   console.log('\n📊 RESUMEN DEL SEED:');
   console.log(`   👤 Usuarios: 4 (3 regulares + 1 admin)`);
@@ -406,6 +602,8 @@ async function main() {
   console.log(`   📰 Posts: 8`);
   console.log(`   ❤️ Likes: 8`);
   console.log(`   💬 Comentarios: 5`);
+  console.log(`   🎯 Desafíos: 6`);
+  console.log(`   📚 Cursos: 8`);
   console.log('\n✅ Seed completado exitosamente!');
   console.log('\n📝 CREDENCIALES DE PRUEBA:');
   console.log('   Usuario: maria@example.com / password123');

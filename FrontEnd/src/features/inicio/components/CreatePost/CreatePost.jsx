@@ -52,6 +52,8 @@ const CreatePost = ({ onPost }) => {
         </div>
         <div className={styles['post-input-container']}>
           <textarea
+            id="post-content"
+            name="content"
             className={`${styles['post-input']} ${isExpanded ? styles['expanded'] : ''}`}
             placeholder={user?.tipoUsuario === 'EMPRESA' 
               ? "¿Qué novedades quieres compartir con la comunidad?" 
@@ -84,6 +86,8 @@ const CreatePost = ({ onPost }) => {
             <div className={styles['post-options']}>
               <label className={styles['image-upload-btn']}>
                 <input
+                  id="post-image-upload"
+                  name="imageUpload"
                   type="file"
                   accept="image/*"
                   onChange={handleImageUpload}

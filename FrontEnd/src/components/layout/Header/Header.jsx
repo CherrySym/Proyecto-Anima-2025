@@ -127,6 +127,8 @@ const Header = () => {
             <div className={styles['search-container']}>
               <span className={styles['search-icon']}><Search size={16} /></span>
               <input
+                id="header-search"
+                name="search"
                 type="text"
                 placeholder={t.search}
                 value={searchQuery}

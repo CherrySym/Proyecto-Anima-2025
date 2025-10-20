@@ -245,7 +245,7 @@ const MisPostulaciones = () => {
 
                   <div className={styles['card-footer']}>
                     <button 
-                      onClick={() => navigate(`/ofertas/${oferta.id}`)}
+                      onClick={() => navigate(`/oferta/${oferta.id}`)}
                       className={styles['btn-secondary']}
                     >
                       Ver Oferta Completa
