@@ -4,6 +4,7 @@ import { useAuth } from '../../../../context/AuthContext';
 import { useMinLoadingTime } from '../../../../hooks/useMinLoadingTime';
 import * as ofertasService from '../../services/ofertasService';
 import { MapPin, FileText, Building2, Rocket, AlertTriangle } from 'lucide-react';
+import Toast from '../../../../components/common/Toast/Toast';
 import styles from './OfertaDetalle.module.css';
 // import './OfertaDetalle.css'; // comentado: archivo original inactivado como backup
 
@@ -20,6 +21,7 @@ const OfertaDetalle = () => {
   const [error, setError] = useState(null);
   const [postulando, setPostulando] = useState(false);
   const [yaPostulado, setYaPostulado] = useState(false);
+  const [toast, setToast] = useState(null);
 
   useEffect(() => {
     loadOferta();
@@ -126,18 +128,18 @@ const OfertaDetalle = () => {
 
   const handlePostularse = async () => {
     if (!user) {
-      alert('Debes iniciar sesión para postularte');
-      navigate('/login');
+      setToast({ message: 'Debes iniciar sesión para postularte', type: 'error' });
+      setTimeout(() => navigate('/login'), 2000);
       return;
     }
 
     if (user.edad < 18) {
-      alert('Debes ser mayor de 18 años para postularte a ofertas laborales.');
+      setToast({ message: 'Debes ser mayor de 18 años para postularte a ofertas laborales', type: 'error' });
       return;
     }
 
     if (user.tipoUsuario === 'EMPRESA') {
-      alert('Las empresas no pueden postularse a ofertas.');
+      setToast({ message: 'Las empresas no pueden postularse a ofertas', type: 'error' });
       return;
     }
 
@@ -146,9 +148,12 @@ const OfertaDetalle = () => {
     try {
       const result = await ofertasService.postularseOferta(oferta.id);
       setYaPostulado(true);
-      alert('¡Postulación enviada exitosamente! La empresa revisará tu perfil y se pondrá en contacto contigo.');
+      setToast({ 
+        message: '¡Postulación enviada exitosamente! La empresa revisará tu perfil', 
+        type: 'success' 
+      });
       
-      // Opcional: redirigir a Mis Postulaciones después de un segundo
+      // Redirigir a Mis Postulaciones después de 2 segundos
       setTimeout(() => {
         navigate('/mis-postulaciones');
       }, 2000);
@@ -156,21 +161,21 @@ const OfertaDetalle = () => {
       console.error('Error al postularse:', err);
       
       // Manejar diferentes tipos de errores
+      let errorMessage = 'Error al postularse. Por favor intenta nuevamente.';
       if (err.error) {
-        alert(err.error);
+        errorMessage = err.error;
       } else if (err.message) {
-        alert(err.message);
-      } else {
-        alert('Error al postularse. Por favor intenta nuevamente.');
+        errorMessage = err.message;
       }
+      
+      setToast({ message: errorMessage, type: 'error' });
     } finally {
       setPostulando(false);
     }
   };
 
   const handleGuardarOferta = () => {
-    // Funcionalidad para guardar oferta para más tarde
-    alert('Oferta guardada en tus favoritos');
+    setToast({ message: 'Oferta guardada en tus favoritos', type: 'success' });
   };
 
   const handleCompartir = () => {
@@ -184,7 +189,7 @@ const OfertaDetalle = () => {
     } else {
       // Fallback: copiar al portapapeles
       navigator.clipboard.writeText(window.location.href);
-      alert('Enlace copiado al portapapeles');
+      setToast({ message: 'Enlace copiado al portapapeles', type: 'success' });
     }
   };
 
@@ -217,6 +222,14 @@ const OfertaDetalle = () => {
 
   return (
     <div className={styles['oferta-detalle-page']}>
+      {toast && (
+        <Toast
+          message={toast.message}
+          type={toast.type}
+          onClose={() => setToast(null)}
+        />
+      )}
+      
       <main className={styles['oferta-detalle-content']}>
         <div className={styles['oferta-detalle-container']}>
           {/* Banner de error si hubo problema */}

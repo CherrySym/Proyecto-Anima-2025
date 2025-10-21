@@ -2,8 +2,9 @@ import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../../../context/AuthContext';
 import { useMinLoadingTime } from '../../../../hooks/useMinLoadingTime';
-import { getDesafioById } from '../../services/desafiosService';
+import { getDesafioById, participarDesafio } from '../../services/desafiosService';
 import { Target, ArrowLeft, Building2, Calendar, Trophy, Star, Clock, Users } from 'lucide-react';
+import Toast from '../../../../components/common/Toast/Toast';
 import styles from './DesafioDetalle.module.css';
 
 /**
@@ -17,6 +18,8 @@ const DesafioDetalle = () => {
   const [desafio, setDesafio] = useState(null);
   const { loading, withMinLoadingTime } = useMinLoadingTime(800);
   const [error, setError] = useState(null);
+  const [toast, setToast] = useState(null);
+  const [participando, setParticipando] = useState(false);
 
   useEffect(() => {
     loadDesafio();
@@ -34,15 +37,33 @@ const DesafioDetalle = () => {
     });
   };
 
-  const handleParticipar = () => {
+  const handleParticipar = async () => {
     if (!user) {
       alert('Debes iniciar sesión para participar en desafíos');
       navigate('/login');
       return;
     }
 
-    // TODO: Implementar lógica de participación en futuras versiones
-    alert('Funcionalidad de participación en desarrollo. ¡Pronto disponible!');
+    setParticipando(true);
+    try {
+      await participarDesafio(desafio.id);
+      setToast({ 
+        message: 'Desafío agregado a "Mis Desafíos". ¡Mucha suerte!', 
+        type: 'success' 
+      });
+      
+      // Redirigir a Mis Desafíos después de 2 segundos
+      setTimeout(() => {
+        navigate('/mis-desafios');
+      }, 2000);
+    } catch (error) {
+      console.error('Error al participar:', error);
+      setToast({ 
+        message: error.error || 'Error al participar en el desafío', 
+        type: 'error' 
+      });
+      setParticipando(false);
+    }
   };
 
   const getDificultadColor = (dificultad) => {
@@ -92,6 +113,13 @@ const DesafioDetalle = () => {
 
   return (
     <div className={styles['desafio-detalle-page']}>
+      {toast && (
+        <Toast
+          message={toast.message}
+          type={toast.type}
+          onClose={() => setToast(null)}
+        />
+      )}
       <div className={styles['desafio-content']}>
         {/* Header con botón volver */}
         <button onClick={() => navigate('/desafios')} className={styles['btn-back']}>
@@ -181,9 +209,10 @@ const DesafioDetalle = () => {
             <button 
               className={styles['btn-participar']}
               onClick={handleParticipar}
-              disabled={!desafio.activo}
+              disabled={!desafio.activo || participando}
             >
-              {desafio.activo ? 'Participar en este desafío' : 'Desafío cerrado'}
+              {participando ? 'Agregando a Mis Desafíos...' : 
+               desafio.activo ? 'Participar en este desafío' : 'Desafío cerrado'}
             </button>
           </div>
         </div>

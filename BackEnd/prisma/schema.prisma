@@ -40,6 +40,7 @@ model Usuario {
   comentarios   Comentario[]
   postulaciones Postulacion[]
   cursosGuardados CursoGuardado[]
+  desafiosParticipaciones DesafioParticipacion[]
 
   @@index([email])
   @@map("usuarios")
@@ -204,11 +205,32 @@ model Desafio {
   updatedAt   DateTime @updatedAt
 
   empresa Empresa @relation(fields: [empresaId], references: [id], onDelete: Cascade)
+  participaciones DesafioParticipacion[]
 
   @@index([empresaId])
   @@index([activo])
   @@index([categoria])
   @@map("desafios")
+}
+
+/// DesafioParticipacion - Relación entre usuario y desafíos en los que participa
+/// Permite a los usuarios guardar desafíos de interés y verlos en "Mis Desafíos"
+model DesafioParticipacion {
+  id         Int      @id @default(autoincrement())
+  usuarioId  Int
+  desafioId  Int
+  estado     String   @default("EN_PROGRESO") // EN_PROGRESO, COMPLETADO, ABANDONADO
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  // Relaciones
+  usuario Usuario @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
+  desafio Desafio @relation(fields: [desafioId], references: [id], onDelete: Cascade)
+
+  @@unique([usuarioId, desafioId]) // Un usuario no puede participar dos veces en el mismo desafío
+  @@index([usuarioId])
+  @@index([desafioId])
+  @@map("desafios_participaciones")
 }
 
 // ==================== CURSOS ====================

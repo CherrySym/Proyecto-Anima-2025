@@ -39,3 +39,39 @@ export const getDesafioById = async (id) => {
     throw error.response?.data || { error: 'Error al cargar el desafío' };
   }
 };
+
+/**
+ * Participar en un desafío (guardarlo en mis desafíos)
+ */
+export const participarDesafio = async (desafioId) => {
+  try {
+    const response = await API.post(`/desafios/${desafioId}/participar`);
+    return response.data;
+  } catch (error) {
+    throw error.response?.data || { error: 'Error al participar en desafío' };
+  }
+};
+
+/**
+ * Quitar participación en un desafío
+ */
+export const quitarParticipacionDesafio = async (desafioId) => {
+  try {
+    const response = await API.delete(`/desafios/${desafioId}/participar`);
+    return response.data;
+  } catch (error) {
+    throw error.response?.data || { error: 'Error al quitar participación' };
+  }
+};
+
+/**
+ * Obtener mis desafíos (en los que participo)
+ */
+export const getMisDesafios = async () => {
+  try {
+    const response = await API.get('/desafios/mis-desafios/lista');
+    return response.data;
+  } catch (error) {
+    throw error.response?.data || { error: 'Error al cargar mis desafíos' };
+  }
+};
