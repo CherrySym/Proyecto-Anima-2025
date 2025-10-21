@@ -23,7 +23,15 @@ const prisma = new PrismaClient();
 
 // Middlewares
 app.use(cors({
-  origin: ['http://localhost:5173', 'http://localhost:5174'], // URL del frontend React (Vite puede usar ambos puertos)
+  origin: process.env.NODE_ENV === 'production' 
+    ? [
+        'https://jobpath.anima.edu.uy',
+        'http://jobpath.anima.edu.uy'
+      ]
+    : [
+        'http://localhost:5173', 
+        'http://localhost:5174'
+      ],
   credentials: true
 }));
 app.use(express.json());

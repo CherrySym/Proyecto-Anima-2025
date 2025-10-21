@@ -235,7 +235,7 @@ export const getMe = async (req, res) => {
         }
       });
     } 
-    else if (tipo === "EMPRESA") {
+    else if (tipoUsuario === "EMPRESA") {
       const empresa = await prisma.empresa.findUnique({
         where: { id },
         select: {
