@@ -1,12 +1,12 @@
 /**
  * Configuración de Axios para comunicación con el backend
- * Base URL: http://localhost:4000
+ * Base URL: /api (ruta relativa manejada por nginx)
  */
 import axios from 'axios';
 
 // Crear instancia de axios con configuración base
 const API = axios.create({
-  baseURL: 'http://localhost:4000',
+  baseURL: '/api',
   headers: {
     'Content-Type': 'application/json',
   },

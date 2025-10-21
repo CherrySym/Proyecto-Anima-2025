@@ -1,77 +1,31 @@
-# JobPath - Aplicación React 🚀
+# JobPath Frontend 🚀
 
-## 📋 Descripción
+SPA moderna con React 18, Vite, React Router 6 y CSS Modules.  
+**Stack:** React · Vite · Router 6 · Context API · Axios · CSS Modules · Lucide Icons
 
-Migración completa del sitio web JobPath desde HTML/CSS/JS estático a una aplicación React moderna con:
-- **React Router** para navegación SPA
-- **Hooks modernos** (useState, useEffect, useRef, useContext)
-- **Context API** para manejo de estado global
-- **Componentes funcionales** reutilizables
-- **CSS modular** importado por componente
-- **Estructura escalable** con arquitectura modular por carpetas
-
----
-
-## 🏗️ Estructura del Proyecto (Nueva - v2.0)
+## 📁 Estructura
 
 ```
 src/
-├── assets/
-│   ├── images/          # Imágenes del proyecto
-│   │   └── index.js     # Exportación centralizada
-│   └── react.svg
 ├── components/
-│   ├── common/          # Componentes reutilizables generales
-│   ├── layout/          # Componentes de estructura
-│   │   └── Header/      # Barra de navegación
-│   │       ├── Header.jsx
-│   │       └── Header.css
-│   └── ui/              # Componentes UI pequeños
-├── context/
-│   ├── AuthContext.jsx      # Manejo de autenticación
-│   └── LanguageContext.jsx  # Manejo de idioma
-├── hooks/               # Custom hooks personalizados
-├── pages/               # Páginas (cada una en su carpeta)
-│   ├── Home/
-│   │   ├── Home.jsx
-│   │   └── Home.css
-│   ├── Landing/
-│   │   ├── Landing.jsx
-│   │   └── Landing.css
-│   ├── Login/
-│   │   ├── Login.jsx
-│   │   └── Login.css
-│   ├── Perfil/
-│   │   ├── Perfil.jsx
-│   │   └── Perfil.css
-│   ├── Jovenes/
-│   │   ├── Jovenes.jsx
-│   │   └── Jovenes.css
-│   ├── Companias/
-│   │   ├── Companias.jsx
-│   │   └── Companias.css
-│   └── About/
-│       ├── About.jsx
-│       └── About.css
-├── routes/
-│   └── AppRouter.jsx    # Configuración centralizada de rutas
-├── App.jsx              # Componente principal simplificado
-├── App.css
-├── main.jsx            # Punto de entrada
-└── index.css           # Estilos globales
+│   ├── layout/          # Header, Sidebar, SimpleNavbar
+│   ├── common/          # Componentes reutilizables (Toast, Loading)
+│   └── features/        # Específicos por dominio
+├── features/            # Organizado por módulo
+│   ├── autenticacion/   # Login, Register
+│   ├── inicio/          # Feed, Perfil
+│   ├── empleos/         # Ofertas, Postulaciones
+│   ├── desafios/        # Challenges
+│   ├── cursos/          # Courses
+│   ├── empresas/        # Companies
+│   ├── orientacion/     # Guidance
+│   ├── social/          # Red, Mensajes, Notificaciones
+│   └── informacion/     # Landing, About, Home
+├── context/             # AuthContext, LanguageContext
+├── services/            # API calls (axios)
+├── routes/              # AppRouter
+└── hooks/               # useMinLoadingTime, etc.
 ```
-
-> 📚 **Documentación completa**: Ver [NUEVA_ESTRUCTURA.md](./NUEVA_ESTRUCTURA.md) para guía detallada
-
----
-
-## � Documentación Adicional
-
-- **[NUEVA_ESTRUCTURA.md](./NUEVA_ESTRUCTURA.md)** - Guía completa de la estructura modular
-- **[EJEMPLO_PAGINA.md](./EJEMPLO_PAGINA.md)** - Ejemplos de código y mejores prácticas
-- **[CHECKLIST_REORGANIZACION.md](./CHECKLIST_REORGANIZACION.md)** - Lista de tareas y próximos pasos
-- **[RESUMEN_REORGANIZACION.md](./RESUMEN_REORGANIZACION.md)** - Resumen ejecutivo de la reorganización
-- **[VISUALIZACION_ESTRUCTURA.md](./VISUALIZACION_ESTRUCTURA.md)** - Visualización gráfica del proyecto
 
 ---
 

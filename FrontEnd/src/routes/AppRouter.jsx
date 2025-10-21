@@ -55,6 +55,14 @@ import MisDesafios from '../features/desafios/pages/MisDesafios/MisDesafios';
 import Cursos from '../features/cursos/pages/Cursos/Cursos';
 import MisCursos from '../features/cursos/pages/MisCursos/MisCursos';
 
+// SOCIAL (nuevas páginas completas)
+import Red from '../features/social/pages/Red/Red';
+import Mensajes from '../features/social/pages/Mensajes/Mensajes';
+import Notificaciones from '../features/social/pages/Notificaciones/Notificaciones';
+import Busqueda from '../features/social/pages/Busqueda/Busqueda';
+import ExplorarUsuarios from '../features/social/pages/ExplorarUsuarios/ExplorarUsuarios';
+import Configuracion from '../features/social/pages/Configuracion/Configuracion';
+
 const AppRouter = () => {
   const { user, loading, error } = useAuth();
 
@@ -178,7 +186,7 @@ const AppRouter = () => {
         } 
       />
 
-      {/* Páginas sociales adicionales */}
+      {/* Páginas sociales funcionales */}
       <Route 
         path="/red" 
         element={
@@ -186,10 +194,7 @@ const AppRouter = () => {
             <div className="app">
               <Header />
               <main className="main-content">
-                <div style={{ padding: '40px', textAlign: 'center' }}>
-                  <h2>Mi Red</h2>
-                  <p>Próximamente: Conexiones, seguidos y seguidores</p>
-                </div>
+                <Red />
               </main>
             </div>
           </PrivateRoute>
@@ -203,10 +208,7 @@ const AppRouter = () => {
             <div className="app">
               <Header />
               <main className="main-content">
-                <div style={{ padding: '40px', textAlign: 'center' }}>
-                  <h2>Mensajes</h2>
-                  <p>Próximamente: Sistema de mensajería</p>
-                </div>
+                <Mensajes />
               </main>
             </div>
           </PrivateRoute>
@@ -220,10 +222,7 @@ const AppRouter = () => {
             <div className="app">
               <Header />
               <main className="main-content">
-                <div style={{ padding: '40px', textAlign: 'center' }}>
-                  <h2>Notificaciones</h2>
-                  <p>Próximamente: Notificaciones en tiempo real</p>
-                </div>
+                <Notificaciones />
               </main>
             </div>
           </PrivateRoute>
@@ -328,7 +327,7 @@ const AppRouter = () => {
         } 
       />
 
-      {/* Búsqueda */}
+      {/* Búsqueda funcional */}
       <Route 
         path="/buscar" 
         element={
@@ -336,17 +335,14 @@ const AppRouter = () => {
             <div className="app">
               <Header />
               <main className="main-content">
-                <div style={{ padding: '40px', textAlign: 'center' }}>
-                  <h2>Búsqueda</h2>
-                  <p>Próximamente: Búsqueda global</p>
-                </div>
+                <Busqueda />
               </main>
             </div>
           </PrivateRoute>
         } 
       />
 
-      {/* Explorar */}
+      {/* Explorar funcional */}
       <Route 
         path="/explorar/usuarios" 
         element={
@@ -354,17 +350,14 @@ const AppRouter = () => {
             <div className="app">
               <Header />
               <main className="main-content">
-                <div style={{ padding: '40px', textAlign: 'center' }}>
-                  <h2>Explorar Usuarios</h2>
-                  <p>Próximamente: Directorio completo de usuarios</p>
-                </div>
+                <ExplorarUsuarios />
               </main>
             </div>
           </PrivateRoute>
         } 
       />
 
-      {/* Configuración */}
+      {/* Configuración funcional */}
       <Route 
         path="/configuracion" 
         element={
@@ -372,10 +365,7 @@ const AppRouter = () => {
             <div className="app">
               <Header />
               <main className="main-content">
-                <div style={{ padding: '40px', textAlign: 'center' }}>
-                  <h2>Configuración</h2>
-                  <p>Próximamente: Ajustes de cuenta y privacidad</p>
-                </div>
+                <Configuracion />
               </main>
             </div>
           </PrivateRoute>

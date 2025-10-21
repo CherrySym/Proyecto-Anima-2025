@@ -18,6 +18,8 @@ const PanelEmpresa = () => {
   const [error, setError] = useState(null);
   const [verPostulaciones, setVerPostulaciones] = useState(null); // ID de oferta seleccionada
   const [postulaciones, setPostulaciones] = useState([]);
+  const [showCrearOferta, setShowCrearOferta] = useState(false);
+  const [editandoOferta, setEditandoOferta] = useState(null);
 
   useEffect(() => {
     if (user?.tipoUsuario === 'EMPRESA') {
@@ -131,7 +133,7 @@ const PanelEmpresa = () => {
       )}
 
       <div className={styles.actions}>
-        <button className={styles.btnPrimary} onClick={() => alert('Función crear oferta próximamente')}>
+        <button className={styles.btnPrimary} onClick={() => setShowCrearOferta(true)}>
           <Plus size={18} /> Crear Nueva Oferta
         </button>
       </div>
@@ -143,7 +145,7 @@ const PanelEmpresa = () => {
         {ofertas.length === 0 ? (
           <div className={styles.empty}>
             <p>No tienes ofertas publicadas aún.</p>
-            <button className={styles.btnPrimary} onClick={() => alert('Crear oferta')}>
+            <button className={styles.btnPrimary} onClick={() => setShowCrearOferta(true)}>
               <Plus size={18} /> Publicar tu primera oferta
             </button>
           </div>
@@ -175,7 +177,7 @@ const PanelEmpresa = () => {
                   
                   <button 
                     className={styles.btnIcon}
-                    onClick={() => alert('Editar oferta próximamente')}
+                    onClick={() => setEditandoOferta(oferta)}
                     title="Editar"
                   >
                     <Edit2 size={18} />
@@ -259,6 +261,174 @@ const PanelEmpresa = () => {
           </div>
         </div>
       )}
+
+      {/* Modal Crear/Editar Oferta */}
+      {(showCrearOferta || editandoOferta) && (
+        <FormularioOferta
+          oferta={editandoOferta}
+          onClose={() => {
+            setShowCrearOferta(false);
+            setEditandoOferta(null);
+          }}
+          onSuccess={() => {
+            loadOfertas();
+            setShowCrearOferta(false);
+            setEditandoOferta(null);
+          }}
+        />
+      )}
+    </div>
+  );
+};
+
+/**
+ * Formulario para crear/editar ofertas
+ */
+const FormularioOferta = ({ oferta, onClose, onSuccess }) => {
+  const [formData, setFormData] = useState({
+    titulo: oferta?.titulo || '',
+    descripcion: oferta?.descripcion || '',
+    area: oferta?.area || 'tecnologia',
+    tipoContrato: oferta?.tipoContrato || 'TIEMPO_COMPLETO',
+    modalidad: oferta?.modalidad || 'PRESENCIAL',
+    ubicacion: oferta?.ubicacion || '',
+    salario: oferta?.salario || '',
+    requisitos: oferta?.requisitos || ''
+  });
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      if (oferta) {
+        // Editar oferta existente
+        await empresaService.actualizarOferta(oferta.id, formData);
+        alert('✓ Oferta actualizada correctamente');
+      } else {
+        // Crear nueva oferta
+        await empresaService.crearOferta(formData);
+        alert('✓ Oferta creada correctamente');
+      }
+      onSuccess();
+    } catch (err) {
+      alert('Error: ' + (err.message || 'No se pudo guardar la oferta'));
+    }
+  };
+
+  return (
+    <div className={styles.modal}>
+      <div className={styles.modalContent} style={{ maxWidth: '600px' }}>
+        <header className={styles.modalHeader}>
+          <h2>{oferta ? 'Editar Oferta' : 'Crear Nueva Oferta'}</h2>
+          <button className={styles.btnClose} onClick={onClose}>✕</button>
+        </header>
+
+        <form onSubmit={handleSubmit} className={styles.form}>
+          <div className={styles.formGroup}>
+            <label>Título de la oferta *</label>
+            <input 
+              type="text"
+              value={formData.titulo}
+              onChange={(e) => setFormData({...formData, titulo: e.target.value})}
+              required
+              placeholder="ej: Desarrollador Frontend Junior"
+            />
+          </div>
+
+          <div className={styles.formGroup}>
+            <label>Descripción *</label>
+            <textarea 
+              value={formData.descripcion}
+              onChange={(e) => setFormData({...formData, descripcion: e.target.value})}
+              required
+              rows="5"
+              placeholder="Describe el puesto, responsabilidades..."
+            />
+          </div>
+
+          <div className={styles.formRow}>
+            <div className={styles.formGroup}>
+              <label>Área *</label>
+              <select 
+                value={formData.area}
+                onChange={(e) => setFormData({...formData, area: e.target.value})}
+              >
+                <option value="tecnologia">Tecnología</option>
+                <option value="marketing">Marketing</option>
+                <option value="ventas">Ventas</option>
+                <option value="administracion">Administración</option>
+                <option value="recursos_humanos">Recursos Humanos</option>
+                <option value="otro">Otro</option>
+              </select>
+            </div>
+
+            <div className={styles.formGroup}>
+              <label>Tipo de Contrato *</label>
+              <select 
+                value={formData.tipoContrato}
+                onChange={(e) => setFormData({...formData, tipoContrato: e.target.value})}
+              >
+                <option value="TIEMPO_COMPLETO">Tiempo Completo</option>
+                <option value="MEDIO_TIEMPO">Medio Tiempo</option>
+                <option value="PASANTIA">Pasantía</option>
+                <option value="FREELANCE">Freelance</option>
+              </select>
+            </div>
+          </div>
+
+          <div className={styles.formRow}>
+            <div className={styles.formGroup}>
+              <label>Modalidad *</label>
+              <select 
+                value={formData.modalidad}
+                onChange={(e) => setFormData({...formData, modalidad: e.target.value})}
+              >
+                <option value="PRESENCIAL">Presencial</option>
+                <option value="REMOTO">Remoto</option>
+                <option value="HIBRIDO">Híbrido</option>
+              </select>
+            </div>
+
+            <div className={styles.formGroup}>
+              <label>Ubicación</label>
+              <input 
+                type="text"
+                value={formData.ubicacion}
+                onChange={(e) => setFormData({...formData, ubicacion: e.target.value})}
+                placeholder="ej: Montevideo, Uruguay"
+              />
+            </div>
+          </div>
+
+          <div className={styles.formGroup}>
+            <label>Salario (opcional)</label>
+            <input 
+              type="text"
+              value={formData.salario}
+              onChange={(e) => setFormData({...formData, salario: e.target.value})}
+              placeholder="ej: $1000 - $1500 USD"
+            />
+          </div>
+
+          <div className={styles.formGroup}>
+            <label>Requisitos</label>
+            <textarea 
+              value={formData.requisitos}
+              onChange={(e) => setFormData({...formData, requisitos: e.target.value})}
+              rows="3"
+              placeholder="Educación, experiencia, habilidades..."
+            />
+          </div>
+
+          <div className={styles.formActions}>
+            <button type="button" onClick={onClose} className={styles.btnSecondary}>
+              Cancelar
+            </button>
+            <button type="submit" className={styles.btnPrimary}>
+              {oferta ? 'Guardar Cambios' : 'Publicar Oferta'}
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
   );
 };

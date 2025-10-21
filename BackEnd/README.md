@@ -1,75 +1,34 @@
-# 🚀 Backend - Nexo (JobPath)
+# 🚀 Backend - JobPath
 
-Backend del proyecto Nexo (JobPath) construido con Node.js, Express, Prisma ORM y MySQL.
+API REST con Node.js, Express, Prisma y MySQL.  
+**Stack:** Node.js · Express · Prisma ORM · MySQL · JWT · bcrypt
 
-## 📋 Prerequisitos
+## 📋 Requisitos
 
-- Node.js 18+ instalado
-- MySQL 8+ corriendo en tu máquina
+- Node.js 18+
+- MySQL 8+
 - npm o yarn
 
 ## 🛠️ Instalación
 
-1. **Instalar dependencias:**
 ```bash
 npm install
-```
 
-2. **Configurar variables de entorno:**
+# Crear .env con:
+# DATABASE_URL="mysql://usuario:password@localhost:3306/jobpath_db"
+# JWT_SECRET="tu_secret"
+# PORT=4000
 
-Crea un archivo `.env` en la raíz del directorio `BackEnd/` con el siguiente contenido:
-
-```env
-# Database
-DATABASE_URL="mysql://usuario:password@localhost:3306/nexo_db"
-
-# JWT Secret
-JWT_SECRET="tu_secret_super_secreto_cambialo_en_produccion"
-
-# Puerto del servidor
-PORT=4000
-```
-
-**Reemplaza:**
-- `usuario` por tu usuario de MySQL (ej: `root`)
-- `password` por tu contraseña de MySQL
-- `nexo_db` por el nombre de tu base de datos (créala previamente)
-
-3. **Crear la base de datos:**
-```bash
 mysql -u root -p
-CREATE DATABASE nexo_db CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+CREATE DATABASE jobpath_db CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 EXIT;
+
+npx prisma generate
+npx prisma migrate deploy
+node prisma/seed.js  # Opcional: datos de prueba
+
+npm run dev  # → http://localhost:4000
 ```
-
-4. **Ejecutar migraciones:**
-```bash
-npm run migrate
-```
-
-5. **Generar el cliente Prisma:**
-```bash
-npm run generate
-```
-
-6. **Poblar la base de datos con datos de prueba:**
-```bash
-npm run seed
-```
-
-## ▶️ Ejecutar el servidor
-
-### Modo desarrollo (con hot-reload):
-```bash
-npm run dev
-```
-
-### Modo producción:
-```bash
-npm start
-```
-
-El servidor estará disponible en: `http://localhost:4000`
 
 ## 🧪 Probar la conexión
 
