@@ -48,6 +48,7 @@ import MisPostulaciones from '../features/empleos/pages/MisPostulaciones/MisPost
 
 // CHALLENGES
 import Desafios from '../features/desafios/pages/Desafios/Desafios';
+import DesafioDetalle from '../features/desafios/pages/DesafioDetalle/DesafioDetalle';
 import MisDesafios from '../features/desafios/pages/MisDesafios/MisDesafios';
 
 // COURSES
@@ -272,6 +273,18 @@ const AppRouter = () => {
             <div className="app">
               <Header />
               <Desafios />
+            </div>
+          </PrivateRoute>
+        } 
+      />
+      
+      <Route 
+        path="/desafio/:id" 
+        element={
+          <PrivateRoute>
+            <div className="app">
+              <Header />
+              <DesafioDetalle />
             </div>
           </PrivateRoute>
         } 

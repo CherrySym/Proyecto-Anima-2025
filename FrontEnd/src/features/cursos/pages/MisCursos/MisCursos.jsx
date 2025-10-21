@@ -4,6 +4,7 @@ import { useAuth } from '../../../../context/AuthContext';
 import { useMinLoadingTime } from '../../../../hooks/useMinLoadingTime';
 import { getMisCursosGuardados, quitarCursoGuardado } from '../../services/cursosService';
 import { GraduationCap, ExternalLink, Trash2, Calendar } from 'lucide-react';
+import Toast from '../../../../components/common/Toast/Toast';
 import styles from './MisCursos.module.css';
 // import './MisCursos.css'; // comentado: backup
 
@@ -17,6 +18,7 @@ const MisCursos = () => {
   const { user } = useAuth();
   const [cursosGuardados, setCursosGuardados] = useState([]);
   const { loading, withMinLoadingTime } = useMinLoadingTime(800);
+  const [toast, setToast] = useState(null);
 
   useEffect(() => {
     if (!user) {
@@ -45,10 +47,15 @@ const MisCursos = () => {
 
     try {
       await quitarCursoGuardado(cursoId);
-      await loadCursosGuardados();
+      // Actualizar lista eliminando el curso
+      setCursosGuardados(prev => prev.filter(curso => curso.id !== cursoId));
+      setToast({ message: 'Curso eliminado del perfil', type: 'success' });
     } catch (error) {
       console.error('Error al quitar curso:', error);
-      alert(error.error || 'Error al quitar curso');
+      setToast({ 
+        message: error.error || 'Error al quitar curso', 
+        type: 'error' 
+      });
     }
   };
 
@@ -73,6 +80,13 @@ const MisCursos = () => {
 
   return (
     <div className={styles['mis-cursos-page']}>
+      {toast && (
+        <Toast
+          message={toast.message}
+          type={toast.type}
+          onClose={() => setToast(null)}
+        />
+      )}
       <main className={styles['mis-cursos-content']}>
         {/* Header */}
         <div className={styles['page-header']}>

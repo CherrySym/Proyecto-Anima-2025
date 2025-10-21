@@ -4,6 +4,7 @@ import { useAuth } from '../../../../context/AuthContext';
 import { useMinLoadingTime } from '../../../../hooks/useMinLoadingTime';
 import { getCursos, guardarCurso, quitarCursoGuardado } from '../../services/cursosService';
 import { BookOpen, Sprout, Leaf, TreePine, ScrollText, Clock, Monitor, DollarSign, Star, Building2, Bookmark, BookmarkCheck } from 'lucide-react';
+import Toast from '../../../../components/common/Toast/Toast';
 import styles from './Cursos.module.css';
 // import './Cursos.css'; // backup preserved as commented file
 
@@ -17,6 +18,7 @@ const Cursos = () => {
   const { user } = useAuth();
   const [cursos, setCursos] = useState([]);
   const { loading, withMinLoadingTime } = useMinLoadingTime(800);
+  const [toast, setToast] = useState(null);
   const [filtros, setFiltros] = useState({
     area: 'todas',
     nivel: 'todos',
@@ -48,7 +50,9 @@ const Cursos = () => {
   const filtrarCursos = () => {
     return cursos.filter(curso => {
       const coincideArea = filtros.area === 'todas' || curso.area === filtros.area;
-      const coincideNivel = filtros.nivel === 'todos' || curso.nivel === filtros.nivel;
+      // Normalizar nivel para comparación (case-insensitive)
+      const coincideNivel = filtros.nivel === 'todos' || 
+        curso.nivel?.toLowerCase() === filtros.nivel.toLowerCase();
       const coincideProveedor = filtros.proveedor === 'todos' || curso.proveedor === filtros.proveedor;
       
       return coincideArea && coincideNivel && coincideProveedor;
@@ -69,20 +73,32 @@ const Cursos = () => {
     try {
       if (yaGuardado) {
         await quitarCursoGuardado(cursoId);
+        setToast({ message: 'Curso eliminado del perfil', type: 'success' });
       } else {
         await guardarCurso(cursoId);
+        setToast({ message: 'Curso guardado en tu perfil', type: 'success' });
       }
       
-      // Recargar lista para actualizar estado
-      await loadCursos();
+      // Actualizar solo el estado del curso sin recargar toda la lista
+      setCursos(prevCursos => 
+        prevCursos.map(curso => 
+          curso.id === cursoId 
+            ? { ...curso, guardado: !yaGuardado }
+            : curso
+        )
+      );
     } catch (error) {
       console.error('Error al guardar/quitar curso:', error);
-      alert(error.error || 'Error al procesar la solicitud');
+      setToast({ 
+        message: error.error || 'Error al procesar la solicitud', 
+        type: 'error' 
+      });
     }
   };
 
   const getNivelColor = (nivel) => {
-    switch(nivel) {
+    const normalized = nivel?.toLowerCase();
+    switch(normalized) {
       case 'principiante': return '#28a745';
       case 'intermedio': return '#ffc107';
       case 'avanzado': return '#dc3545';
@@ -91,7 +107,8 @@ const Cursos = () => {
   };
 
   const getNivelIcon = (nivel) => {
-    switch(nivel) {
+    const normalized = nivel?.toLowerCase();
+    switch(normalized) {
       case 'principiante': return <Sprout size={16} />;
       case 'intermedio': return <Leaf size={16} />;
       case 'avanzado': return <TreePine size={16} />;
@@ -114,6 +131,13 @@ const Cursos = () => {
 
     return (
       <div className={styles['cursos-page']}>
+        {toast && (
+          <Toast
+            message={toast.message}
+            type={toast.type}
+            onClose={() => setToast(null)}
+          />
+        )}
         <main className={styles['cursos-content']}>
   <div className={styles['cursos-header']}>
           <h1><BookOpen size={32} /> Cursos y Talleres</h1>

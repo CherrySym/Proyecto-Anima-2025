@@ -63,7 +63,7 @@ const Desafios = () => {
   };
 
   const handleParticipar = (desafioId) => {
-    navigate(`/desafios/${desafioId}`);
+    navigate(`/desafio/${desafioId}`);
   };
 
   const getDificultadColor = (dificultad) => {
