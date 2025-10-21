@@ -27,7 +27,7 @@ export const getAllPosts = async () => {
  */
 export const getPostById = async (postId) => {
   try {
-    const response = await api.get(`/posts/${postId}`);
+    const response = await API.get(`/posts/${postId}`);
     return response.data;
   } catch (error) {
     console.error('Error obteniendo post:', error);
@@ -42,7 +42,7 @@ export const getPostById = async (postId) => {
  */
 export const createPost = async (postData) => {
   try {
-    const response = await api.post('/posts', postData);
+    const response = await API.post('/posts', postData);
     return response.data;
   } catch (error) {
     console.error('Error creando post:', error);
@@ -58,7 +58,7 @@ export const createPost = async (postData) => {
  */
 export const updatePost = async (postId, postData) => {
   try {
-    const response = await api.put(`/posts/${postId}`, postData);
+    const response = await API.put(`/posts/${postId}`, postData);
     return response.data;
   } catch (error) {
     console.error('Error actualizando post:', error);
@@ -73,7 +73,7 @@ export const updatePost = async (postId, postData) => {
  */
 export const deletePost = async (postId) => {
   try {
-    const response = await api.delete(`/posts/${postId}`);
+    const response = await API.delete(`/posts/${postId}`);
     return response.data;
   } catch (error) {
     console.error('Error eliminando post:', error);
@@ -88,7 +88,7 @@ export const deletePost = async (postId) => {
  */
 export const getUserPosts = async (usuarioId) => {
   try {
-    const response = await api.get(`/posts/usuario/${usuarioId}`);
+    const response = await API.get(`/posts/usuario/${usuarioId}`);
     return response.data;
   } catch (error) {
     console.error('Error obteniendo posts del usuario:', error);
@@ -103,7 +103,7 @@ export const getUserPosts = async (usuarioId) => {
  */
 export const getCompanyPosts = async (empresaId) => {
   try {
-    const response = await api.get(`/posts/empresa/${empresaId}`);
+    const response = await API.get(`/posts/empresa/${empresaId}`);
     return response.data;
   } catch (error) {
     console.error('Error obteniendo posts de la empresa:', error);
@@ -120,7 +120,7 @@ export const getCompanyPosts = async (empresaId) => {
  */
 export const toggleLike = async (postId) => {
   try {
-    const response = await api.post('/likes/toggle', { postId });
+    const response = await API.post('/likes/toggle', { postId });
     // Normalizar campos para el frontend
     const d = response.data || {};
     return {
@@ -140,7 +140,7 @@ export const toggleLike = async (postId) => {
  */
 export const checkLike = async (postId) => {
   try {
-    const response = await api.get(`/likes/check/${postId}`);
+    const response = await API.get(`/likes/check/${postId}`);
     return response.data;
   } catch (error) {
     console.error('Error verificando like:', error);
@@ -155,7 +155,7 @@ export const checkLike = async (postId) => {
  */
 export const getPostLikes = async (postId) => {
   try {
-    const response = await api.get(`/likes/post/${postId}`);
+    const response = await API.get(`/likes/post/${postId}`);
     return response.data;
   } catch (error) {
     console.error('Error obteniendo likes:', error);
@@ -172,7 +172,7 @@ export const getPostLikes = async (postId) => {
  */
 export const addComment = async (data) => {
   try {
-    const response = await api.post('/comentarios', data);
+    const response = await API.post('/comentarios', data);
     return response.data;
   } catch (error) {
     console.error('Error agregando comentario:', error);
@@ -187,7 +187,7 @@ export const addComment = async (data) => {
  */
 export const getPostComments = async (postId) => {
   try {
-    const response = await api.get(`/comentarios/post/${postId}`);
+    const response = await API.get(`/comentarios/post/${postId}`);
     return response.data;
   } catch (error) {
     console.error('Error obteniendo comentarios:', error);
@@ -202,7 +202,7 @@ export const getPostComments = async (postId) => {
  */
 export const getCommentById = async (comentarioId) => {
   try {
-    const response = await api.get(`/comentarios/${comentarioId}`);
+    const response = await API.get(`/comentarios/${comentarioId}`);
     return response.data;
   } catch (error) {
     console.error('Error obteniendo comentario:', error);
@@ -218,7 +218,7 @@ export const getCommentById = async (comentarioId) => {
  */
 export const updateComment = async (comentarioId, data) => {
   try {
-    const response = await api.put(`/comentarios/${comentarioId}`, data);
+    const response = await API.put(`/comentarios/${comentarioId}`, data);
     return response.data;
   } catch (error) {
     console.error('Error actualizando comentario:', error);
@@ -233,7 +233,7 @@ export const updateComment = async (comentarioId, data) => {
  */
 export const deleteComment = async (comentarioId) => {
   try {
-    const response = await api.delete(`/comentarios/${comentarioId}`);
+    const response = await API.delete(`/comentarios/${comentarioId}`);
     return response.data;
   } catch (error) {
     console.error('Error eliminando comentario:', error);
@@ -248,7 +248,7 @@ export const deleteComment = async (comentarioId) => {
  */
 export const getCommentReplies = async (parentId) => {
   try {
-    const response = await api.get(`/comentarios/parent/${parentId}`);
+    const response = await API.get(`/comentarios/parent/${parentId}`);
     return response.data;
   } catch (error) {
     console.error('Error obteniendo respuestas:', error);
