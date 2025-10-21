@@ -291,6 +291,18 @@ const AppRouter = () => {
       />
       
       <Route 
+        path="/cursos"
+        element={
+          <PrivateRoute>
+            <div className="app">
+              <Header />
+              <DesafioDetalle />
+            </div>
+          </PrivateRoute>
+        } 
+      />
+      
+      <Route 
         path="/cursos" 
         element={
           <PrivateRoute>
