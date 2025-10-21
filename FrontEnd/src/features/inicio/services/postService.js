@@ -1,4 +1,4 @@
-import api from '../../../services/api';
+import API from '../../../services/api';
 
 /**
  * Servicio para gestionar publicaciones (posts), likes y comentarios
@@ -12,7 +12,7 @@ import api from '../../../services/api';
  */
 export const getAllPosts = async () => {
   try {
-    const response = await api.get('/posts');
+    const response = await API.get('/posts');
     return response.data;
   } catch (error) {
     console.error('Error obteniendo posts:', error);

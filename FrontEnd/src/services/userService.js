@@ -1,4 +1,4 @@
-import api from './api';
+import API from './api';
 
 /**
  * Servicio para gestionar usuarios
@@ -11,7 +11,7 @@ import api from './api';
  */
 export const getUserById = async (usuarioId) => {
   try {
-    const response = await api.get(`/usuarios/${usuarioId}`);
+    const response = await API.get(`/users/${usuarioId}`);
     return response.data;
   } catch (error) {
     console.error('Error obteniendo usuario:', error);
@@ -25,7 +25,7 @@ export const getUserById = async (usuarioId) => {
  */
 export const getAllUsers = async () => {
   try {
-    const response = await api.get('/usuarios');
+    const response = await api.get('/users');
     return response.data;
   } catch (error) {
     console.error('Error obteniendo usuarios:', error);
@@ -41,7 +41,7 @@ export const getAllUsers = async () => {
  */
 export const updateUser = async (usuarioId, userData) => {
   try {
-    const response = await api.put(`/usuarios/${usuarioId}`, userData);
+    const response = await api.put(`/users/${usuarioId}`, userData);
     return response.data;
   } catch (error) {
     console.error('Error actualizando usuario:', error);

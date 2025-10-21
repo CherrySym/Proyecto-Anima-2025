@@ -280,6 +280,51 @@ export const updateOferta = async (req, res) => {
 };
 
 /**
+ * Obtener todas las ofertas de la empresa autenticada
+ */
+export const getMisOfertas = async (req, res) => {
+  try {
+    const empresaId = req.user?.id;
+
+    if (!empresaId) {
+      return res.status(401).json({ error: "Debes iniciar sesión como empresa" });
+    }
+
+    const ofertas = await prisma.oferta.findMany({
+      where: { empresaId },
+      include: {
+        empresa: {
+          select: {
+            id: true,
+            nombre: true,
+            logo: true,
+            sector: true
+          }
+        },
+        _count: {
+          select: {
+            postulaciones: true
+          }
+        }
+      },
+      orderBy: { createdAt: 'desc' }
+    });
+
+    return res.json({
+      ofertas: ofertas.map(oferta => ({
+        ...oferta,
+        fechaPublicacion: oferta.createdAt,
+        empresa_info: oferta.empresa,
+        numeroPostulaciones: oferta._count.postulaciones
+      }))
+    });
+  } catch (err) {
+    console.error("getMisOfertas:", err);
+    return res.status(500).json({ error: "Error al obtener ofertas" });
+  }
+};
+
+/**
  * Borrar oferta (soft delete - marcar como inactiva)
  */
 export const deleteOferta = async (req, res) => {

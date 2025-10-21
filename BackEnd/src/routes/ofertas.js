@@ -3,6 +3,7 @@ import {
   createOferta,
   getOfertas,
   getOfertaById,
+  getMisOfertas,
   updateOferta,
   deleteOferta,
 } from "../controllers/ofertasController.js";
@@ -12,6 +13,7 @@ const router = express.Router();
 
 // Rutas que requieren autenticación
 router.post("/", authMiddleware, createOferta);
+router.get("/mis-ofertas", authMiddleware, getMisOfertas);
 router.put("/:id", authMiddleware, updateOferta);
 router.delete("/:id", authMiddleware, deleteOferta);
 
