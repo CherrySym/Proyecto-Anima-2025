@@ -105,13 +105,13 @@ if [ -d "BackEnd" ]; then
     fi
 
     # Reiniciar la app con pm2
-    log_info "Reiniciando backend con pm2 (nombre: jobpath-backend)..."
-    if pm2 describe jobpath-backend >/dev/null 2>&1; then
-        pm2 reload jobpath-backend || pm2 restart jobpath-backend
+    log_info "Reiniciando backend con pm2 (nombre: JobPath-Backend)..."
+    if pm2 describe JobPath-Backend >/dev/null 2>&1; then
+        pm2 reload JobPath-Backend || pm2 restart JobPath-Backend
         log_success "Backend reiniciado exitosamente"
     else
         log_info "Backend no encontrado en pm2, iniciando..."
-        pm2 start npm --name jobpath-backend -- run start
+        pm2 start npm --name JobPath-Backend -- run start
         log_success "Backend iniciado exitosamente"
     fi
     pm2 save
