@@ -76,10 +76,16 @@ echo "--------------------------------------"
 if [ -d "FrontEnd" ]; then
     cd FrontEnd
     if [ -f package.json ]; then
+        # Limpiar caché y build anterior
+        log_info "Limpiando caché y build anterior..."
+        rm -rf dist node_modules/.vite
+        
         log_info "Instalando dependencias del Frontend..."
         npm ci --silent || npm install --silent
-        log_info "Construyendo aplicación React..."
+        
+        log_info "Construyendo aplicación React (build limpio)..."
         npm run build --silent
+        
         log_success "Frontend construido exitosamente"
         cd ..
     else
@@ -124,6 +130,11 @@ echo ""
 # Reiniciar nginx para servir la nueva build
 log_info "Paso 4: Reiniciando Nginx..."
 echo "--------------------------------------"
+log_info "Limpiando caché de Nginx..."
+# Limpiar caché de proxy si existe
+if [ -d "/var/cache/nginx" ]; then
+    sudo rm -rf /var/cache/nginx/*
+fi
 sudo systemctl restart nginx
 log_success "Nginx reiniciado exitosamente"
 echo ""
@@ -131,3 +142,6 @@ echo ""
 echo "======================================"
 log_success "¡Actualización completada con éxito!"
 echo "======================================"
+echo ""
+log_info "💡 Recomendación: Abre el navegador en modo incógnito"
+log_info "   o presiona Ctrl+Shift+R para forzar recarga"
