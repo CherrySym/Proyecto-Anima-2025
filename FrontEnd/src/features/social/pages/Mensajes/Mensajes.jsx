@@ -11,18 +11,47 @@ const Mensajes = () => {
   const [selectedChat, setSelectedChat] = useState(null);
   const [messageText, setMessageText] = useState('');
 
-  // Mock data
+  // Mock data - 3 conversaciones diferentes
   const chats = [
-    { id: 1, nombre: 'María González', ultimoMensaje: 'Hola, ¿cómo estás?', tiempo: '10:30 AM', unread: 2 },
-    { id: 2, nombre: 'Empresa Globant', ultimoMensaje: 'Gracias por postularte', tiempo: 'Ayer', unread: 0 },
-    { id: 3, nombre: 'Carlos Pérez', ultimoMensaje: 'Nos vemos mañana', tiempo: '2 días', unread: 1 }
+    { id: 1, nombre: 'María González', ultimoMensaje: 'Te recomiendo ese curso de Python', tiempo: '10:30 AM', unread: 2 },
+    { id: 2, nombre: 'Empresa Globant', ultimoMensaje: 'Tu perfil nos interesa mucho', tiempo: 'Ayer', unread: 0 },
+    { id: 3, nombre: 'Carlos Pérez', ultimoMensaje: '¿Participas en el desafío?', tiempo: '2 días', unread: 1 }
   ];
 
-  const messages = selectedChat ? [
-    { id: 1, autor: 'otro', texto: '¡Hola! ¿Cómo estás?', tiempo: '10:30 AM' },
-    { id: 2, autor: 'yo', texto: 'Muy bien, ¿y tú?', tiempo: '10:32 AM' },
-    { id: 3, autor: 'otro', texto: 'Excelente, ¿tienes tiempo para revisar el proyecto?', tiempo: '10:35 AM' }
-  ] : [];
+  // Mensajes diferentes según el chat seleccionado
+  const getMessagesForChat = (chatId) => {
+    switch(chatId) {
+      case 1: // María González
+        return [
+          { id: 1, autor: 'otro', texto: '¡Hola! Vi que estás buscando mejorar tus habilidades', tiempo: '10:15 AM' },
+          { id: 2, autor: 'yo', texto: 'Sí, quiero aprender programación', tiempo: '10:20 AM' },
+          { id: 3, autor: 'otro', texto: 'Te recomiendo ese curso de Python que está en la plataforma', tiempo: '10:22 AM' },
+          { id: 4, autor: 'yo', texto: '¡Gracias! Lo voy a revisar', tiempo: '10:25 AM' },
+          { id: 5, autor: 'otro', texto: 'También podríamos estudiar juntos si quieres', tiempo: '10:30 AM' }
+        ];
+      case 2: // Empresa Globant
+        return [
+          { id: 1, autor: 'otro', texto: 'Hola, somos de Recursos Humanos de Globant', tiempo: 'Ayer 9:00 AM' },
+          { id: 2, autor: 'otro', texto: 'Vimos tu postulación para Desarrollador Junior', tiempo: 'Ayer 9:01 AM' },
+          { id: 3, autor: 'yo', texto: '¡Hola! Sí, me interesa mucho la posición', tiempo: 'Ayer 9:15 AM' },
+          { id: 4, autor: 'otro', texto: 'Tu perfil nos interesa mucho. ¿Estarías disponible para una entrevista?', tiempo: 'Ayer 10:30 AM' },
+          { id: 5, autor: 'yo', texto: 'Por supuesto, ¿cuándo sería conveniente?', tiempo: 'Ayer 11:00 AM' },
+          { id: 6, autor: 'otro', texto: 'Te contactaremos pronto con los detalles', tiempo: 'Ayer 2:30 PM' }
+        ];
+      case 3: // Carlos Pérez
+        return [
+          { id: 1, autor: 'otro', texto: 'Hey! ¿Viste el nuevo desafío de diseño?', tiempo: '2 días 3:00 PM' },
+          { id: 2, autor: 'yo', texto: 'Sí! Se ve interesante', tiempo: '2 días 3:15 PM' },
+          { id: 3, autor: 'otro', texto: '¿Participas en el desafío? Podemos formar equipo', tiempo: '2 días 3:20 PM' },
+          { id: 4, autor: 'yo', texto: 'Me parece buena idea, ¿cuándo empezamos?', tiempo: '2 días 4:00 PM' },
+          { id: 5, autor: 'otro', texto: 'Mañana te comparto mi propuesta inicial', tiempo: '2 días 5:30 PM' }
+        ];
+      default:
+        return [];
+    }
+  };
+
+  const messages = selectedChat ? getMessagesForChat(selectedChat.id) : [];
 
   const handleSendMessage = (e) => {
     e.preventDefault();
@@ -97,11 +126,13 @@ const Mensajes = () => {
             <form className={styles.inputArea} onSubmit={handleSendMessage}>
               <input 
                 type="text"
-                placeholder="Escribe un mensaje..."
+                placeholder="Próximamente..."
                 value={messageText}
                 onChange={(e) => setMessageText(e.target.value)}
+                disabled
+                style={{ cursor: 'not-allowed', opacity: 0.7 }}
               />
-              <button type="submit">
+              <button type="submit" disabled style={{ cursor: 'not-allowed', opacity: 0.7 }}>
                 <Send size={20} />
               </button>
             </form>

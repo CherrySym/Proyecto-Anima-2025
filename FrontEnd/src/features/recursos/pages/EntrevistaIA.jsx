@@ -201,9 +201,8 @@ function EntrevistaIA() {
                     <button
                       key={index}
                       className={styles['question-button']}
-                      onClick={() => alert('Próximamente...')}
                     >
-                      {pregunta.replace(/[\u{1F600}-\u{1F64F}]/gu, '')} {/* Remove emojis */}
+                      {pregunta}
                     </button>
                   ))}
                 </div>
