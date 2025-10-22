@@ -20,10 +20,10 @@ function Recursos() {
   }, [seccion]);
 
   const menuItems = [
-    { id: 'orientacion', label: 'Orientación Vocacional', icon: Sparkles },
-    { id: 'consejos', label: 'Consejos', icon: Star },
-    { id: 'cv-carta', label: 'CV y Carta de Presentación', icon: FileText },
-    { id: 'entrevista-ia', label: 'Entrenamiento de Entrevistas IA', icon: MessageSquare },
+     { id: 'orientacion', label: 'Orientación Vocacional', icon: Sparkles },
+     { id: 'consejos', label: 'Consejos', icon: Star },
+     { id: 'cv-carta', label: 'CV y Carta de Presentación', icon: FileText },
+     { id: 'entrevista-ia', label: 'Entrenamientos de entrevista con IA', icon: MessageSquare },
   ];
 
   const handleMenuClick = (sectionId) => {

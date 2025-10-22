@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Mic, Video, MessageSquare, Play, StopCircle, Sparkles, Map, HelpCircle, Search, FileText, Briefcase, Shirt, MessageCircle, Handshake, Target, Zap, CheckCircle, CheckCircle2, Laptop } from 'lucide-react';
+import { Mic, Video, MessageSquare, Play, StopCircle, Sparkles, Map, HelpCircle, Search, FileText, Briefcase, Shirt, MessageCircle, Handshake, Target, Zap, CheckCircle, CheckCircle2, Laptop, ClipboardList, Circle, X } from 'lucide-react';
 import styles from '../Recursos.module.css';
 
 function EntrevistaIA() {
@@ -73,7 +73,10 @@ function EntrevistaIA() {
 
       {/* Antes de la Entrevista */}
       <section className={styles['phase-section']}>
-        <h2>📋 Antes de la Entrevista</h2>
+        <h2>
+          <ClipboardList size={24} />
+          Antes de la Entrevista
+        </h2>
         <div className={styles['cards-grid']}>
           {preparacionItems.map((item, index) => (
             <div key={index} className={styles['info-card-small']}>
@@ -87,7 +90,10 @@ function EntrevistaIA() {
 
       {/* Durante la Entrevista */}
       <section className={styles['phase-section']}>
-        <h2>💼 Durante la Entrevista</h2>
+        <h2>
+          <Briefcase size={24} />
+          Durante la Entrevista
+        </h2>
         <div className={styles['cards-grid']}>
           {duranteItems.map((item, index) => (
             <div key={index} className={styles['info-card-small']}>
@@ -142,7 +148,8 @@ function EntrevistaIA() {
               className={styles['close-practice']} 
               onClick={() => setShowPracticeMode(false)}
             >
-              ✕ Cerrar Modo Práctica
+              <X size={18} />
+              Cerrar Modo Práctica
             </button>
           </div>
 
@@ -152,7 +159,12 @@ function EntrevistaIA() {
               <div className={styles['video-placeholder']}>
                 <Video size={64} strokeWidth={1.5} />
                 <p>Vista previa de cámara</p>
-                {isRecording && <div className={styles['recording-indicator']}>● GRABANDO</div>}
+                {isRecording && (
+                  <div className={styles['recording-indicator']}>
+                    <Circle size={12} fill="currentColor" />
+                    GRABANDO
+                  </div>
+                )}
               </div>
 
               <div className={styles['controls']}>
@@ -186,8 +198,12 @@ function EntrevistaIA() {
                 <h3>Preguntas Frecuentes en Entrevistas</h3>
                 <div className={styles['questions-list']}>
                   {preguntasComunes.map((pregunta, index) => (
-                    <button key={index} className={styles['question-button']}>
-                      {pregunta}
+                    <button
+                      key={index}
+                      className={styles['question-button']}
+                      onClick={() => alert('Próximamente...')}
+                    >
+                      {pregunta.replace(/[\u{1F600}-\u{1F64F}]/gu, '')} {/* Remove emojis */}
                     </button>
                   ))}
                 </div>
