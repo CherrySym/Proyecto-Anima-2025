@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Mic, Video, MessageSquare, Play, StopCircle, Sparkles, Map, HelpCircle } from 'lucide-react';
+import { Mic, Video, MessageSquare, Play, StopCircle, Sparkles, Map, HelpCircle, Search, FileText, Briefcase, Shirt, MessageCircle, Handshake, Target, Zap, CheckCircle, CheckCircle2, Laptop } from 'lucide-react';
 import styles from '../Recursos.module.css';
 
 function EntrevistaIA() {
@@ -16,21 +16,21 @@ function EntrevistaIA() {
   ];
 
   const preparacionItems = [
-    { icon: '🔍', title: 'Investiga la Empresa', desc: 'Conoce su misión, valores y noticias recientes' },
-    { icon: '📝', title: 'Revisa el Puesto', desc: 'Identifica habilidades clave requeridas' },
-    { icon: '💼', title: 'Prepara Documentos', desc: 'CV, carta, portfolio y certificados' },
-    { icon: '👔', title: 'Vestimenta Apropiada', desc: 'Formal o business casual según la empresa' },
+    { icon: <Search size={20} />, title: 'Investiga la Empresa', desc: 'Conoce su misión, valores y noticias recientes' },
+    { icon: <FileText size={20} />, title: 'Revisa el Puesto', desc: 'Identifica habilidades clave requeridas' },
+    { icon: <Briefcase size={20} />, title: 'Prepara Documentos', desc: 'CV, carta, portfolio y certificados' },
+    { icon: <Shirt size={20} />, title: 'Vestimenta Apropiada', desc: 'Formal o business casual según la empresa' },
     { icon: <Map size={20} />, title: 'Planifica tu Llegada', desc: 'Llega 10-15 minutos antes' },
-    { icon: '💭', title: 'Método STAR', desc: 'Situación, Tarea, Acción, Resultado' }
+    { icon: <MessageSquare size={20} />, title: 'Método STAR', desc: 'Situación, Tarea, Acción, Resultado' }
   ];
 
   const duranteItems = [
-    { icon: '🤝', title: 'Primera Impresión', desc: 'Saluda con confianza y mantén contacto visual' },
-    { icon: '🎯', title: 'Escucha Activa', desc: 'Presta atención antes de responder' },
-    { icon: '💬', title: 'Comunica Claramente', desc: 'Sé específico y usa ejemplos' },
-    { icon: '⚡', title: 'Muestra Entusiasmo', desc: 'Demuestra interés genuino' },
+    { icon: <Handshake size={20} />, title: 'Primera Impresión', desc: 'Saluda con confianza y mantén contacto visual' },
+    { icon: <Target size={20} />, title: 'Escucha Activa', desc: 'Presta atención antes de responder' },
+    { icon: <MessageCircle size={20} />, title: 'Comunica Claramente', desc: 'Sé específico y usa ejemplos' },
+    { icon: <Zap size={20} />, title: 'Muestra Entusiasmo', desc: 'Demuestra interés genuino' },
     { icon: <HelpCircle size={20} />, title: 'Haz Preguntas', desc: 'Prepara preguntas inteligentes' },
-    { icon: '✅', title: 'Sé Honesto', desc: 'No exageres tus habilidades' }
+    { icon: <CheckCircle size={20} />, title: 'Sé Honesto', desc: 'No exageres tus habilidades' }
   ];
 
   const virtualTips = [
@@ -101,11 +101,14 @@ function EntrevistaIA() {
 
       {/* Entrevistas Virtuales */}
       <section className={styles['virtual-tips-section']}>
-        <h2>💻 Tips para Entrevistas Virtuales</h2>
+        <h2>
+          <Laptop size={24} />
+          Tips para Entrevistas Virtuales
+        </h2>
         <div className={styles['tips-grid']}>
           {virtualTips.map((tip, index) => (
             <div key={index} className={styles['tip-item']}>
-              <span className={styles['check-icon']}>✓</span>
+              <CheckCircle2 size={18} className={styles['check-icon']} />
               {tip}
             </div>
           ))}
@@ -131,7 +134,10 @@ function EntrevistaIA() {
       {showPracticeMode && (
         <div className={styles['practice-mode-section']}>
           <div className={styles['practice-header']}>
-            <h2>🎯 Modo Práctica Activo</h2>
+            <h2>
+              <Target size={24} />
+              Modo Práctica Activo
+            </h2>
             <button 
               className={styles['close-practice']} 
               onClick={() => setShowPracticeMode(false)}

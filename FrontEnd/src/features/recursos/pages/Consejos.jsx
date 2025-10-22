@@ -1,11 +1,11 @@
-import { Star, CheckCircle, BarChart3 } from 'lucide-react';
+import { Star, CheckCircle, BarChart3, Search, MessageCircle, Target, Lightbulb, TrendingUp, BookOpen } from 'lucide-react';
 import styles from '../Recursos.module.css';
 
 function Consejos() {
   const sections = [
     {
       title: '1. Autoevaluación Honesta',
-      icon: '🔍',
+      icon: <Search size={24} />,
       content: 'Reflexiona sobre tus experiencias pasadas. ¿Qué tareas disfrutas hacer? ¿En qué actividades pierdes la noción del tiempo? Estas son señales de tus fortalezas naturales.',
       tips: [
         'Haz una lista de tus logros personales y académicos',
@@ -15,7 +15,7 @@ function Consejos() {
     },
     {
       title: '2. Pide Retroalimentación',
-      icon: '💬',
+      icon: <MessageCircle size={24} />,
       content: 'Pregunta a amigos, familiares y profesores qué creen que haces bien. A menudo, otros pueden ver fortalezas que nosotros no reconocemos.',
       tips: [
         'Pide ejemplos específicos de cuándo demostraste esa fortaleza',
@@ -25,7 +25,7 @@ function Consejos() {
     },
     {
       title: '3. Prueba Cosas Nuevas',
-      icon: '🎯',
+      icon: <Target size={24} />,
       content: 'Experimenta con diferentes actividades y roles. La única forma de descubrir nuevas fortalezas es salir de tu zona de confort.',
       tips: [
         'Participa en proyectos extracurriculares',
@@ -45,7 +45,7 @@ function Consejos() {
     },
     {
       title: '5. Observa tus Emociones',
-      icon: '💡',
+      icon: <Lightbulb size={24} />,
       content: 'Presta atención a qué actividades te energizan y cuáles te drenan. Tus fortalezas generalmente coinciden con lo que te hace sentir bien.',
       tips: [
         'Lleva un diario de actividades y emociones durante una semana',
@@ -55,7 +55,7 @@ function Consejos() {
     },
     {
       title: '6. Desarrolla tus Fortalezas',
-      icon: '📈',
+      icon: <TrendingUp size={24} />,
       content: 'Una vez identificadas, invierte tiempo en desarrollar tus fortalezas. Es más efectivo mejorar en lo que ya eres bueno que intentar arreglar debilidades.',
       tips: [
         'Busca oportunidades para usar tus fortalezas diariamente',
@@ -107,11 +107,14 @@ function Consejos() {
 
       {/* Resources */}
       <div className={styles['resources-section']}>
-        <h3>📚 Recursos Adicionales</h3>
+        <h3>
+          <BookOpen size={24} />
+          Recursos Adicionales
+        </h3>
         <ul className={styles['resources-list']}>
           {resources.map((item, index) => (
             <li key={index}>
-              <span className={styles['resource-icon']}>✓</span>
+              <CheckCircle size={16} className={styles['resource-icon']} />
               {item}
             </li>
           ))}

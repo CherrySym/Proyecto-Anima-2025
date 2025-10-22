@@ -1,4 +1,4 @@
-import { FileText, Mail, CheckCircle, AlertCircle } from 'lucide-react';
+import { FileText, Mail, CheckCircle, AlertCircle, XCircle, Download, FileCheck } from 'lucide-react';
 import styles from '../Recursos.module.css';
 
 function CVCarta() {
@@ -162,7 +162,7 @@ function CVCarta() {
           <div className={styles['errors-grid']}>
             {erroresComunes.map((error, index) => (
               <div key={index} className={styles['error-item']}>
-                <span className={styles['error-icon']}>❌</span>
+                <XCircle size={18} className={styles['error-icon']} />
                 {error}
               </div>
             ))}
@@ -171,17 +171,23 @@ function CVCarta() {
 
         {/* RECURSOS Y PLANTILLAS */}
         <section className={styles['resources-actions']}>
-          <h2>📄 Plantillas y Recursos</h2>
+          <h2>
+            <FileCheck size={24} />
+            Plantillas y Recursos
+          </h2>
           <p>Descarga plantillas profesionales para crear tu CV y carta de presentación</p>
           <div className={styles['action-buttons']}>
             <button className={`${styles['action-btn']} ${styles['primary']}`}>
-              📄 Descargar Plantilla CV
+              <Download size={18} />
+              Descargar Plantilla CV
             </button>
             <button className={`${styles['action-btn']} ${styles['primary']}`}>
-              📝 Descargar Plantilla Carta
+              <Download size={18} />
+              Descargar Plantilla Carta
             </button>
             <button className={`${styles['action-btn']} ${styles['secondary']}`}>
-              📚 Ver Más Ejemplos
+              <FileText size={18} />
+              Ver Más Ejemplos
             </button>
           </div>
         </section>

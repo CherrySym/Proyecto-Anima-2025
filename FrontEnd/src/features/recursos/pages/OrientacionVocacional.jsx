@@ -1,4 +1,4 @@
-import { Sparkles, Lightbulb, Target, TrendingUp } from 'lucide-react';
+import { Sparkles, Lightbulb, Target, TrendingUp, CheckCircle2 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import styles from '../Recursos.module.css';
 
@@ -73,7 +73,10 @@ function OrientacionVocacional() {
 
         <aside className={styles['sidebar-tips']}>
           <div className={styles['tip-card']}>
-            <h3>💡 Tips Clave</h3>
+            <h3>
+              <CheckCircle2 size={20} />
+              {' '}Tips Clave
+            </h3>
             <ul>
               <li>Reflexiona sobre qué actividades te apasionan realmente</li>
               <li>Identifica tus fortalezas y debilidades</li>
