@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../../../context/AuthContext';
-import { AlertTriangle } from 'lucide-react';
+import { AlertTriangle, ArrowLeft } from 'lucide-react';
 import styles from './Login.module.css';
 // import './Login.css'; // antiguo: desactivado tras migración a CSS Modules
 
@@ -84,15 +84,12 @@ const Login = () => {
   return (
     <div className={styles['login-page']}>
       <div className={styles['login-container']}>
-        <button 
-          onClick={() => navigate('/')} 
-          className={styles['btn-volver-atras']}
-        >
-          Volver Atrás
-        </button>
+        <div className={styles['back-arrow']} onClick={() => navigate('/')}>
+          <ArrowLeft size={24} />
+          <span>Atrás</span>
+        </div>
 
         <h1>BIENVENIDO</h1>
-        <h3>----------------------------------------------------</h3>
         <h1>Iniciar Sesión</h1>
 
         {errors.general && (

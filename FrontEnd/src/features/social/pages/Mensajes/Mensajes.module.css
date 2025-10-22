@@ -176,6 +176,11 @@
   color: white;
 }
 
+.message.yo .messageBubble p,
+.message.yo .messageBubble .messageTime {
+  color: white;
+}
+
 .message.otro .messageBubble {
   background: #f0f0f0;
   color: #333;

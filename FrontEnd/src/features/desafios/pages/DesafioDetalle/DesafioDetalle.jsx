@@ -3,7 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../../../context/AuthContext';
 import { useMinLoadingTime } from '../../../../hooks/useMinLoadingTime';
 import { getDesafioById, participarDesafio } from '../../services/desafiosService';
-import { Target, ArrowLeft, Building2, Calendar, Trophy, Star, Clock, Users } from 'lucide-react';
+import { Target, ArrowLeft, Building2, Calendar, Trophy, Star, Clock, Users, AlertCircle, Info } from 'lucide-react';
 import Toast from '../../../../components/common/Toast/Toast';
 import styles from './DesafioDetalle.module.css';
 
@@ -20,6 +20,7 @@ const DesafioDetalle = () => {
   const [error, setError] = useState(null);
   const [toast, setToast] = useState(null);
   const [participando, setParticipando] = useState(false);
+  const [yaParticipa, setYaParticipa] = useState(false);
 
   useEffect(() => {
     loadDesafio();
@@ -30,9 +31,13 @@ const DesafioDetalle = () => {
       try {
         const data = await getDesafioById(id);
         setDesafio(data);
-      } catch (error) {
-        console.error('Error al cargar desafío:', error);
-        setError('No se pudo cargar el desafío');
+        // Check if user is already participating
+        if (data.yaParticipa) {
+          setYaParticipa(true);
+        }
+      } catch (err) {
+        console.error('Error al cargar desafío:', err);
+        setError(err.message || 'No se pudo cargar el desafío');
       }
     });
   };
@@ -47,15 +52,12 @@ const DesafioDetalle = () => {
     setParticipando(true);
     try {
       await participarDesafio(desafio.id);
+      setYaParticipa(true);
       setToast({ 
         message: 'Desafío agregado a "Mis Desafíos". ¡Mucha suerte!', 
         type: 'success' 
       });
-      
-      // Redirigir a Mis Desafíos después de 2 segundos
-      setTimeout(() => {
-        navigate('/mis-desafios');
-      }, 2000);
+      setParticipando(false);
     } catch (error) {
       console.error('Error al participar:', error);
       setToast({ 
@@ -101,7 +103,7 @@ const DesafioDetalle = () => {
     return (
       <div className={styles['desafio-detalle-page']}>
         <div className={styles['error-container']}>
-          <h2>😕 Desafío no encontrado</h2>
+          <h2><AlertCircle size={24} /> Desafío no encontrado</h2>
           <p>{error || 'El desafío que buscas no existe o ha sido eliminado'}</p>
           <button onClick={() => navigate('/desafios')} className={styles['btn-volver']}>
             <ArrowLeft size={16} /> Volver a desafíos
@@ -155,7 +157,7 @@ const DesafioDetalle = () => {
 
             {/* Información adicional */}
             <section className={styles['section']}>
-              <h2>ℹ️ Información</h2>
+              <h2><Info size={20} /> Información</h2>
               <div className={styles['info-grid']}>
                 <div className={styles['info-item']}>
                   <Trophy size={18} />
@@ -203,15 +205,16 @@ const DesafioDetalle = () => {
           <div className={styles['desafio-footer']}>
             {user?.tipo === 'ADOLESCENTE' && (
               <p className={styles['advertencia']}>
-                ⚠️ Como menor de 18 años, puedes participar pero las recompensas monetarias estarán disponibles cuando cumplas 18 años.
+                <AlertCircle size={16} /> Como menor de 18 años, puedes participar pero las recompensas monetarias estarán disponibles cuando cumplas 18 años.
               </p>
             )}
             <button 
-              className={styles['btn-participar']}
+              className={`${styles['btn-participar']} ${yaParticipa ? styles['btn-participando'] : ''}`}
               onClick={handleParticipar}
-              disabled={!desafio.activo || participando}
+              disabled={!desafio.activo || participando || yaParticipa}
             >
               {participando ? 'Agregando a Mis Desafíos...' : 
+               yaParticipa ? 'Ya participas en este desafío' :
                desafio.activo ? 'Participar en este desafío' : 'Desafío cerrado'}
             </button>
           </div>

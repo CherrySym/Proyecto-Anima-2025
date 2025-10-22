@@ -47,21 +47,34 @@
 
 .login-container input[type="text"],
 .login-container input[type="email"],
-.login-container input[type="password"] {
+.login-container input[type="password"],
+.login-container select {
   width: 100%;
   padding: 12px;
   border: 1px solid #ddd;
   border-radius: 8px;
   font-size: 16px;
   box-sizing: border-box;
+  background-color: white;
+  cursor: pointer;
 }
 
 .login-container input[type="text"]:focus,
 .login-container input[type="email"]:focus,
-.login-container input[type="password"]:focus {
+.login-container input[type="password"]:focus,
+.login-container select:focus {
   outline: none;
   border-color: #4f4fcf;
   box-shadow: 0 0 5px rgba(79, 79, 207, 0.5);
+}
+
+.login-container select {
+  appearance: none;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%234f4fcf' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  background-size: 20px;
+  padding-right: 40px;
 }
 
 .submit-button {
@@ -81,6 +94,31 @@
 .submit-button:hover {
   transform: translateY(-2px);
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.back-arrow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #4f4fcf;
+  font-weight: 600;
+  cursor: pointer;
+  margin-bottom: 20px;
+  transition: all 0.3s;
+  width: fit-content;
+}
+
+.back-arrow:hover {
+  color: #2d2d3f;
+  transform: translateX(-5px);
+}
+
+.back-arrow svg {
+  transition: transform 0.3s;
+}
+
+.back-arrow:hover svg {
+  transform: translateX(-3px);
 }
 
 .btn-volver-atras {

@@ -260,7 +260,9 @@ const Sidebar = () => {
                     {course.proveedor || course.provider || 'Proveedor externo'}
                   </p>
                   {course.area && (
-                    <span className={styles['course-area']}>{course.area}</span>
+                    <span className={styles['course-area']}>
+                      {course.area.charAt(0).toUpperCase() + course.area.slice(1)}
+                    </span>
                   )}
                 </div>
                 <button 

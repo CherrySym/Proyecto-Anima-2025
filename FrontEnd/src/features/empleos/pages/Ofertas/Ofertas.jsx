@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../../../context/AuthContext';
 import { useMinLoadingTime } from '../../../../hooks/useMinLoadingTime';
 import * as ofertasService from '../../services/ofertasService';
-import { MapPin, Tag, AlertTriangle } from 'lucide-react';
+import { MapPin, Tag, AlertTriangle, Target, Clock, X } from 'lucide-react';
 import styles from './Ofertas.module.css';
 // import './Ofertas.css'; // comentado: archivo original inactivado como backup
 
@@ -138,7 +138,7 @@ const Ofertas = () => {
     <div className={styles['ofertas-page']}>
       <main className={styles['ofertas-content']}>
         <div className={styles['ofertas-header']}>
-          <h1>🎯 Ofertas Laborales</h1>
+          <h1><Target size={28} /> Ofertas Laborales</h1>
           <p>Encuentra oportunidades perfectas para iniciar tu carrera profesional</p>
           
           {error && (
@@ -273,8 +273,8 @@ const Ofertas = () => {
                     <span>Publicado: {new Date(oferta.fechaPublicacion || oferta.createdAt).toLocaleDateString('es-AR')}</span>
                     {oferta.fechaVencimiento && (
                       <span className={vencida ? styles['vencida'] : ''}>
-                        {vencida ? '❌ ' : '⏰ '}
-                        Vence: {new Date(oferta.fechaVencimiento).toLocaleDateString('es-AR')}
+                        {vencida ? <X size={14} /> : <Clock size={14} />}
+                        {' '}Vence: {new Date(oferta.fechaVencimiento).toLocaleDateString('es-AR')}
                       </span>
                     )}
                   </div>

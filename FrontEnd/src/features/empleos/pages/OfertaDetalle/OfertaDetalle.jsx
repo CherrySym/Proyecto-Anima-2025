@@ -3,7 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../../../context/AuthContext';
 import { useMinLoadingTime } from '../../../../hooks/useMinLoadingTime';
 import * as ofertasService from '../../services/ofertasService';
-import { MapPin, FileText, Building2, Rocket, AlertTriangle } from 'lucide-react';
+import { MapPin, FileText, Building2, Rocket, AlertTriangle, Star, Share2, Users, Globe, DollarSign, Ban, CheckCircle } from 'lucide-react';
 import Toast from '../../../../components/common/Toast/Toast';
 import styles from './OfertaDetalle.module.css';
 // import './OfertaDetalle.css'; // comentado: archivo original inactivado como backup
@@ -152,11 +152,7 @@ const OfertaDetalle = () => {
         message: '¡Postulación enviada exitosamente! La empresa revisará tu perfil', 
         type: 'success' 
       });
-      
-      // Redirigir a Mis Postulaciones después de 2 segundos
-      setTimeout(() => {
-        navigate('/mis-postulaciones');
-      }, 2000);
+      setPostulando(false);
     } catch (err) {
       console.error('Error al postularse:', err);
       
@@ -169,13 +165,12 @@ const OfertaDetalle = () => {
       }
       
       setToast({ message: errorMessage, type: 'error' });
-    } finally {
       setPostulando(false);
     }
   };
 
   const handleGuardarOferta = () => {
-    setToast({ message: 'Oferta guardada en tus favoritos', type: 'success' });
+    // Funcionalidad deshabilitada - no hay sección de favoritos
   };
 
   const handleCompartir = () => {
@@ -316,10 +311,10 @@ const OfertaDetalle = () => {
                   <h4>{oferta.empresa_info.nombre}</h4>
                   <p>{oferta.empresa_info.descripcion}</p>
                   <div className={styles['empresa-stats']}>
-                    <span>👥 {oferta.empresa_info.empleados} empleados</span>
+                    <span><Users size={16} /> {oferta.empresa_info.empleados} empleados</span>
                     {oferta.empresa_info.sitio_web && (
                       <a href={oferta.empresa_info.sitio_web} target="_blank" rel="noopener noreferrer">
-                        🌐 Sitio web
+                        <Globe size={16} /> Sitio web
                       </a>
                     )}
                   </div>
@@ -331,13 +326,13 @@ const OfertaDetalle = () => {
             <div className={styles['oferta-sidebar']}>
               <div className={styles['postulacion-card']}>
                 <div className={styles['salario-info']}>
-                  <h4>💰 Salario</h4>
+                  <h4><DollarSign size={20} /> Salario</h4>
                   <p>{oferta.salario}</p>
                 </div>
 
                 {user?.edad < 18 ? (
                   <div className={styles['age-restriction']}>
-                    <p>🚫 Esta oferta requiere ser mayor de 18 años</p>
+                    <p><Ban size={16} /> Esta oferta requiere ser mayor de 18 años</p>
                     <p className={styles['age-tip']}>
                       Mientras tanto, puedes:
                     </p>
@@ -349,7 +344,7 @@ const OfertaDetalle = () => {
                   </div>
                 ) : yaPostulado ? (
                   <div className={styles['ya-postulado']}>
-                    <p>✅ Ya te postulaste a esta oferta</p>
+                    <p><CheckCircle size={18} /> Ya te postulaste a esta oferta</p>
                     <small>La empresa revisará tu perfil y se pondrá en contacto contigo.</small>
                   </div>
                 ) : (
@@ -364,10 +359,10 @@ const OfertaDetalle = () => {
 
                 <div className={styles['acciones-secundarias']}>
                   <button onClick={handleGuardarOferta} className={styles['btn-guardar']}>
-                    ⭐ Guardar oferta
+                    <Star size={18} /> Guardar oferta
                   </button>
                   <button onClick={handleCompartir} className={styles['btn-compartir']}>
-                    📤 Compartir
+                    <Share2 size={18} /> Compartir
                   </button>
                 </div>
 
