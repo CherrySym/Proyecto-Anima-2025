@@ -86,7 +86,16 @@ if [ -d "FrontEnd" ]; then
         log_info "Construyendo aplicación React (build limpio)..."
         npm run build --silent
         
-        log_success "Frontend construido exitosamente"
+        log_info "Copiando archivos build a directorio de nginx..."
+        # Crear directorio si no existe
+        sudo mkdir -p /var/www/jobpath/frontend
+        # Copiar todos los archivos del build
+        sudo cp -r dist/* /var/www/jobpath/frontend/
+        # Dar permisos correctos
+        sudo chown -R www-data:www-data /var/www/jobpath
+        sudo chmod -R 755 /var/www/jobpath
+        
+        log_success "Frontend construido y desplegado exitosamente"
         cd ..
     else
         log_warning "No se encontró package.json en FrontEnd"
@@ -128,15 +137,25 @@ fi
 echo ""
 
 # Reiniciar nginx para servir la nueva build
-log_info "Paso 4: Reiniciando Nginx..."
+log_info "Paso 4: Actualizando Nginx..."
 echo "--------------------------------------"
 log_info "Limpiando caché de Nginx..."
 # Limpiar caché de proxy si existe
 if [ -d "/var/cache/nginx" ]; then
     sudo rm -rf /var/cache/nginx/*
 fi
+
+log_info "Reiniciando servicio de Nginx..."
 sudo systemctl restart nginx
-log_success "Nginx reiniciado exitosamente"
+
+log_info "Verificando estado de Nginx..."
+if sudo systemctl is-active --quiet nginx; then
+    log_success "Nginx está corriendo correctamente"
+else
+    log_error "⚠️  Error: Nginx no está corriendo"
+    sudo systemctl status nginx
+    exit 1
+fi
 echo ""
 
 echo "======================================"
