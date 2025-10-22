@@ -4,7 +4,7 @@ import { useAuth } from '../../../context/AuthContext';
 import { useLanguage } from '../../../context/LanguageContext';
 import { 
   Home, Users, Briefcase, BookOpen, Target, MessageCircle, Bell, Search,
-  User, Settings, FileText, Compass, Lightbulb, Star, LogOut
+  User, Settings, FileText, Compass, Lightbulb, Star, LogOut, GraduationCap
 } from 'lucide-react';
 import styles from './Header.module.css';
 // import './Header.css'; // antiguo: comentado tras migración a CSS Modules
@@ -66,16 +66,17 @@ const Header = () => {
 
   const handleSearch = (e) => {
     e.preventDefault();
-    if (searchQuery.trim()) {
-      navigate(`/buscar?q=${encodeURIComponent(searchQuery.trim())}`);
-      setSearchQuery('');
-    }
+    // DESHABILITADO PARA MVP
+    // if (searchQuery.trim()) {
+    //   navigate(`/buscar?q=${encodeURIComponent(searchQuery.trim())}`);
+    //   setSearchQuery('');
+    // }
   };
 
   // Textos en diferentes idiomas
   const texts = {
     es: {
-      search: 'Buscar...',
+      search: 'Próximamente...',
       home: 'Inicio',
       network: 'Red',
       jobs: 'Empleos',
@@ -90,7 +91,7 @@ const Header = () => {
       backToPublic: 'Volver al sitio público'
     },
     en: {
-      search: 'Search...',
+      search: 'Coming soon...',
       home: 'Home',
       network: 'Network',
       jobs: 'Jobs',
@@ -121,7 +122,7 @@ const Header = () => {
           <span>JobPath</span>
         </Link>
 
-        {/* Barra de búsqueda */}
+        {/* Barra de búsqueda - DESHABILITADA PARA MVP */}
         {user && (
           <form className={styles['search-form']} onSubmit={handleSearch}>
             <div className={styles['search-container']}>
@@ -134,6 +135,8 @@ const Header = () => {
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className={styles['search-input']}
+                disabled
+                style={{ cursor: 'not-allowed', opacity: 0.6 }}
               />
             </div>
           </form>
@@ -261,6 +264,10 @@ const Header = () => {
                     <span>Mis postulaciones</span>
                   </Link>
                 )}
+                <Link to="/recursos/orientacion" className={styles['dropdown-item']} onClick={closeDropdown}>
+                  <GraduationCap size={18} />
+                  <span>Recursos para ti</span>
+                </Link>
                 <hr className={styles['dropdown-divider']} />
                 <Link to="/orientacion-vocacional" className={styles['dropdown-item']} onClick={closeDropdown}>
                   <Compass size={18} />

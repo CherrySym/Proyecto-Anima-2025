@@ -83,6 +83,34 @@ export const actualizarPostulacion = async (postulacionId, estado) => {
 // ==================== EMPRESA ====================
 
 /**
+ * Obtener todas las empresas (públicamente disponibles)
+ */
+export const getAllEmpresas = async (filtros = {}) => {
+  try {
+    const params = new URLSearchParams();
+    if (filtros.sector) params.append('sector', filtros.sector);
+    if (filtros.search) params.append('search', filtros.search);
+    
+    const response = await API.get(`/empresas?${params}`);
+    return response.data;
+  } catch (error) {
+    throw error.response?.data || { error: 'Error al cargar empresas' };
+  }
+};
+
+/**
+ * Obtener una empresa por ID
+ */
+export const getEmpresaById = async (empresaId) => {
+  try {
+    const response = await API.get(`/empresas/${empresaId}`);
+    return response.data;
+  } catch (error) {
+    throw error.response?.data || { error: 'Error al cargar empresa' };
+  }
+};
+
+/**
  * Obtener datos de la empresa actual
  */
 export const getEmpresaActual = async () => {
@@ -103,5 +131,56 @@ export const actualizarEmpresa = async (empresaData) => {
     return response.data;
   } catch (error) {
     throw error.response?.data || { error: 'Error al actualizar empresa' };
+  }
+};
+
+// ==================== SEGUIR EMPRESAS ====================
+
+/**
+ * Seguir una empresa
+ */
+export const seguirEmpresa = async (empresaId) => {
+  try {
+    const response = await API.post(`/empresas/${empresaId}/seguir`);
+    return response.data;
+  } catch (error) {
+    throw error.response?.data || { error: 'Error al seguir empresa' };
+  }
+};
+
+/**
+ * Dejar de seguir una empresa
+ */
+export const dejarDeSeguirEmpresa = async (empresaId) => {
+  try {
+    const response = await API.delete(`/empresas/${empresaId}/seguir`);
+    return response.data;
+  } catch (error) {
+    throw error.response?.data || { error: 'Error al dejar de seguir empresa' };
+  }
+};
+
+/**
+ * Obtener empresas que sigue el usuario
+ */
+export const getEmpresasSeguidas = async () => {
+  try {
+    const response = await API.get('/empresas/seguidas/mis-empresas');
+    return response.data;
+  } catch (error) {
+    throw error.response?.data || { error: 'Error al cargar empresas seguidas' };
+  }
+};
+
+/**
+ * Verificar si el usuario sigue a empresas específicas
+ */
+export const verificarSeguimientoEmpresas = async (empresaIds) => {
+  try {
+    const params = new URLSearchParams({ empresaIds: empresaIds.join(',') });
+    const response = await API.get(`/empresas/seguimiento/verificar?${params}`);
+    return response.data;
+  } catch (error) {
+    throw error.response?.data || { error: 'Error al verificar seguimiento' };
   }
 };

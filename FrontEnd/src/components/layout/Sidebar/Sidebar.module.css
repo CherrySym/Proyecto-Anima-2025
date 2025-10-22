@@ -3,8 +3,6 @@
   display: flex;
   flex-direction: column;
   gap: 20px;
-  position: sticky;
-  top: 20px;
   height: fit-content;
 }
 
@@ -88,20 +86,41 @@
 
 .follow-btn {
   width: 100%;
-  padding: 6px 12px;
-  background: none;
-  border: 1px solid #4f4fcf;
-  color: #4f4fcf;
+  padding: 8px 12px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border: none;
+  color: white;
   border-radius: 16px;
   cursor: pointer;
   font-size: 13px;
   font-weight: 600;
   transition: all 0.3s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
 }
 
-.follow-btn:hover {
-  background: #4f4fcf;
-  color: white;
+.follow-btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+}
+
+.follow-btn.following {
+  background: #f0f0f0;
+  color: #667eea;
+  border: 2px solid #667eea;
+}
+
+.follow-btn.following:hover:not(:disabled) {
+  background: #ffe5e5;
+  color: #e74c3c;
+  border-color: #e74c3c;
+}
+
+.follow-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
 }
 
 /* Cursos recomendados */
@@ -278,11 +297,32 @@
   font-size: 13px;
   font-weight: 600;
   transition: all 0.3s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
 }
 
 .follow-company-btn:hover {
   background: #28a745;
   color: white;
+}
+
+.follow-company-btn.following {
+  background: #f0f0f0;
+  border-color: #667eea;
+  color: #667eea;
+}
+
+.follow-company-btn.following:hover:not(:disabled) {
+  background: #ffe5e5;
+  color: #e74c3c;
+  border-color: #e74c3c;
+}
+
+.follow-company-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
 }
 
 /* Actividad reciente */

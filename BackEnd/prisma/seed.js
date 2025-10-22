@@ -18,7 +18,18 @@ async function main() {
   await prisma.usuario.deleteMany();
   await prisma.empresa.deleteMany();
 
-  console.log('✅ Base de datos limpiada');
+  // Resetear auto_increment para que los IDs empiecen desde 1
+  await prisma.$executeRawUnsafe('ALTER TABLE usuarios AUTO_INCREMENT = 1');
+  await prisma.$executeRawUnsafe('ALTER TABLE empresas AUTO_INCREMENT = 1');
+  await prisma.$executeRawUnsafe('ALTER TABLE ofertas AUTO_INCREMENT = 1');
+  await prisma.$executeRawUnsafe('ALTER TABLE desafios AUTO_INCREMENT = 1');
+  await prisma.$executeRawUnsafe('ALTER TABLE posts AUTO_INCREMENT = 1');
+  await prisma.$executeRawUnsafe('ALTER TABLE comentarios AUTO_INCREMENT = 1');
+  await prisma.$executeRawUnsafe('ALTER TABLE likes AUTO_INCREMENT = 1');
+  await prisma.$executeRawUnsafe('ALTER TABLE postulaciones AUTO_INCREMENT = 1');
+  await prisma.$executeRawUnsafe('ALTER TABLE cursos_externos AUTO_INCREMENT = 1');
+
+  console.log('✅ Base de datos limpiada y auto_increment reseteado');
 
   // Hash de contraseña para todos los usuarios de prueba
   const passwordHash = await bcrypt.hash('password123', 10);

@@ -25,7 +25,7 @@ export const getUserById = async (usuarioId) => {
  */
 export const getAllUsers = async () => {
   try {
-    const response = await api.get('/users');
+    const response = await API.get('/users');
     return response.data;
   } catch (error) {
     console.error('Error obteniendo usuarios:', error);
@@ -41,7 +41,7 @@ export const getAllUsers = async () => {
  */
 export const updateUser = async (usuarioId, userData) => {
   try {
-    const response = await api.put(`/users/${usuarioId}`, userData);
+    const response = await API.put(`/users/${usuarioId}`, userData);
     return response.data;
   } catch (error) {
     console.error('Error actualizando usuario:', error);
@@ -63,7 +63,7 @@ export const followUser = async (usuarioId) => {
   console.warn('⚠️ Follow/Unfollow no implementado en MVP');
   throw new Error('Funcionalidad no disponible en MVP');
   // try {
-  //   const response = await api.post(`/usuarios/${usuarioId}/follow`);
+  //   const response = await API.post(`/usuarios/${usuarioId}/follow`);
   //   return response.data;
   // } catch (error) {
   //   console.error('Error siguiendo usuario:', error);
@@ -80,7 +80,7 @@ export const unfollowUser = async (usuarioId) => {
   console.warn('⚠️ Follow/Unfollow no implementado en MVP');
   throw new Error('Funcionalidad no disponible en MVP');
   // try {
-  //   const response = await api.delete(`/usuarios/${usuarioId}/follow`);
+  //   const response = await API.delete(`/usuarios/${usuarioId}/follow`);
   //   return response.data;
   // } catch (error) {
   //   console.error('Error dejando de seguir usuario:', error);
@@ -97,7 +97,7 @@ export const getFollowers = async (usuarioId) => {
   console.warn('⚠️ Follow/Unfollow no implementado en MVP');
   throw new Error('Funcionalidad no disponible en MVP');
   // try {
-  //   const response = await api.get(`/usuarios/${usuarioId}/followers`);
+  //   const response = await API.get(`/usuarios/${usuarioId}/followers`);
   //   return response.data;
   // } catch (error) {
   //   console.error('Error obteniendo seguidores:', error);
@@ -114,7 +114,7 @@ export const getFollowing = async (usuarioId) => {
   console.warn('⚠️ Follow/Unfollow no implementado en MVP');
   throw new Error('Funcionalidad no disponible en MVP');
   // try {
-  //   const response = await api.get(`/usuarios/${usuarioId}/following`);
+  //   const response = await API.get(`/usuarios/${usuarioId}/following`);
   //   return response.data;
   // } catch (error) {
   //   console.error('Error obteniendo seguidos:', error);

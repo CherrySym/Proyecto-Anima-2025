@@ -41,6 +41,13 @@ model Usuario {
   postulaciones Postulacion[]
   cursosGuardados CursoGuardado[]
   desafiosParticipaciones DesafioParticipacion[]
+  
+  // Conexiones (seguir a otros usuarios)
+  conexionesIniciadas Conexion[] @relation("UsuarioSigue")
+  conexionesRecibidas Conexion[] @relation("UsuarioSeguido")
+
+  // Empresas seguidas
+  empresasSeguidas EmpresaSeguida[] @relation("UsuarioSigueEmpresa")
 
   @@index([email])
   @@map("usuarios")
@@ -67,6 +74,9 @@ model Empresa {
   posts   Post[]
   ofertas Oferta[]
   desafios Desafio[]
+  
+  // Seguidores (usuarios que siguen esta empresa)
+  seguidores EmpresaSeguida[] @relation("EmpresaSeguidores")
 
   @@index([email])
   @@map("empresas")
@@ -134,6 +144,40 @@ model Comentario {
   @@index([usuarioId])
   @@index([parentId])
   @@map("comentarios")
+}
+
+/// Conexion - Relación de seguimiento entre usuarios
+/// Un usuario puede seguir a otro usuario (conexión unidireccional)
+model Conexion {
+  id            Int      @id @default(autoincrement())
+  seguidorId    Int // Usuario que sigue
+  seguidoId     Int // Usuario seguido
+  createdAt     DateTime @default(now())
+
+  seguidor Usuario @relation("UsuarioSigue", fields: [seguidorId], references: [id], onDelete: Cascade)
+  seguido  Usuario @relation("UsuarioSeguido", fields: [seguidoId], references: [id], onDelete: Cascade)
+
+  @@unique([seguidorId, seguidoId]) // Un usuario no puede seguir al mismo usuario dos veces
+  @@index([seguidorId])
+  @@index([seguidoId])
+  @@map("conexiones")
+}
+
+/// EmpresaSeguida - Relación de seguimiento entre usuario y empresa
+/// Un usuario puede seguir empresas para ver sus contenidos y ofertas
+model EmpresaSeguida {
+  id         Int      @id @default(autoincrement())
+  usuarioId  Int // Usuario que sigue
+  empresaId  Int // Empresa seguida
+  createdAt  DateTime @default(now())
+
+  usuario Usuario @relation("UsuarioSigueEmpresa", fields: [usuarioId], references: [id], onDelete: Cascade)
+  empresa Empresa @relation("EmpresaSeguidores", fields: [empresaId], references: [id], onDelete: Cascade)
+
+  @@unique([usuarioId, empresaId]) // Un usuario no puede seguir a la misma empresa dos veces
+  @@index([usuarioId])
+  @@index([empresaId])
+  @@map("empresas_seguidas")
 }
 
 // ==================== OFERTAS LABORALES ====================

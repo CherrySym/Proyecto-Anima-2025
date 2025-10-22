@@ -4,9 +4,12 @@ import { useAuth } from '../../../../context/AuthContext';
 import { useMinLoadingTime } from '../../../../hooks/useMinLoadingTime';
 import Post from '../../components/Post/Post';
 import * as userService from '../../../../services/userService';
-import { MapPin, BarChart3 } from 'lucide-react';
+import * as conexionesService from '../../../../services/conexionesService';
+import * as empresaService from '../../../empresas/services/empresaService';
+import { MapPin, BarChart3, UserPlus, UserCheck, UserX, Building2 } from 'lucide-react';
 import * as postService from '../../services/postService';
 import { getMisDesafios } from '../../../desafios/services/desafiosService';
+import Toast from '../../../../components/common/Toast/Toast';
 import styles from './UserProfile.module.css';
 // import './UserProfile.css'; // comentado: archivo original inactivado como backup
 
@@ -17,10 +20,14 @@ const UserProfile = () => {
   const [user, setUser] = useState(null);
   const [posts, setPosts] = useState([]);
   const [desafiosCount, setDesafiosCount] = useState(0);
+  const [estadisticas, setEstadisticas] = useState({ conexiones: 0, empresasSeguidas: 0 });
   const { loading, withMinLoadingTime } = useMinLoadingTime(800);
   const [isOwnProfile, setIsOwnProfile] = useState(false);
   const [isFollowing, setIsFollowing] = useState(false);
   const [error, setError] = useState(null);
+  const [loadingConnection, setLoadingConnection] = useState(false);
+  const [hoveredButton, setHoveredButton] = useState(false);
+  const [toast, setToast] = useState({ show: false, message: '', type: 'success' });
 
   useEffect(() => {
     loadUserProfile();
@@ -38,10 +45,39 @@ const UserProfile = () => {
         if (ownProfile && currentUser) {
           setUser(currentUser);
           
+          // Cargar estadísticas de conexiones y empresas seguidas
+          try {
+            const stats = await conexionesService.obtenerEstadisticas();
+            const empresasSeguidas = await empresaService.getEmpresasSeguidas();
+            setEstadisticas({
+              conexiones: stats.conexiones || 0,
+              empresasSeguidas: empresasSeguidas?.length || 0
+            });
+          } catch (err) {
+            console.error('Error cargando estadísticas:', err);
+            setEstadisticas({ conexiones: 0, empresasSeguidas: 0 });
+          }
+          
           // Cargar posts del usuario
           try {
             const userPosts = await postService.getUserPosts(currentUser.id);
-            setPosts(userPosts || []);
+            // Normalizar estructura de posts para el componente Post
+            const normalizedPosts = (userPosts || []).map(post => ({
+              ...post,
+              user: {
+                id: post.author?.id || post.usuario?.id || currentUser.id,
+                name: post.author?.nombre || post.usuario?.nombre || currentUser.nombre,
+                avatar: post.author?.avatar || post.usuario?.avatar || currentUser.avatar || '/img/usuario.png',
+                profession: post.author?.profesion || post.usuario?.profesion || 'Miembro de JobPath',
+                isCompany: false
+              },
+              content: post.contenido || post.content,
+              image: post.imagenUrl || post.image,
+              timestamp: post.createdAt || post.timestamp,
+              likes: post.likesCount || post.likes || 0,
+              comments: post.commentsCount || post.comments || 0
+            }));
+            setPosts(normalizedPosts);
           } catch (err) {
             console.error('Error cargando posts:', err);
             setPosts([]);
@@ -63,7 +99,34 @@ const UserProfile = () => {
             
             // Cargar posts del usuario
             const userPosts = await postService.getUserPosts(targetUserId);
-            setPosts(userPosts || []);
+            // Normalizar estructura de posts para el componente Post
+            const normalizedPosts = (userPosts || []).map(post => ({
+              ...post,
+              user: {
+                id: post.author?.id || post.usuario?.id || userData.id,
+                name: post.author?.nombre || post.usuario?.nombre || userData.nombre,
+                avatar: post.author?.avatar || post.usuario?.avatar || userData.avatar || '/img/usuario.png',
+                profession: post.author?.profesion || post.usuario?.profesion || 'Miembro de JobPath',
+                isCompany: false
+              },
+              content: post.contenido || post.content,
+              image: post.imagenUrl || post.image,
+              timestamp: post.createdAt || post.timestamp,
+              likes: post.likesCount || post.likes || 0,
+              comments: post.commentsCount || post.comments || 0
+            }));
+            setPosts(normalizedPosts);
+            
+            // Verificar si ya sigue a este usuario
+            if (currentUser) {
+              try {
+                const connectionStatus = await conexionesService.verificarConexion(targetUserId);
+                setIsFollowing(connectionStatus.siguiendo || false);
+              } catch (err) {
+                console.error('Error verificando conexión:', err);
+                setIsFollowing(false);
+              }
+            }
             
             // Por ahora no mostramos desafíos de otros usuarios
             setDesafiosCount(0);
@@ -79,8 +142,45 @@ const UserProfile = () => {
     });
   };
 
-  const handleFollow = () => {
-    setIsFollowing(!isFollowing);
+  const handleFollow = async () => {
+    if (!user?.id || loadingConnection) return;
+    
+    try {
+      setLoadingConnection(true);
+      
+      if (isFollowing) {
+        await conexionesService.dejarDeSeguirUsuario(user.id);
+        setIsFollowing(false);
+        // Actualizar contador de conexiones
+        setEstadisticas(prev => ({
+          ...prev,
+          conexiones: Math.max(0, prev.conexiones - 1)
+        }));
+        showToast('Conexión eliminada', 'info');
+      } else {
+        await conexionesService.seguirUsuario(user.id);
+        setIsFollowing(true);
+        // Actualizar contador de conexiones
+        setEstadisticas(prev => ({
+          ...prev,
+          conexiones: prev.conexiones + 1
+        }));
+        showToast('Conexión establecida', 'success');
+      }
+    } catch (err) {
+      console.error('Error en conexión:', err);
+      showToast('Error al procesar la conexión', 'error');
+    } finally {
+      setLoadingConnection(false);
+    }
+  };
+
+  const showToast = (message, type = 'success') => {
+    setToast({ show: true, message, type });
+  };
+
+  const closeToast = () => {
+    setToast({ show: false, message: '', type: 'success' });
   };
 
   const handleLike = (postId) => {
@@ -119,6 +219,15 @@ const UserProfile = () => {
 
   return (
     <div className={styles['profile-page']}>
+      {toast.show && (
+        <Toast 
+          message={toast.message}
+          type={toast.type}
+          show={toast.show}
+          onClose={closeToast}
+        />
+      )}
+      
       <div className={styles['profile-container']}>
         {/* Header del perfil */}
         <div className={styles['profile-header']}>
@@ -141,7 +250,7 @@ const UserProfile = () => {
               
               <div className={styles['profile-stats']}>
                 <div className={styles['stat']}>
-                  <strong>0</strong>
+                  <strong>{estadisticas.conexiones}</strong>
                   <span>Conexiones</span>
                 </div>
                 <div className={styles['stat']}>
@@ -165,8 +274,30 @@ const UserProfile = () => {
                   <button 
                     className={`${styles['follow-btn']} ${isFollowing ? styles.following : ''}`}
                     onClick={handleFollow}
+                    onMouseEnter={() => setHoveredButton(true)}
+                    onMouseLeave={() => setHoveredButton(false)}
+                    disabled={loadingConnection}
                   >
-                    {isFollowing ? 'Siguiendo' : 'Conectar'}
+                    {loadingConnection ? (
+                      <div className="loading-spinner-small"></div>
+                    ) : isFollowing ? (
+                      hoveredButton ? (
+                        <>
+                          <UserX size={18} />
+                          Desconectar
+                        </>
+                      ) : (
+                        <>
+                          <UserCheck size={18} />
+                          Conectado
+                        </>
+                      )
+                    ) : (
+                      <>
+                        <UserPlus size={18} />
+                        Conectar
+                      </>
+                    )}
                   </button>
                   <button className={styles['message-btn']}>
                     Mensaje

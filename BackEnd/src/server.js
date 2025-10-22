@@ -15,6 +15,7 @@ import likesRouter from "./routes/likes.js";
 import comentariosRouter from "./routes/comentarios.js";
 import desafiosRouter from "./routes/desafios.js";
 import cursosRouter from "./routes/cursos.js";
+import conexionesRouter from "./routes/conexiones.js";
 
 // Configuración
 dotenv.config();
@@ -70,6 +71,7 @@ app.use("/ofertas", ofertasRouter);
 app.use("/postulaciones", postulacionesRouter);
 app.use("/desafios", desafiosRouter);
 app.use("/cursos", cursosRouter);
+app.use("/conexiones", conexionesRouter);
 
 // -------------------- START SERVER --------------------
 const PORT = process.env.PORT || 4000;

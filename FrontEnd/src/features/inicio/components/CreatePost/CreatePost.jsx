@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useAuth } from '../../../../context/AuthContext';
+import { Camera, BarChart3, Calendar } from 'lucide-react';
 import styles from './CreatePost.module.css';
 // import './CreatePost.css'; // backup preserved as CreatePost.css (commented)
 
@@ -93,17 +94,17 @@ const CreatePost = ({ onPost }) => {
                   onChange={handleImageUpload}
                   style={{ display: 'none' }}
                 />
-                <span className={styles['upload-icon']}>📷</span>
+                <Camera size={20} className={styles['upload-icon']} />
                 <span>Foto</span>
               </label>
               
               <button type="button" className={styles['poll-btn']} disabled>
-                <span>📊</span>
+                <BarChart3 size={20} />
                 <span>Encuesta</span>
               </button>
               
               <button type="button" className={styles['event-btn']} disabled>
-                <span>📅</span>
+                <Calendar size={20} />
                 <span>Evento</span>
               </button>
             </div>

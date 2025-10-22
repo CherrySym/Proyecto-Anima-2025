@@ -73,17 +73,27 @@ export const createUser = async (req, res) => {
 export const getUsers = async (req, res) => {
   try {
     const { tipo, rol, search } = req.query;
+    const currentUserId = req.user?.id; // Usuario autenticado (opcional)
 
     // Construir filtros
-    const where = {};
+    const where = {
+      rol: 'USUARIO' // Excluir ADMIN por defecto
+    };
+    
     if (tipo) where.tipo = tipo;
-    if (rol) where.rol = rol;
+    if (rol && rol !== 'ADMIN') where.rol = rol; // No permitir filtrar por ADMIN
+    
     if (search) {
       where.OR = [
         { nombre: { contains: search, mode: 'insensitive' } },
         { email: { contains: search, mode: 'insensitive' } },
         { bio: { contains: search, mode: 'insensitive' } }
       ];
+    }
+
+    // Excluir el usuario actual de los resultados si está autenticado
+    if (currentUserId) {
+      where.id = { not: currentUserId };
     }
 
     const users = await prisma.usuario.findMany({
@@ -112,11 +122,22 @@ export const getUsers = async (req, res) => {
       orderBy: { createdAt: 'desc' }
     });
 
-    // Agregar edad calculada y alias
+    // Si hay usuario autenticado, verificar qué usuarios sigue
+    let conexionesMap = new Map();
+    if (currentUserId) {
+      const conexiones = await prisma.conexion.findMany({
+        where: { seguidorId: currentUserId },
+        select: { seguidoId: true }
+      });
+      conexionesMap = new Map(conexiones.map(c => [c.seguidoId, true]));
+    }
+
+    // Agregar edad calculada, alias y estado de conexión
     const usersConEdad = users.map(u => ({
       ...u,
       edad: calcularEdad(u.fechaNacimiento),
       name: u.nombre, // Alias para frontend
+      siguiendo: conexionesMap.has(u.id) || false,
       contadores: {
         posts: u._count.posts,
         postulaciones: u._count.postulaciones,

@@ -24,13 +24,9 @@ import CompanyProfile from '../features/empresas/pages/CompanyProfile/CompanyPro
 import CompanyProfilePublic from '../features/empresas/pages/CompanyProfilePublic/CompanyProfilePublic';
 
 // GUIDANCE
-import OrientacionVocacional from '../features/orientacion/pages/OrientacionVocacional/OrientacionVocacional';
 import OrientacionPersonalizada from '../features/orientacion/pages/OrientacionPersonalizada/OrientacionPersonalizada';
-import Consejos from '../features/orientacion/pages/Consejos/Consejos';
-import Entrevistas from '../features/orientacion/pages/Entrevistas/Entrevistas';
 
 // CAREER
-import CVyCarta from '../features/trayectoria/pages/CVyCarta/CVyCarta';
 import Curriculum from '../features/trayectoria/pages/Curriculum/Curriculum';
 
 // SUBSCRIPTION
@@ -59,9 +55,11 @@ import MisCursos from '../features/cursos/pages/MisCursos/MisCursos';
 import Red from '../features/social/pages/Red/Red';
 import Mensajes from '../features/social/pages/Mensajes/Mensajes';
 import Notificaciones from '../features/social/pages/Notificaciones/Notificaciones';
-import Busqueda from '../features/social/pages/Busqueda/Busqueda';
-import ExplorarUsuarios from '../features/social/pages/ExplorarUsuarios/ExplorarUsuarios';
+// import Busqueda from '../features/social/pages/Busqueda/Busqueda'; // REMOVIDO PARA MVP
 import Configuracion from '../features/social/pages/Configuracion/Configuracion';
+
+// RECURSOS
+import Recursos from '../features/recursos/Recursos';
 
 const AppRouter = () => {
   const { user, loading, error } = useAuth();
@@ -130,11 +128,7 @@ const AppRouter = () => {
       <Route path="/companias" element={<Companias />} />
       <Route path="/companias/:companyId" element={<CompanyProfilePublic />} />
       <Route path="/jovenes" element={<Jovenes />} />
-      <Route path="/orientacion-vocacional" element={<OrientacionVocacional />} />
       <Route path="/suscripciones" element={<Suscripciones />} />
-      <Route path="/consejos" element={<Consejos />} />
-      <Route path="/cv-y-carta" element={<CVyCarta />} />
-      <Route path="/entrevistas" element={<Entrevistas />} />
       <Route path="/contacto" element={<Contacto />} />
       <Route path="/curriculum" element={<Curriculum />} />
       <Route path="/pago" element={<Pago />} />
@@ -327,8 +321,8 @@ const AppRouter = () => {
         } 
       />
 
-      {/* Búsqueda funcional */}
-      <Route 
+      {/* Búsqueda funcional - REMOVIDO PARA MVP */}
+      {/* <Route 
         path="/buscar" 
         element={
           <PrivateRoute>
@@ -340,22 +334,7 @@ const AppRouter = () => {
             </div>
           </PrivateRoute>
         } 
-      />
-
-      {/* Explorar funcional */}
-      <Route 
-        path="/explorar/usuarios" 
-        element={
-          <PrivateRoute>
-            <div className="app">
-              <Header />
-              <main className="main-content">
-                <ExplorarUsuarios />
-              </main>
-            </div>
-          </PrivateRoute>
-        } 
-      />
+      /> */}
 
       {/* Configuración funcional */}
       <Route 
@@ -366,6 +345,21 @@ const AppRouter = () => {
               <Header />
               <main className="main-content">
                 <Configuracion />
+              </main>
+            </div>
+          </PrivateRoute>
+        } 
+      />
+
+      {/* Recursos para ti */}
+      <Route 
+        path="/recursos/:seccion?" 
+        element={
+          <PrivateRoute>
+            <div className="app">
+              <Header />
+              <main className="main-content">
+                <Recursos />
               </main>
             </div>
           </PrivateRoute>

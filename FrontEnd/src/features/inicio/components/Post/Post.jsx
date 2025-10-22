@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import * as postService from '../../services/postService';
+import { Building2, Heart, MessageCircle, Repeat2, Send } from 'lucide-react';
 import styles from './Post.module.css';
 // import './Post.css'; // backup preserved as Post.css (commented)
 
@@ -9,6 +10,12 @@ const Post = ({ post, onLike }) => {
   const [newComment, setNewComment] = useState('');
   const [comments, setComments] = useState([]);
   const [loadingComments, setLoadingComments] = useState(false);
+
+  // Validación: si no hay post o no hay user, no renderizar
+  if (!post || !post.user) {
+    console.warn('Post component: post or post.user is undefined', post);
+    return null;
+  }
 
   // Cargar comentarios cuando se expande la sección
   useEffect(() => {
@@ -121,15 +128,19 @@ const Post = ({ post, onLike }) => {
   return (
     <article className={styles['post']}>
       <div className={styles['post-header']}>
-        <Link to={post.user.isCompany ? `/empresa/${post.user.id}` : `/perfil/${post.user.id}`} className={styles['user-info']}>
+        <Link to={post.user?.isCompany ? `/empresa/${post.user.id}` : `/perfil/${post.user?.id || ''}`} className={styles['user-info']}>
           <div className={styles['user-avatar']}>
-            <img src={post.user.avatar} alt={post.user.name} />
-            {post.user.isCompany && <div className={styles['company-badge']}>🏢</div>}
+            <img src={post.user?.avatar || '/img/usuario.png'} alt={post.user?.name || 'Usuario'} />
+            {post.user?.isCompany && (
+              <div className={styles['company-badge']}>
+                <Building2 size={14} />
+              </div>
+            )}
           </div>
           <div className={styles['user-details']}>
-            <h4 className={styles['user-name']}>{post.user.name}</h4>
+            <h4 className={styles['user-name']}>{post.user?.name || 'Usuario'}</h4>
             <p className={styles['user-subtitle']}>
-              {post.user.profession}
+              {post.user?.profession || 'Miembro de JobPath'}
             </p>
             <span className={styles['post-time']}>{formatTimestamp(post.timestamp)}</span>
           </div>
@@ -154,7 +165,7 @@ const Post = ({ post, onLike }) => {
         <span className={styles['likes-count']}>
           {post.likes > 0 && (
             <>
-              <span className={styles['like-icon']}>❤️</span>
+              <Heart size={16} className={styles['like-icon']} fill="#e74c3c" color="#e74c3c" />
               {post.likes} {post.likes === 1 ? 'like' : 'likes'}
             </>
           )}
@@ -169,9 +180,11 @@ const Post = ({ post, onLike }) => {
           className={`${styles['action-btn']} ${styles['like-btn']} ${post.isLiked ? styles['liked'] : ''}`}
           onClick={() => onLike(post.id)}
         >
-          <span className={styles['action-icon']}>
-            {post.isLiked ? '❤️' : '🤍'}
-          </span>
+          <Heart 
+            size={20} 
+            fill={post.isLiked ? "currentColor" : "none"}
+            className={styles['action-icon']}
+          />
           <span>Me gusta</span>
         </button>
         
@@ -179,12 +192,12 @@ const Post = ({ post, onLike }) => {
           className={`${styles['action-btn']} ${styles['comment-btn']}`}
           onClick={() => setShowComments(!showComments)}
         >
-          <span className={styles['action-icon']}>💬</span>
+          <MessageCircle size={20} className={styles['action-icon']} />
           <span>Comentar</span>
         </button>
         
         <button className={`${styles['action-btn']} ${styles['share-btn']}`}>
-          <span className={styles['action-icon']}>🔄</span>
+          <Repeat2 size={20} className={styles['action-icon']} />
           <span>Compartir</span>
         </button>
       </div>
@@ -239,7 +252,11 @@ const Post = ({ post, onLike }) => {
                       <div className={styles['comment-bubble']}>
                         <strong className={styles['comment-author']}>
                           {comment.user.name}
-                          {comment.user.isCompany && <span className={styles['company-tag']}>🏢</span>}
+                          {comment.user.isCompany && (
+                            <span className={styles['company-tag']}>
+                              <Building2 size={12} />
+                            </span>
+                          )}
                         </strong>
                         <p className={styles['comment-text']}>{comment.content}</p>
                       </div>

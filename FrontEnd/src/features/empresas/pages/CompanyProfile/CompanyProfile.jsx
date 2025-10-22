@@ -1,18 +1,43 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
+import { useAuth } from '../../../../context/AuthContext';
 import { useMinLoadingTime } from '../../../../hooks/useMinLoadingTime';
 import Post from '../../../inicio/components/Post/Post';
-import { MapPin } from 'lucide-react';
+import * as empresaService from '../../services/empresaService';
+import { MapPin, UserPlus, UserCheck, UserX, Building2 } from 'lucide-react';
+import Toast from '../../../../components/common/Toast/Toast';
 import styles from './CompanyProfile.module.css';
 // import './CompanyProfile.css'; // comentado: backup
 
+// Función auxiliar para formatear timestamps
+const formatTimestamp = (dateString) => {
+  const date = new Date(dateString);
+  const now = new Date();
+  const diffMs = now - date;
+  const diffMins = Math.floor(diffMs / 60000);
+  const diffHours = Math.floor(diffMs / 3600000);
+  const diffDays = Math.floor(diffMs / 86400000);
+
+  if (diffMins < 1) return 'Ahora';
+  if (diffMins < 60) return `${diffMins} min`;
+  if (diffHours < 24) return `${diffHours}h`;
+  if (diffDays < 7) return `${diffDays}d`;
+  
+  return date.toLocaleDateString('es-ES', { day: 'numeric', month: 'short' });
+};
+
 const CompanyProfile = () => {
   const { companyId } = useParams();
+  const navigate = useNavigate();
+  const { user: currentUser } = useAuth();
   const [company, setCompany] = useState(null);
   const [posts, setPosts] = useState([]);
   const { loading, withMinLoadingTime } = useMinLoadingTime(800);
   const [isFollowing, setIsFollowing] = useState(false);
   const [activeTab, setActiveTab] = useState('publicaciones');
+  const [loadingFollow, setLoadingFollow] = useState(false);
+  const [hoveredButton, setHoveredButton] = useState(false);
+  const [toast, setToast] = useState({ show: false, message: '', type: 'success' });
 
   // Mock data para la empresa
   const mockCompany = {
@@ -140,18 +165,114 @@ const CompanyProfile = () => {
 
   useEffect(() => {
     const loadCompanyData = async () => {
+      if (!companyId) return;
+      
       await withMinLoadingTime(async () => {
-        setCompany(mockCompany);
-        setPosts(mockCompanyPosts);
-        setIsFollowing(false);
+        try {
+          // Cargar datos reales de la empresa desde la API
+          const empresaData = await empresaService.getEmpresaById(companyId);
+          
+          setCompany({
+            id: empresaData.id,
+            name: empresaData.nombre || empresaData.name,
+            sector: empresaData.sector,
+            logo: empresaData.logo,
+            coverImage: empresaData.coverImage || '/img/img1.png',
+            location: empresaData.ubicacion,
+            website: empresaData.website || '#',
+            description: empresaData.descripcion,
+            founded: empresaData.founded || 'N/A',
+            employees: empresaData.employees || 'N/A',
+            values: empresaData.values || [],
+            benefits: empresaData.benefits || [],
+            stats: {
+              followers: empresaData.contadores?.seguidores || 0,
+              posts: empresaData.contadores?.posts || 0,
+              openPositions: empresaData.contadores?.ofertas || 0
+            },
+            // Las ofertas y desafíos vienen del backend
+            openPositions: empresaData.ofertas || [],
+            challenges: empresaData.desafios || []
+          });
+          
+          setIsFollowing(empresaData.siguiendo || false);
+          
+          // Cargar posts reales de la empresa desde el backend
+          const postsFormateados = (empresaData.posts || []).map(post => ({
+            id: post.id,
+            user: {
+              id: empresaData.id,
+              name: empresaData.nombre,
+              avatar: empresaData.logo,
+              isCompany: true,
+              sector: empresaData.sector
+            },
+            content: post.contenido,
+            image: post.imagenUrl, // Corregido: era imagenUrl, no imagen
+            timestamp: formatTimestamp(post.createdAt),
+            likes: post.likesCount || 0,
+            comments: post.commentsCount || 0,
+            isLiked: false // TODO: verificar si el usuario dio like
+          }));
+          setPosts(postsFormateados);
+        } catch (err) {
+          console.error('Error cargando empresa:', err);
+          // NO usar fallback - mostrar error al usuario
+          setCompany(null);
+          setPosts([]);
+          setIsFollowing(false);
+        }
       });
     };
     
     loadCompanyData();
   }, [companyId]);
 
-  const handleFollow = () => {
-    setIsFollowing(!isFollowing);
+  const handleFollow = async () => {
+    if (!company?.id || loadingFollow) return;
+    
+    try {
+      setLoadingFollow(true);
+      
+      if (isFollowing) {
+        await empresaService.dejarDeSeguirEmpresa(company.id);
+        setIsFollowing(false);
+        // Actualizar contador
+        setCompany(prev => ({
+          ...prev,
+          stats: {
+            ...prev.stats,
+            followers: Math.max(0, prev.stats.followers - 1)
+          }
+        }));
+        showToast('Dejaste de seguir a esta empresa', 'info');
+      } else {
+        await empresaService.seguirEmpresa(company.id);
+        setIsFollowing(true);
+        // Actualizar contador
+        setCompany(prev => ({
+          ...prev,
+          stats: {
+            ...prev.stats,
+            followers: prev.stats.followers + 1
+          }
+        }));
+        showToast('Ahora sigues a esta empresa', 'success');
+      }
+    } catch (err) {
+      console.error('Error siguiendo empresa:', err);
+      showToast('Error al procesar la acción', 'error');
+    } finally {
+      setLoadingFollow(false);
+    }
+  };
+
+  const showToast = (message, type = 'success') => {
+    setToast({ show: true, message, type });
+  };
+
+  const closeToast = () => {
+    setToast({ show: false, message: '', type: 'success' });
   };
 
   const handleLike = (postId) => {
@@ -181,8 +302,23 @@ const CompanyProfile = () => {
     return (
       <div className={styles['company-profile-page']}>
         <div className={styles['error-container']}>
+          <Building2 size={64} style={{ color: '#999', marginBottom: '20px' }} />
           <h2>Empresa no encontrada</h2>
-          <p>La empresa que buscas no existe o ha sido eliminada.</p>
+          <p>La empresa con ID {companyId} no existe en la base de datos.</p>
+          <button 
+            onClick={() => navigate('/red?tab=empresas')}
+            style={{
+              marginTop: '20px',
+              padding: '10px 20px',
+              background: '#4f4fcf',
+              color: 'white',
+              border: 'none',
+              borderRadius: '8px',
+              cursor: 'pointer'
+            }}
+          >
+            Ver todas las empresas
+          </button>
         </div>
       </div>
     );
@@ -190,6 +326,15 @@ const CompanyProfile = () => {
 
   return (
     <div className={styles['company-profile-page']}>
+      {toast.show && (
+        <Toast 
+          message={toast.message}
+          type={toast.type}
+          show={toast.show}
+          onClose={closeToast}
+        />
+      )}
+      
       <div className={styles['company-profile-container']}>
         {/* Header de la empresa */}
         <div className={styles['company-header']}>
@@ -220,7 +365,7 @@ const CompanyProfile = () => {
                 </div>
                 <div className={styles['stat']}>
                   <strong>{company.stats.openPositions}</strong>
-                  <span>Vacantes</span>
+                  <span>Ofertas</span>
                 </div>
               </div>
             </div>
@@ -229,8 +374,30 @@ const CompanyProfile = () => {
               <button 
                 className={`${styles['follow-company-btn']} ${isFollowing ? styles['following'] : ''}`}
                 onClick={handleFollow}
+                onMouseEnter={() => setHoveredButton(true)}
+                onMouseLeave={() => setHoveredButton(false)}
+                disabled={loadingFollow}
               >
-                {isFollowing ? 'Siguiendo' : 'Seguir'}
+                {loadingFollow ? (
+                  <div className="loading-spinner-small"></div>
+                ) : isFollowing ? (
+                  hoveredButton ? (
+                    <>
+                      <UserX size={18} />
+                      Dejar de seguir
+                    </>
+                  ) : (
+                    <>
+                      <UserCheck size={18} />
+                      Siguiendo
+                    </>
+                  )
+                ) : (
+                  <>
+                    <UserPlus size={18} />
+                    Seguir
+                  </>
+                )}
               </button>
               <a 
                 href={company.website} 
@@ -291,44 +458,62 @@ const CompanyProfile = () => {
           {activeTab === 'empleos' && (
             <div className={styles['jobs-tab']}>
               <h3>Posiciones abiertas</h3>
-              <div className={styles['jobs-grid']}>
-                {company.openPositions.map(job => (
-                  <div key={job.id} className={styles['job-card']}>
-                    <h4>{job.title}</h4>
-                    <p className={styles['job-department']}>{job.department}</p>
-                    <p className={styles['job-location']}><MapPin size={14} /> {job.location}</p>
-                    <div className={styles['job-tags']}>
-                      <span className={styles['job-type']}>{job.type}</span>
-                      <span className={styles['job-experience']}>{job.experience}</span>
+              {company.openPositions.length === 0 ? (
+                <p className={styles['no-data']}>No hay posiciones abiertas en este momento.</p>
+              ) : (
+                <div className={styles['jobs-grid']}>
+                  {company.openPositions.map(job => (
+                    <div key={job.id} className={styles['job-card']}>
+                      <h4>{job.titulo}</h4>
+                      <p className={styles['job-department']}>{job.ubicacion}</p>
+                      <p className={styles['job-location']}><MapPin size={14} /> {job.tipoContrato}</p>
+                      <div className={styles['job-tags']}>
+                        <span className={styles['job-type']}>{job.modalidad}</span>
+                        <span className={styles['job-experience']}>{job.postulacionesCount || 0} postulaciones</span>
+                      </div>
+                      <button 
+                        className={styles['apply-btn']}
+                        onClick={() => navigate(`/oferta/${job.id}`)}
+                      >
+                        Ver oferta
+                      </button>
                     </div>
-                    <button className={styles['apply-btn']}>Ver detalles</button>
-                  </div>
-                ))}
-              </div>
+                  ))}
+                </div>
+              )}
             </div>
           )}
 
           {activeTab === 'desafios' && (
             <div className={styles['challenges-tab']}>
               <h3>Desafíos activos</h3>
-              <div className={styles['challenges-grid']}>
-                {company.challenges.map(challenge => (
-                  <div key={challenge.id} className={styles['challenge-card']}>
-                    <h4>{challenge.title}</h4>
-                    <p className={styles['challenge-description']}>{challenge.description}</p>
-                    <div className={styles['challenge-info']}>
-                      <div className={styles['challenge-prize']}>
-                        <strong>Premio: {challenge.prize}</strong>
+              {company.challenges.length === 0 ? (
+                <p className={styles['no-data']}>No hay desafíos activos en este momento.</p>
+              ) : (
+                <div className={styles['challenges-grid']}>
+                  {company.challenges.map(challenge => (
+                    <div key={challenge.id} className={styles['challenge-card']}>
+                      <h4>{challenge.titulo}</h4>
+                      <p className={styles['challenge-description']}>{challenge.descripcion}</p>
+                      <div className={styles['challenge-info']}>
+                        <div className={styles['challenge-prize']}>
+                          <strong>Recompensa: {challenge.recompensa || 0} puntos</strong>
+                        </div>
+                        <div className={styles['challenge-stats']}>
+                          <span>📊 Dificultad: {challenge.dificultad || 'Media'}</span>
+                          <span>👥 {challenge.participantesCount || 0} participantes</span>
+                        </div>
                       </div>
-                      <div className={styles['challenge-stats']}>
-                        <span>⏰ {challenge.deadline}</span>
-                        <span>👥 {challenge.participants} participantes</span>
-                      </div>
+                      <button 
+                        className={styles['participate-btn']}
+                        onClick={() => navigate(`/desafio/${challenge.id}`)}
+                      >
+                        Ver desafío
+                      </button>
                     </div>
-                    <button className={styles['participate-btn']}>Participar</button>
-                  </div>
-                ))}
-              </div>
+                  ))}
+                </div>
+              )}
             </div>
           )}
 

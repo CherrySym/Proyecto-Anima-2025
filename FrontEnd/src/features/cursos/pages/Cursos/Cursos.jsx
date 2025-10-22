@@ -219,13 +219,22 @@ const Cursos = () => {
             cursosFiltrados.map(curso => (
               <div key={curso.id} className={styles['curso-card']}>
                 <div className={styles['curso-image']}>
-                  <img 
-                    src={curso.imagen || '/img/default-course.jpg'} 
-                    alt={curso.titulo}
-                    onError={(e) => {
-                      e.target.src = '/img/default-course.jpg';
-                    }}
-                  />
+                  {curso.imagen ? (
+                    <img 
+                      src={curso.imagen} 
+                      alt={curso.titulo}
+                      onError={(e) => {
+                        e.target.style.display = 'none';
+                        e.target.nextElementSibling.style.display = 'flex';
+                      }}
+                    />
+                  ) : null}
+                  <div 
+                    className={styles['curso-image-placeholder']}
+                    style={{ display: curso.imagen ? 'none' : 'flex' }}
+                  >
+                    <BookOpen size={48} />
+                  </div>
                   <div className={styles['curso-badges']}>
                     {(!curso.costo || curso.costo === 0) && (
                       <span className={`${styles['badge']} ${styles['gratuito']}`}>GRATIS</span>
