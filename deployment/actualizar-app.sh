@@ -86,16 +86,8 @@ if [ -d "FrontEnd" ]; then
         log_info "Construyendo aplicación React (build limpio)..."
         npm run build --silent
         
-        log_info "Copiando archivos build a directorio de nginx..."
-        # Crear directorio si no existe
-        sudo mkdir -p /var/www/jobpath/frontend
-        # Copiar todos los archivos del build
-        sudo cp -r dist/* /var/www/jobpath/frontend/
-        # Dar permisos correctos
-        sudo chown -R www-data:www-data /var/www/jobpath
-        sudo chmod -R 755 /var/www/jobpath
-        
-        log_success "Frontend construido y desplegado exitosamente"
+        log_success "Frontend construido exitosamente"
+        log_info "Nginx sirve directamente desde: FrontEnd/dist/"
         cd ..
     else
         log_warning "No se encontró package.json en FrontEnd"
@@ -145,6 +137,15 @@ if [ -d "/var/cache/nginx" ]; then
     sudo rm -rf /var/cache/nginx/*
 fi
 
+log_info "Verificando sintaxis de configuración de Nginx..."
+if sudo nginx -t >/dev/null 2>&1; then
+    log_success "Configuración de Nginx OK"
+else
+    log_error "⚠️  Error en configuración de Nginx"
+    sudo nginx -t
+    exit 1
+fi
+
 log_info "Reiniciando servicio de Nginx..."
 sudo systemctl restart nginx
 
@@ -162,5 +163,8 @@ echo "======================================"
 log_success "¡Actualización completada con éxito!"
 echo "======================================"
 echo ""
-log_info "💡 Recomendación: Abre el navegador en modo incógnito"
-log_info "   o presiona Ctrl+Shift+R para forzar recarga"
+log_info "� Ubicación del build: $APP_DIR/FrontEnd/dist/"
+log_info "💡 IMPORTANTE: Limpia el caché del navegador"
+log_info "   • Modo incógnito (Ctrl+Shift+N)"
+log_info "   • O recarga forzada (Ctrl+Shift+R / Cmd+Shift+R)"
+echo ""
