@@ -62,7 +62,7 @@ async function main() {
       rol: 'USUARIO',
       avatar: '/img/usuario.png',
       bio: 'Desarrollador frontend junior. Conocimientos en React, JavaScript y diseño web. ¡Listo para aprender!',
-      ubicacion: 'Buenos Aires, Argentina',
+      ubicacion: 'Montevideo, Uruguay',
       puntos: 85
     }
   });
@@ -77,7 +77,7 @@ async function main() {
       rol: 'USUARIO',
       avatar: '/img/usuario.png',
       bio: 'Estudiante de secundaria interesada en diseño gráfico y redes sociales 🎨',
-      ubicacion: 'Santiago, Chile',
+      ubicacion: 'Maldonado, Uruguay',
       puntos: 45
     }
   });
@@ -122,7 +122,7 @@ async function main() {
       descripcion: 'Líder en e-commerce y fintech en América Latina. Democratizamos el comercio y los servicios financieros.',
       logo: '/img/MerL.png',
       sector: 'E-commerce / Fintech',
-      ubicacion: 'Buenos Aires, Argentina'
+      ubicacion: 'Montevideo, Uruguay'
     }
   });
 
@@ -149,7 +149,7 @@ async function main() {
       titulo: 'Desarrollador Frontend Junior',
       descripcion: 'Buscamos un desarrollador frontend junior con ganas de aprender y crecer en un ambiente dinámico. Trabajarás con tecnologías modernas y equipos ágiles.\n\n**Responsabilidades:**\n• Desarrollar interfaces de usuario atractivas y funcionales\n• Colaborar con diseñadores UX/UI para implementar mockups\n• Escribir código limpio, mantenible y bien documentado\n• Participar en revisiones de código y reuniones de equipo\n• Aprender nuevas tecnologías y metodologías de desarrollo\n• Optimizar el rendimiento de aplicaciones web\n• Implementar pruebas unitarias y de integración\n• Mantener documentación técnica actualizada\n• Trabajar en equipo usando metodologías ágiles\n• Resolver bugs y problemas técnicos\n\n**Requisitos Técnicos:**\n• Experiencia mínima de 1 año en desarrollo frontend\n• Dominio de HTML5, CSS3 y JavaScript ES6+\n• Conocimiento sólido de React y sus ecosistemas\n• Familiaridad con herramientas de build (Webpack, Vite)\n• Experiencia con sistemas de control de versiones (Git)\n• Conocimientos de responsive design y mobile-first\n• Comprensión de principios de accesibilidad web\n• Experiencia con APIs RESTful\n\n**Beneficios:**\n• Horarios flexibles y trabajo remoto opcional\n• Capacitaciones y cursos pagos por la empresa\n• Ambiente de trabajo joven y dinámico\n• Posibilidades de crecimiento profesional\n• Snacks y almuerzo en la oficina\n• Seguro médico privado\n• Días de vacaciones adicionales\n• Budget para equipamiento y home office\n• Eventos y actividades de team building\n• Acceso a conferencias y meetups tecnológicos\n\n**Proceso de Selección:**\n• Entrevista inicial con RRHH (30 minutos)\n• Prueba técnica para resolver en casa (2-3 horas)\n• Entrevista técnica con el equipo de desarrollo (1 hora)\n• Entrevista final con el CTO (30 minutos)\n• Propuesta y onboarding',
       ubicacion: 'Montevideo, Uruguay',
-      salario: '$40,000 - $60,000 UYU',
+      salario: '$50,000 - $70,000 UYU',
       tipo: 'Tiempo completo',
       area: 'tecnologia',
       modalidad: 'Híbrido',
@@ -164,8 +164,8 @@ async function main() {
       empresaId: empresa2.id,
       titulo: 'Analista de Marketing Digital Junior',
       descripcion: 'Únete a nuestro equipo de marketing digital para ayudarnos a crear campañas innovadoras en redes sociales y e-commerce.\n\n**Responsabilidades:**\n• Crear y gestionar contenido para redes sociales (Instagram, Facebook, TikTok, LinkedIn)\n• Diseñar estrategias de marketing digital alineadas con objetivos comerciales\n• Analizar métricas y KPIs de campañas digitales\n• Colaborar con el equipo de diseño para crear piezas gráficas\n• Gestionar presupuestos de publicidad digital\n• Realizar investigación de mercado y análisis de competencia\n• Optimizar campañas de email marketing\n• Coordinar con influencers y partners digitales\n• Crear reportes mensuales de performance\n• Mantenerse actualizado con tendencias de marketing digital\n\n**Requisitos:**\n• Estudiante o recién graduado en Marketing, Comunicación o afines\n• Conocimiento profundo de redes sociales y sus algoritmos\n• Google Analytics y herramientas de análisis web\n• Experiencia con Meta Business Suite y Google Ads (deseable)\n• Habilidades de copywriting y storytelling\n• Conocimientos básicos de diseño (Canva, Adobe Creative Suite)\n• Capacidad analítica y orientación a resultados\n• Creatividad y pensamiento innovador\n• Excelente comunicación escrita y verbal\n\n**Beneficios:**\n• Trabajo 100% remoto\n• Horarios flexibles\n• Presupuesto para cursos y certificaciones\n• Acceso a herramientas premium de marketing\n• Días libres por cumpleaños\n• Ambiente colaborativo y creativo\n• Oportunidades de crecimiento rápido\n• Bonos por performance',
-      ubicacion: 'Buenos Aires, Argentina',
-      salario: '$80,000 - $120,000 ARS',
+      ubicacion: 'Montevideo, Uruguay',
+      salario: '$45,000 - $65,000 UYU',
       tipo: 'Medio tiempo',
       area: 'marketing',
       modalidad: 'Remoto',
@@ -181,7 +181,7 @@ async function main() {
       titulo: 'QA Tester - Programa Trainee',
       descripcion: 'Programa trainee de 3 meses para formar QA testers. No se requiere experiencia previa, solo muchas ganas de aprender.',
       ubicacion: 'Montevideo, Uruguay',
-      salario: '$35,000 - $45,000 UYU',
+      salario: '$40,000 - $50,000 UYU',
       tipo: 'Trainee',
       area: 'tecnologia',
       modalidad: 'Presencial',
@@ -212,8 +212,8 @@ async function main() {
       empresaId: empresa2.id,
       titulo: 'Desarrollador Backend Node.js',
       descripcion: 'Desarrollador backend para trabajar en microservicios y APIs REST. Experiencia mínima de 1 año.',
-      ubicacion: 'Buenos Aires, Argentina',
-      salario: '$150,000 - $200,000 ARS',
+      ubicacion: 'Montevideo, Uruguay',
+      salario: '$60,000 - $80,000 UYU',
       tipo: 'Tiempo completo',
       area: 'tecnologia',
       modalidad: 'Remoto',
@@ -309,7 +309,7 @@ async function main() {
     data: {
       empresaId: empresa3.id,
       contenido: 'En Conaprole valoramos el talento joven uruguayo. Si eres proactivo y quieres crecer en una empresa líder, revisa nuestras oportunidades.',
-      imagenUrl: '/img/ConaproleSh.png'
+      imagenUrl: null
     }
   });
 
