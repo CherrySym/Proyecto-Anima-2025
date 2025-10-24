@@ -11,7 +11,13 @@ echo "======================================"
 echo ""
 
 # Directorio de la aplicación
-APP_DIR="$HOME/jobpath"
+# Preferir la instalación en /opt/Proyecto-Anima-2025 si existe (ruta de producción)
+PREFERRED_DIR="/opt/Proyecto-Anima-2025"
+if [ -d "$PREFERRED_DIR" ]; then
+    APP_DIR="$PREFERRED_DIR"
+else
+    APP_DIR="$HOME/jobpath"
+fi
 
 # Funciones para mensajes con colores
 log_info() {
@@ -34,9 +40,20 @@ log_error() {
 if [ ! -d "$APP_DIR" ]; then
     log_error "Directorio $APP_DIR no encontrado"
     log_info "Clonando repositorio..."
-    cd "$HOME"
-    git clone https://github.com/CherrySym/Proyecto-Anima-2025.git jobpath
-    cd jobpath
+    # Clonar en la ruta preferida si está disponible, sino en $HOME/jobpath
+    if [ -d "$PREFERRED_DIR" ] || [ "$(dirname \"$PREFERRED_DIR\")" = "/opt" ]; then
+        # Asegurar que /opt existe y se pueda escribir (necesita sudo si no)
+        if [ ! -d "$PREFERRED_DIR" ]; then
+            sudo mkdir -p "$PREFERRED_DIR"
+            sudo chown "$USER":"$USER" "$PREFERRED_DIR"
+        fi
+        git clone https://github.com/CherrySym/Proyecto-Anima-2025.git "$PREFERRED_DIR"
+        cd "$PREFERRED_DIR"
+    else
+        cd "$HOME"
+        git clone https://github.com/CherrySym/Proyecto-Anima-2025.git jobpath
+        cd jobpath
+    fi
 else
     cd "$APP_DIR"
 fi
