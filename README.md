@@ -164,8 +164,3 @@ Funcionalidades planificadas:
 - Panel de analytics para empresas
 - Sistema de búsqueda avanzada
 
-## Contribución
-
-Este proyecto fue desarrollado como parte del programa Anima 2025.
-
-Última actualización: Octubre 2025
