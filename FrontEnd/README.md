@@ -1,163 +1,323 @@
-# JobPath Frontend 🚀
+# Frontend - JobPath# JobPath Frontend 🚀
 
-SPA moderna con React 18, Vite, React Router 6 y CSS Modules.  
+
+
+Aplicación SPA desarrollada con React 18, Vite, React Router 6 y CSS Modules.SPA moderna con React 18, Vite, React Router 6 y CSS Modules.  
+
 **Stack:** React · Vite · Router 6 · Context API · Axios · CSS Modules · Lucide Icons
+
+## Estructura del Proyecto
 
 ## 📁 Estructura
 
 ```
-src/
-├── components/
-│   ├── layout/          # Header, Sidebar, SimpleNavbar
-│   ├── common/          # Componentes reutilizables (Toast, Loading)
-│   └── features/        # Específicos por dominio
-├── features/            # Organizado por módulo
-│   ├── autenticacion/   # Login, Register
-│   ├── inicio/          # Feed, Perfil
-│   ├── empleos/         # Ofertas, Postulaciones
-│   ├── desafios/        # Challenges
-│   ├── cursos/          # Courses
-│   ├── empresas/        # Companies
-│   ├── orientacion/     # Guidance
-│   ├── social/          # Red, Mensajes, Notificaciones
-│   └── informacion/     # Landing, About, Home
-├── context/             # AuthContext, LanguageContext
-├── services/            # API calls (axios)
-├── routes/              # AppRouter
-└── hooks/               # useMinLoadingTime, etc.
+
+src/```
+
+├── components/src/
+
+│   ├── layout/          # Header, Sidebar, navegación├── components/
+
+│   ├── common/          # Componentes reutilizables (Toast, Loading)│   ├── layout/          # Header, Sidebar, SimpleNavbar
+
+│   └── features/        # Componentes específicos por módulo│   ├── common/          # Componentes reutilizables (Toast, Loading)
+
+├── features/            # Organizado por funcionalidad│   └── features/        # Específicos por dominio
+
+│   ├── autenticacion/   # Login, Register├── features/            # Organizado por módulo
+
+│   ├── inicio/          # Dashboard, Perfil│   ├── autenticacion/   # Login, Register
+
+│   ├── empleos/         # Ofertas, Postulaciones│   ├── inicio/          # Feed, Perfil
+
+│   ├── desafios/        # Desafíos empresariales│   ├── empleos/         # Ofertas, Postulaciones
+
+│   ├── cursos/          # Cursos externos│   ├── desafios/        # Challenges
+
+│   ├── empresas/        # Perfiles de empresas│   ├── cursos/          # Courses
+
+│   ├── recursos/        # Recursos educativos│   ├── empresas/        # Companies
+
+│   ├── social/          # Red, Posts, Mensajes│   ├── orientacion/     # Guidance
+
+│   └── informacion/     # Landing, About, Home│   ├── social/          # Red, Mensajes, Notificaciones
+
+├── context/             # AuthContext, manejo de estado global│   └── informacion/     # Landing, About, Home
+
+├── services/            # Llamadas a la API con Axios├── context/             # AuthContext, LanguageContext
+
+├── routes/              # Configuración de rutas (AppRouter)├── services/            # API calls (axios)
+
+└── hooks/               # Hooks personalizados├── routes/              # AppRouter
+
+```└── hooks/               # useMinLoadingTime, etc.
+
 ```
+
+## Instalación
 
 ---
 
-## �🔄 Cambios Principales de la Migración
+```bash
+
+# Instalar dependencias## �🔄 Cambios Principales de la Migración
+
+npm install
 
 ### 1. **Navegación**
-- **Antes:** Enlaces HTML directos (`<a href="...">`)
-- **Ahora:** React Router con `<Link>` y navegación programática
+
+# Ejecutar en desarrollo- **Antes:** Enlaces HTML directos (`<a href="...">`)
+
+npm run dev- **Ahora:** React Router con `<Link>` y navegación programática
+
 ```jsx
-// Antes (HTML)
-<a href="home/home.html">PRINCIPAL</a>
 
-// Ahora (React)
-<Link to="/home">PRINCIPAL</Link>
-```
+# Construir para producción// Antes (HTML)
 
-### 2. **Eventos y Lógica**
+npm run build<a href="home/home.html">PRINCIPAL</a>
+
+
+
+# Vista previa del build// Ahora (React)
+
+npm run preview<Link to="/home">PRINCIPAL</Link>
+
+``````
+
+
+
+La aplicación estará disponible en `http://localhost:5173`### 2. **Eventos y Lógica**
+
 - **Antes:** `document.getElementById()` y `addEventListener`
-- **Ahora:** Hooks de React (`useState`, `useEffect`, `useRef`)
-```jsx
-// Antes (JS vanilla)
-document.getElementById('loginForm').addEventListener('submit', ...)
 
-// Ahora (React)
-const handleSubmit = (e) => { e.preventDefault(); ... }
+## Principales Características- **Ahora:** Hooks de React (`useState`, `useEffect`, `useRef`)
+
+```jsx
+
+### Autenticación// Antes (JS vanilla)
+
+Sistema de autenticación con Context API y localStorage:document.getElementById('loginForm').addEventListener('submit', ...)
+
+```jsx
+
+// Usar en cualquier componente// Ahora (React)
+
+const { user, login, logout } = useAuth();const handleSubmit = (e) => { e.preventDefault(); ... }
+
 <form onSubmit={handleSubmit}>
-```
+
+// Iniciar sesión```
+
+await login(credentials);
 
 ### 3. **Estado Global**
-- **Antes:** `localStorage` con código repetido
-- **Ahora:** Context API centralizado
-```jsx
+
+// Cerrar sesión- **Antes:** `localStorage` con código repetido
+
+logout();- **Ahora:** Context API centralizado
+
+``````jsx
+
 // AuthContext provee: user, login, logout, updateProfile
-const { user, login } = useAuth();
-```
 
-### 4. **Gestión de Archivos**
-- **Antes:** Manipulación directa del DOM para imágenes
-- **Ahora:** `useRef` y estado de React
-```jsx
+### Rutas Protegidasconst { user, login } = useAuth();
+
+Las rutas requieren autenticación según configuración en `AppRouter.jsx````
+
+
+
+### Gestión de Estado### 4. **Gestión de Archivos**
+
+- Context API para autenticación y usuario global- **Antes:** Manipulación directa del DOM para imágenes
+
+- useState y useEffect para estado local de componentes- **Ahora:** `useRef` y estado de React
+
+- Custom hooks para lógica reutilizable```jsx
+
 const fileInputRef = useRef(null);
-const [publications, setPublications] = useState([]);
-```
 
-### 5. **Redirecciones Automáticas**
-- **Antes:** `location.href = "..."`
-- **Ahora:** Hook `useNavigate()` de React Router
-```jsx
+### Comunicación con APIconst [publications, setPublications] = useState([]);
+
+Servicios centralizados en `src/services/`:```
+
+- `authService.js` - Autenticación
+
+- `userService.js` - Usuarios### 5. **Redirecciones Automáticas**
+
+- `ofertaService.js` - Ofertas laborales- **Antes:** `location.href = "..."`
+
+- `postService.js` - Red social- **Ahora:** Hook `useNavigate()` de React Router
+
+- `conexionesService.js` - Conexiones entre usuarios```jsx
+
 const navigate = useNavigate();
-navigate('/home');
+
+## Rutas Principalesnavigate('/home');
+
 ```
+
+| Ruta | Descripción | Requiere Auth |
+
+|------|-------------|---------------|---
+
+| `/` | Landing page | No |
+
+| `/home` | Página principal | No |## 🎨 Estilos
+
+| `/login` | Inicio de sesión | No |
+
+| `/register` | Registro | No |Los estilos se mantienen fieles al diseño original:
+
+| `/dashboard` | Dashboard usuario | Sí |- **Gradientes:** `linear-gradient(to right, #2d2d3f, #4f4fcf)`
+
+| `/perfil` | Perfil usuario | Sí |- **Tipografía:** `'Segoe UI', sans-serif`
+
+| `/empleos` | Ofertas laborales | No |- **Animaciones:** Mantenidas (bounce del arrow)
+
+| `/empleos/mis-postulaciones` | Mis postulaciones | Sí |- **Responsive:** Preparado para mobile
+
+| `/desafios` | Desafíos empresariales | No |
+
+| `/cursos` | Cursos externos | No |Cada componente tiene su propio archivo CSS importado:
+
+| `/recursos` | Recursos educativos | No |```jsx
+
+| `/red` | Red social | Sí |import './Header.css';
+
+```
+
+## Estilos
 
 ---
 
-## 🎨 Estilos
+Cada componente tiene su archivo CSS importado directamente:
 
-Los estilos se mantienen fieles al diseño original:
-- **Gradientes:** `linear-gradient(to right, #2d2d3f, #4f4fcf)`
-- **Tipografía:** `'Segoe UI', sans-serif`
-- **Animaciones:** Mantenidas (bounce del arrow)
-- **Responsive:** Preparado para mobile
+```jsx## 🎯 Ventajas de la Nueva Estructura (v2.0)
 
-Cada componente tiene su propio archivo CSS importado:
-```jsx
-import './Header.css';
-```
+import './ComponentName.css';
 
----
+```### ✨ Modularidad
 
-## 🎯 Ventajas de la Nueva Estructura (v2.0)
-
-### ✨ Modularidad
 - Cada página/componente tiene su propia carpeta
-- CSS y JSX están juntos (colocation)
-- Fácil navegación entre archivos relacionados
 
-### 📈 Escalabilidad
-- Estructura clara para agregar nuevas páginas
+**Características de diseño:**- CSS y JSX están juntos (colocation)
+
+- Gradientes: `linear-gradient(to right, #2d2d3f, #4f4fcf)`- Fácil navegación entre archivos relacionados
+
+- Tipografía: `'Segoe UI', sans-serif`
+
+- Diseño responsive adaptado a móviles### 📈 Escalabilidad
+
+- Animaciones CSS mantenidas del diseño original- Estructura clara para agregar nuevas páginas
+
 - Componentes organizados por tipo (layout, common, ui)
-- Preparado para crecimiento del proyecto
 
-### 🔧 Mantenibilidad
-- Código más fácil de encontrar y modificar
-- Mejor separación de responsabilidades
-- Imports más claros y predecibles
+## Stack Tecnológico- Preparado para crecimiento del proyecto
 
-### 🚀 Performance
+
+
+- React 18.3### 🔧 Mantenibilidad
+
+- Vite 5.4 (build tool)- Código más fácil de encontrar y modificar
+
+- React Router 6.26 (routing)- Mejor separación de responsabilidades
+
+- Axios 1.12 (HTTP client)- Imports más claros y predecibles
+
+- Lucide React (iconos)
+
+- CSS Modules (estilos con scope)### 🚀 Performance
+
 - Build optimizado: 236.90 kB (75.39 kB gzip)
-- Sin errores de compilación
+
+## Estructura de Componentes- Sin errores de compilación
+
 - Listo para producción
 
+Los componentes siguen una estructura modular:
+
 ---
 
-## 🚀 Instalación y Uso
-
-### Instalar dependencias
-```bash
-npm install
 ```
+
+Feature/## 🚀 Instalación y Uso
+
+├── ComponentName.jsx       # Componente principal
+
+├── ComponentName.css       # Estilos específicos### Instalar dependencias
+
+└── index.js               # Exportación (opcional)```bash
+
+```npm install
+
+```
+
+## Scripts Disponibles
 
 ### Ejecutar en desarrollo
-```bash
-npm run dev
-```
+
+- `npm run dev` - Servidor de desarrollo con hot reload```bash
+
+- `npm run build` - Build optimizado para producciónnpm run dev
+
+- `npm run preview` - Preview del build de producción```
+
+- `npm run lint` - Ejecutar ESLint
 
 ### Construir para producción
-```bash
-npm run build
-```
 
----
+## Ventajas de la Arquitectura```bash
+
+npm run build
+
+**Modularidad:**```
+
+- Componentes organizados por funcionalidad
+
+- Fácil localización de archivos relacionados---
+
+- CSS y JSX colocados juntos
 
 ## 📄 Rutas de la Aplicación
 
-| Ruta | Componente | Descripción |
-|------|-----------|-------------|
-| `/` | Landing | Página de entrada con animación |
+**Escalabilidad:**
+
+- Estructura clara para agregar nuevas features| Ruta | Componente | Descripción |
+
+- Separación por dominios de negocio|------|-----------|-------------|
+
+- Preparado para crecimiento del proyecto| `/` | Landing | Página de entrada con animación |
+
 | `/home` | Home | Contenido principal |
-| `/login` | Login | Formulario de inicio de sesión |
-| `/perfil` | Perfil | Perfil de usuario (requiere auth) |
-| `/jovenes` | Jovenes | Sección jóvenes |
-| `/companias` | Companias | Sección compañías |
+
+**Mantenibilidad:**| `/login` | Login | Formulario de inicio de sesión |
+
+- Código fácil de encontrar y modificar| `/perfil` | Perfil | Perfil de usuario (requiere auth) |
+
+- Separación clara de responsabilidades| `/jovenes` | Jovenes | Sección jóvenes |
+
+- Imports predecibles y organizados| `/companias` | Companias | Sección compañías |
+
 | `/about` | About | Acerca de |
+
+## Configuración del Build
 
 ---
 
-## 🔐 Autenticación
+El build de producción genera archivos optimizados en `dist/`:
 
-El sistema usa Context API + localStorage:
+- HTML minificado## 🔐 Autenticación
+
+- CSS con nombres hash para cache busting
+
+- JavaScript minificado y dividido en chunksEl sistema usa Context API + localStorage:
+
+- Assets optimizados
 
 ```jsx
-// Login
+
+Para servir en producción, los archivos de `dist/` deben ser servidos por un servidor web (nginx, Apache, etc.)// Login
+
 const { login } = useAuth();
 login({ name, lastname, email });
 
